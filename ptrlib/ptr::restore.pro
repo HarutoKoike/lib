@@ -1,0 +1,5 @@
+PRO ptr::restore, _EXTRA=ex
+COMPILE_OPT IDL2, STATIC
+RESTORE, _EXTRA=e
+DEFSYSV, '!PTR', ptr
+END
