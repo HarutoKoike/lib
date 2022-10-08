@@ -25,13 +25,13 @@ COMPILE_OPT IDL2, STATIC
 ;
 IF ~ISA(vname, 'STRING') THEN BEGIN
   PRINT, '% vname must be STRING'
-  RETURN
+  RETURN, !NULL
 ENDIF 
 
 ;
 idx = ptr->index(vname)
 IF ~ISA(idx) THEN BEGIN
-  PRINT, '% Variable "' + vname + '" does not exists'
+  PRINT, '% Variable "' + vname + '" is not be stored'
   RETURN, !NULL
 ENDIF
 

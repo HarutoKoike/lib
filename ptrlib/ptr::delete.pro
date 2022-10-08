@@ -15,18 +15,9 @@ END
 
 
 
-
-
-
-
-
-
-
-
-
 ;===========================================================+
 ; ++ NAME ++
-;  --> test.pro
+PRO ptr::delete, vname
 ;
 ; ++ PURPOSE ++
 ;  -->
@@ -43,65 +34,18 @@ END
 ; ++ HISTORY ++
 ;  H.Koike 
 ;===========================================================+
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-PRO ptr::delete, vname
-
 COMPILE_OPT IDL2, STATIC
+;
+IF ~ISA(vname, 'STRING') THEN BEGIN
+  PRINT, '% vname must be STRING'
+  RETURN
+ENDIF 
+
 
 idx = ptr->index(vname)
-
-IF ~ISA(vname) THEN BEGIN
-  PRINT, '% Variable "' + vname + '" does not exists'
+;
+IF ~ISA(idx) THEN BEGIN
+  PRINT, '% Variable "' + vname + '" is not stored'
   RETURN
 ENDIF
  
@@ -121,7 +65,6 @@ ptr->array_delete, *(!PTR.VNAME), idx
 ptr->array_delete, *(!PTR.DATA), idx
 ptr->array_delete, *(!PTR.ID), idx
 ptr->array_delete, *(!PTR.DESCRIPTION), idx
-
 
 
 END

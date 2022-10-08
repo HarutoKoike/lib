@@ -60,7 +60,7 @@ ENDIF
 ;*---------- check existence of variable ----------*
 ;
 IF ISA(ptr->index(vname)) THEN BEGIN
-  PRINT, '% variable "' + vname + '" is already defined'
+  PRINT, '% variable "' + vname + '" is already stored'
   RETURN
 ENDIF
 

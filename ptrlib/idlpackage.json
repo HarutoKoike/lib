@@ -1,0 +1,11 @@
+{
+  "Name": "ptrlib",
+  "Version": "v.1.1",
+  "Author": "Haruto Koike",
+  "Date": "Sep 2021",
+  "Dependencies": {
+      "Name": "IDL",
+      "Version": ">8.5"
+  }
+}
+ 

@@ -16,9 +16,20 @@ COMPILE_OPT IDL2
 RETURN, 1
 END
 
+
+;
+;*---------- return index of variable  ----------*
+;
 FUNCTION ptr::index, vname
 COMPILE_OPT IDL2, STATIC
+;
+IF N_ELEMENTS(vname) NE 1 OR ~ISA(vname, 'STRING') THEN BEGIN
+  PRINT, '% vname must be scalar and STRING'
+  RETURN, !NULL 
+ENDIF
+;
 IF ~ISA( *(!PTR.VNAME) ) THEN RETURN, !NULL
+;
 RETURN, WHERE( STRMATCH( *(!PTR.VNAME), vname ) EQ 1, /NULL) 
 END
 
