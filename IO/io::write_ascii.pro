@@ -33,22 +33,26 @@ PRO io::write_ascii, filename, $
                      format=format, header=header
 ;
 ; ++ PURPOSE ++
-;  -->
+;  --> write ascii data file
 ;
 ; ++ POSITIONAL ARGUMENTS ++
-;  -->
+;  --> filename(STRING): file name 
+;  --> arr1-arr15 (any type of array): 
+;       data arrays, all arrays must be same size 
 ;
 ; ++ KEYWORDS ++
-; -->
+; --> format: print IO format (strongly recommended)
+; --> header: string array of header sentenses
 ;
 ; ++ CALLING SEQUENCE ++
 ;  -->
 ;
 ; ++ HISTORY ++
-;  H.Koike 
+;     09/2022, H.Koike 
 ;===========================================================+
 COMPILE_OPT IDL2, STATIC
-;
+
+
 nvar = N_PARAMS() - 1 
 IF nvar EQ 0 THEN RETURN
 ;
@@ -96,30 +100,49 @@ ENDFOR
 ;
 ;*---------- header configuration ----------*
 ;
-vartype = STRING(nvars, FORMAT='(I02)')
-FOR i = 0, nvars-1 DO $
+vartype = STRING(nvar, FORMAT='(I02)')
+FOR i = 0, nvar-1 DO $
   vartype += STRING( SIZE( *(vars[i]), /TYPE ), FORMAT='(I02)')
 ;
 header_lines = N_ELEMENTS(headers) + 3   ; vartype, format, separator
 vartype = STRING(header_lines, FORMAT='(I05)') + vartype
 ;
-separator = '--------------------------------------------' + $
-            '--------------------------------------------' 
+separator = '--------------------------------------------' 
 ;
 IF ~KEYWORD_SET(format) THEN format = ''
-format = 'format: ' + format 
+format_str = 'format: ' + format 
 ;
 IF ISA(header) THEN BEGIN 
-  header = [vartype, format, header, separator] 
+  header = [vartype, format_str, header, separator] 
 ENDIF ELSE BEGIN
-  header = [vartype, format, separator] 
+  header = [vartype, format_str, separator] 
 ENDELSE
 
 
+
+;
+;*---------- write ----------*
+;
+OPENW, lun, filename, /GET_LUN
+;
+; header
+FOR i = 0, N_ELEMENTS(header) - 1 DO BEGIN
+  PRINTF, lun, header[i]
+ENDFOR
+;
+; data
+FOR i = 0, n1 - 1 DO BEGIN
+  PRINTF, lun, out[i], FORMAT=format
+ENDFOR
+;
+FREE_LUN, lun
+
+
+PTR_FREE, vars
 END
 
 
-io->write_ascii, '~/idl/lib/IO/text.txt', indgen(8), fltarr(8)
+io->write_ascii, '~/idl/lib/IO/text.txt', indgen(8), fltarr(8), form='(i02, 1x, f3.1)'
 
 end
 
