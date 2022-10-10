@@ -93,8 +93,3 @@ ENDWHILE
 FREE_LUN, lun
 
 END
-
-
-
-io->read_ascii, '~/idl/lib/IO/text.txt', data
-end
