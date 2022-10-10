@@ -140,10 +140,3 @@ FREE_LUN, lun
 
 PTR_FREE, vars
 END
-
-
-io->write_ascii, '~/idl/lib/IO/text.txt', indgen(8), fltarr(8), form='(i02, 1x, f3.1)'
-
-end
-
-

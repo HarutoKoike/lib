@@ -1,24 +1,28 @@
 ;===========================================================+ 
 ; ++ NAME ++
-PRO path::save_format, format, format_file=format_file, $
-                       class=class, overwrite=overwrite
+PRO path::save_format, class, format, format_file=format_file, $
+                       overwrite=overwrite
 ;
 ; ++ PURPOSE ++
-;  -->
+;  --> define file-path format of a class
 ;
 ; ++ POSITIONAL ARGUMENTS ++
-;  -->
+;  --> format(STRING): must only consist of charactors in "format_char_list", see line around 40
 ;
 ; ++ KEYWORDS ++
-; -->
+; -->  format_file(STRING): by default, format is saved to '!PACKAGE_PATH/naming_format/class_format.sav'
+;                           set this keyword to specify another filename to save format
+; -->  overwrite(BOOLEAN): by default, format file will not be overwritten.
+;                          if you renew format file, set this keyword
 ;
 ; ++ CALLING SEQUENCE ++
-;  -->
+;  --> path::save_format, 'myclass', '%c_%sc_%Y%m'
 ;
 ; ++ HISTORY ++
-;  H.Koike 
+;    09/2022,  H.Koike 
 ;===========================================================+
 COMPILE_OPT IDL2, STATIC
+;ON_ERROR, 2
 ;
 ;
 ;*---------- save path  ----------*
@@ -31,6 +35,23 @@ IF KEYWORD_SET(format_file) THEN $
 ;
 IF ~FILE_TEST(save_dir) THEN FILE_MKDIR, save_dir
 ;
+
+;
+;*---------- format file name  ----------*
+;
+IF ~KEYWORD_SET(format_file) THEN BEGIN
+  format_file = class + '_format.sav'
+  format_file = FILEPATH(format_file, ROOT=save_dir)
+ENDIF
+;
+;
+
+;
+;*---------- check  ----------*
+;
+IF FILE_TEST(format_file) AND ~KEYWORD_SET(overwrite) THEN $
+  MESSAGE, 'format of ' + class + ' already exists'
+   
 
 
 ;
@@ -55,33 +76,9 @@ format_char_list = [format_char_list, date->format_list()]
 format_reg = '(' + STRJOIN(format_char_list, '|') + ')+'
 boo        = STREGEX(format, format_reg, LENGTH=len)
 ;
-IF len NE STRLEN(format) THEN BEGIN
-  PRINT, '% Format does not match the format of format'
-  RETURN
-ENDIF
+IF len NE STRLEN(format) THEN $
+  MESSAGE, 'Format does not match the format of format'
 
-
-
-;
-;*---------- format file name  ----------*
-;
-IF ~KEYWORD_SET(format_file) THEN BEGIN
-  ;
-  IF ~KEYWORD_SET(class) THEN BEGIN
-    PRINT, '"Class" must be specified'
-    RETURN
-  ENDIF
-  ;
-  format_file = class + '_format.sav'
-ENDIF
-;
-format_file = FILEPATH(format_file, ROOT=save_dir)
-;
-;
-IF FILE_TEST(format_file) AND ~KEYWORD_SET(overwrite) THEN BEGIN
-  PRINT, '% format of ' + class + ' already exists'
-  RETURN
-ENDIF
 
 
 ;

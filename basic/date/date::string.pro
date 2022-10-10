@@ -3,7 +3,7 @@
 FUNCTION date::string, format=format
 ;
 ; ++ PURPOSE ++
-;  -->
+;  --> 
 ;
 ; ++ POSITIONAL ARGUMENTS ++
 ;  -->

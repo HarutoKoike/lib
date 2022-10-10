@@ -1,6 +1,5 @@
 @io::write_ascii.pro
 @io::read_ascii.pro
-@io::file_naming.pro
 
 
 FUNCTION io::init

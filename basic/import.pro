@@ -3,20 +3,22 @@
 PRO import, path, recursive=recursive, class=class
 ;
 ; ++ PURPOSE ++
-;  -->
+;  --> add new library path to !PATH system variable
 ;
 ; ++ POSITIONAL ARGUMENTS ++
-;  -->
+;  --> path(STRING): absolute path to library
 ;
 ; ++ KEYWORDS ++
-; -->
+; -->  recursive(BOOLEAN): set this keyword to include sub-directy recursively
+; -->  class(STRING): 
 ;
 ; ++ CALLING SEQUENCE ++
-;  -->
+;  --> import, '~/mylib', /recursive 
 ;
 ; ++ HISTORY ++
-;  H.Koike 
+;   09/2022, H.Koike 
 ;===========================================================+
+;
 COMPILE_OPT IDL2
 ON_ERROR, 0
 

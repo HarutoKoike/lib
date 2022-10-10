@@ -6,22 +6,35 @@ FUNCTION path::file_name, class=class, subclass=subclass, $
                           format_file=format_file
 ;
 ; ++ PURPOSE ++
-;  -->
+;  --> This function returns file-name, following the format file 
+;      that already defined
 ;
 ; ++ POSITIONAL ARGUMENTS ++
 ;  -->
 ;
 ; ++ KEYWORDS ++
-; -->
+; --> class(STRING): class name
+;                    if this keyword is set, format_file will automatically
+;                    searched by class name
+; --> subclass(STRING): subclass name
+; --> suffix(STRING): suffix 
+; --> prefix(STRING): prefix 
+; --> extension(STRING): extension (etc., '.txt') 
+; --> julday(DOUBLE): date in julian date format
+;                     julday is needed if format includes time date
+; --> format_file(STRING): path to format file
+; 
 ;
 ; ++ CALLING SEQUENCE ++
-;  -->
+;  --> filename = path->file_name(class='myclass', subclass='sub', $
+;                                 suffix='new', julday=julday(10, 1, 2020), $
+;                                 extension='.txt')
 ;
 ; ++ DEPENDENCY ++
 ;  --> class "date"
 ;
 ; ++ HISTORY ++
-;  H.Koike 
+;    09/2022, H.Koike 
 ;===========================================================+
 COMPILE_OPT IDL2, STATIC
 ;
