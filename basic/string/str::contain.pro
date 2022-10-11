@@ -3,16 +3,19 @@
 FUNCTION str::contain, char, list, partly=partly
 ;
 ; ++ PURPOSE ++
-;  -->
+;  --> check whether a word contains specified words. 
+;      if the words contains list of words, return true
 ;
 ; ++ POSITIONAL ARGUMENTS ++
-;  -->
+;  --> char(STRING): word
+;  --> list(STRING): list of words to be contained
 ;
 ; ++ KEYWORDS ++
-; -->
+; -->  partly(BOOLEAN): if this keyword is set, return 1 even if 
+;                       at least 1 element in the list is contained
 ;
 ; ++ CALLING SEQUENCE ++
-;  -->
+;  -->  str::contain('abcdef', ['bc', 'ac'], /partly
 ;
 ; ++ HISTORY ++
 ;  H.Koike 

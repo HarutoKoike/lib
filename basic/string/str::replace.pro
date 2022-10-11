@@ -3,16 +3,19 @@
 FUNCTION str::replace, source, pre, post 
 ;
 ; ++ PURPOSE ++
-;  -->
+;  --> replace words into other words
 ;
 ; ++ POSITIONAL ARGUMENTS ++
-;  -->
+;  --> source(STRING): scalar or array of string to be modified 
+;  --> pre(STRING): 1 element string to be replaced
+;  --> post(string): 1 element string to replace
 ;
 ; ++ KEYWORDS ++
 ; -->
 ;
 ; ++ CALLING SEQUENCE ++
-;  -->
+;  --> str_new = str->replace(['hoge', 'foo'], 'o', 'ee'
+;      >> ['heege', 'feeee']
 ;
 ; ++ HISTORY ++
 ;  H.Koike 

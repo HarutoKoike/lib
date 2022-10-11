@@ -1,9 +1,9 @@
 ;===========================================================+
 ; ++ NAME ++
-FUNCTION path::file_name, class=class, subclass=subclass, $
-                          suffix=suffix, prefix=prefix,   $
-                          julday=julday, extension=extension, $
-                          format_file=format_file, mkdir=mkdir
+FUNCTION path::filename, class=class, subclass=subclass, $
+                         suffix=suffix, prefix=prefix,   $
+                         julday=julday, extension=extension, $
+                         format_file=format_file, mkdir=mkdir
 ;
 ; ++ PURPOSE ++
 ;  --> This function returns file-name, following the format file 
@@ -165,7 +165,6 @@ ENDIF
 IF KEYWORD_SET(julday) THEN BEGIN
     FOREACH f, format_list DO BEGIN
         dc       = date->string(format=f)
-        print, dc
         filename = str->replace(filename, f, dc)
         filepath = str->replace(filepath, f, dc)
     ENDFOREACH
