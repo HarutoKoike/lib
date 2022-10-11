@@ -1,7 +1,7 @@
 
-;@path::save_format.pro
-;@path::file_name.pro
-;@path::format_list.pro
+@path::save_format.pro
+@path::file_name.pro
+@path::format_list.pro
 
 FUNCTION path::init
 COMPILE_OPT IDL2

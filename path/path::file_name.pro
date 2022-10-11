@@ -3,7 +3,7 @@
 FUNCTION path::file_name, class=class, subclass=subclass, $
                           suffix=suffix, prefix=prefix,   $
                           julday=julday, extension=extension, $
-                          format_file=format_file
+                          format_file=format_file, mkdir=mkdir
 ;
 ; ++ PURPOSE ++
 ;  --> This function returns file-name, following the format file 
@@ -23,6 +23,7 @@ FUNCTION path::file_name, class=class, subclass=subclass, $
 ; --> julday(DOUBLE): date in julian date format
 ;                     julday is needed if format includes time date
 ; --> format_file(STRING): path to format file
+; --> mkdir(BOOLEAN): set this to make direcotry 'file_dirname(path)'  
 ; 
 ;
 ; ++ CALLING SEQUENCE ++
@@ -35,8 +36,10 @@ FUNCTION path::file_name, class=class, subclass=subclass, $
 ;
 ; ++ HISTORY ++
 ;    09/2022, H.Koike 
+;    10/10/2022 added keyword "mkdir"
 ;===========================================================+
 COMPILE_OPT IDL2, STATIC
+;
 ;
 ;
 ;*---------- restore format ----------*
@@ -57,11 +60,87 @@ IF ~FILE_TEST(format_file) THEN BEGIN
   MESSAGE, 'No format file for class "' + class + '"'
 ENDIF
 
+;
+; restore vars "format" and "path_format"
 RESTORE, format_file
-
-
-;list = STRSPLIT(format, '(%|-|_|/)', /REGEX, /EXTRACT)
 filename = format
+filepath = path_format
+;
+
+
+
+
+
+
+;
+;*---------- class  ----------*
+;
+in_class = str->contain(format, '%c') OR $
+           str->contain(path_format, '%c') 
+;
+IF ~KEYWORD_SET(class) AND in_class THEN BEGIN 
+    MESSAGE, '"Class" not specified'
+ENDIF
+;
+IF KEYWORD_SET(class) THEN BEGIN
+    filename = str->replace(format, '%c', class)
+    filepath = str->replace(filepath, '%c', class)
+ENDIF
+
+
+
+;
+;*---------- subclass  ----------*
+;
+;
+in_subclass =  str->contain(format, '%sc') OR $
+               str->contain(path_format, '%sc') 
+;
+IF ~KEYWORD_SET(subclass) AND in_subclass THEN BEGIN 
+    MESSAGE, '"Subclass" not specified'
+ENDIF
+;
+IF KEYWORD_SET(subclass) THEN BEGIN
+    filename = str->replace(filename, '%sc', subclass)
+    filepath = str->replace(filepath, '%sc', subclass)
+ENDIF
+
+
+
+;
+;*---------- suffix  ----------*
+;
+in_suffix = str->contain(format, '%suf') OR $
+            str->contain(path_format, '%suf')
+;
+IF ~KEYWORD_SET(suffix) AND in_suffix THEN BEGIN 
+    MESSAGE, '"suffix" not specified'
+ENDIF
+;
+IF KEYWORD_SET(suffix) THEN BEGIN
+    filename = str->replace(filename, '%suf', suffix)
+    filepath = str->replace(filepath, '%suf', suffix)
+ENDIF
+ 
+
+
+;
+;*---------- prefix  ----------*
+;
+;
+in_prefix = str->contain(format, '%pre') OR $
+            str->contain(format, '%pre')
+;
+IF ~KEYWORD_SET(prefix) AND in_prefix THEN BEGIN 
+    MESSAGE, '"prefix" not specified'
+ENDIF
+;
+IF KEYWORD_SET(prefix) THEN BEGIN
+    filename = str->replace(filename, '%pre', prefix)   
+    filepath = str->replace(filepath, '%pre', prefix)
+ENDIF
+
+
 
 
 ;
@@ -71,97 +150,48 @@ IF KEYWORD_SET(julday) THEN date = date(julday=julday)
 ;
 ; check format contains date
 format_list  = date->format_list()
-date_contain = 0
-IF str->contain(format, format_list, /partly) THEN date_contain = 1
+;
+in_date = str->contain(format, format_list, /partly) OR $
+          str->contain(path_format, format_list, /partly) 
 ;
 ; if julday not set
-IF date_contain AND ~KEYWORD_SET(julday) THEN BEGIN
+IF ~KEYWORD_SET(julday) AND in_date THEN BEGIN
   MESSAGE, 'Keyword "julday" must be set if file name ' + $
-         'contains date'
+           'contains date'
 ENDIF                   
 
-
-
-
-;
-;*---------- class  ----------*
-;
-IF ~str->contain(format, '%c') THEN GOTO, SKIP1
-;
-IF ~KEYWORD_SET(class) THEN BEGIN 
-  MESSAGE, '"Class" not specified'
-ENDIF
-;
-filename = str->replace(format, '%c', class)
-
-
-
-;
-;*---------- subclass  ----------*
-;
-SKIP1:
-;
-IF ~str->contain(format, '%sc') THEN GOTO, SKIP2
-;
-IF ~KEYWORD_SET(subclass) THEN BEGIN 
-  MESSAGE, '"Subclass" not specified'
-ENDIF
-;
-filename = str->replace(filename, '%sc', subclass)
-
-
-
-;
-;*---------- suffix  ----------*
-;
-SKIP2:
-;
-IF ~str->contain(format, '%suf') THEN GOTO, SKIP3
-;
-IF ~KEYWORD_SET(suffix) THEN BEGIN 
-  MESSAGE, '"suffix" not specified'
-ENDIF
-;
-filename = str->replace(filename, '%suf', suffix)
  
-
-
-;
-;*---------- prefix  ----------*
-;
-SKIP3:
-;
-IF ~str->contain(format, '%pre') THEN GOTO, SKIP4
-;
-IF ~KEYWORD_SET(prefix) THEN BEGIN 
-  MESSAGE, '"prefix" not specified'
-ENDIF
-;
-filename = str->replace(filename, '%pre', prefix)   
-
-
-
-;
-;*---------- date ----------*
-;
-SKIP4:
-;
-IF ~date_contain THEN GOTO, SKIP5
-;
 ; replace date format by value
-FOREACH f, format_list DO BEGIN
-  IF ~str->contain(format, f) THEN CONTINUE
-  ;
-  dc       = date->string(format=f)
-  filename = str->replace(filename, f, dc)
-ENDFOREACH
+IF KEYWORD_SET(julday) THEN BEGIN
+    FOREACH f, format_list DO BEGIN
+        dc       = date->string(format=f)
+        print, dc
+        filename = str->replace(filename, f, dc)
+        filepath = str->replace(filepath, f, dc)
+    ENDFOREACH
+ENDIF
 
 
 
-SKIP5:
+;
+;*---------- add extension  ----------*
+;
 IF KEYWORD_SET(extension) THEN $
   filename += extension
 
-RETURN, filename
+
+;
+;*---------- make directory  ----------*
+;
+dir = FILE_DIRNAME(filename)
+IF ~FILE_TEST(dir) THEN FILE_MKDIR, dir
+
+
+RETURN, FILEPATH(filename, ROOT=filepath)
 END
+
+
+
+
+
 

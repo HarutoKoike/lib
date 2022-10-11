@@ -1,7 +1,8 @@
 ;===========================================================+ 
 ; ++ NAME ++
 PRO path::save_format, class, format, format_file=format_file, $
-                       overwrite=overwrite
+                       overwrite=overwrite, root_dir_format=root_dir_format, $
+                       subdir_format=subdir_format, exists=exists
 ;
 ; ++ PURPOSE ++
 ;  --> define file-path format of a class
@@ -14,18 +15,27 @@ PRO path::save_format, class, format, format_file=format_file, $
 ;                           set this keyword to specify another filename to save format
 ; -->  overwrite(BOOLEAN): by default, format file will not be overwritten.
 ;                          if you renew format file, set this keyword
+; --> root_dir_format(STRING) : format of root directory, default is 
+;                               "GETENV('HOME')" 
+; --> subdir_format(STRING) : format of sub directory, default is 
+;                             class. this can be array  
 ;
 ; ++ CALLING SEQUENCE ++
 ;  --> path::save_format, 'myclass', '%c_%sc_%Y%m'
 ;
+; ++  DEPENDENCY ++
+;  --> class "date"
+;
 ; ++ HISTORY ++
-;    09/2022,  H.Koike 
+;    09/2022,    H.Koike 
+;    10/10/2022, added file path, keyword "subdir_format" and "root_dir_format"  
+;
 ;===========================================================+
 COMPILE_OPT IDL2, STATIC
 ;ON_ERROR, 2
 ;
 ;
-;*---------- save path  ----------*
+;*---------- path to save format file ----------*
 ;
 IF ~KEYWORD_SET(format_file) THEN $
   save_dir = FILEPATH('naming_format', ROOT=!PACKAGE_PATH)
@@ -33,7 +43,6 @@ IF ~KEYWORD_SET(format_file) THEN $
 IF KEYWORD_SET(format_file) THEN $
   save_dir = FILE_DIRNAME(format_file)
 ;
-IF ~FILE_TEST(save_dir) THEN FILE_MKDIR, save_dir
 ;
 
 ;
@@ -44,14 +53,28 @@ IF ~KEYWORD_SET(format_file) THEN BEGIN
   format_file = FILEPATH(format_file, ROOT=save_dir)
 ENDIF
 ;
+
+;
+;*---------- check existence  ----------*
+;
+IF ARG_PRESENT(exists) THEN BEGIN
+    exists = FILE_TEST(format_file) 
+    RETURN
+ENDIF
 ;
 
 ;
-;*---------- check  ----------*
+;*---------- check existence ----------*
 ;
 IF FILE_TEST(format_file) AND ~KEYWORD_SET(overwrite) THEN $
   MESSAGE, 'format of ' + class + ' already exists'
    
+
+;
+;*---------- create directory  ----------*
+;
+IF ~FILE_TEST(save_dir) THEN FILE_MKDIR, save_dir
+
 
 
 ;
@@ -81,8 +104,21 @@ IF len NE STRLEN(format) THEN $
 
 
 
+
+;
+;*---------- path format setting  ----------*
+;
+IF ~KEYWORD_SET(root_dir_format) THEN $
+    root_dir_format = GETENV('HOME')
+IF ~KEYWORD_SET(subdir_format) THEN $
+    subdir_format = class
+;
+path_format = FILEPATH('dummy', subdir=subdir_format, root=root_dir_format)
+path_format = FILE_DIRNAME(path_format)
+
+
 ;
 ;*---------- save  ----------*
 ;
-SAVE, format, FILENAME=format_file
+SAVE, format, path_format, FILENAME=format_file
 END
