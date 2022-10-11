@@ -1,0 +1,92 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style type="text/css">
+body { background-color: white; color: black; }
+h2 { font-weight: bold; font-variant: small-caps; text-decoration: underline; font-size: 1.5em; color: #4A4A4A; }
+ul, ol { margin-left: 2em; margin-top: 0.2em; text-align: justify; }
+li { margin-bottom: 0.2em; margin-top: 0; }
+p, p.listheader { text-align: justify; text-indent: 2%; margin-top: 0; }
+table { border-collapse: collapse; }
+table, th, td { border: 1px solid #909090; }
+th { background-color: #909090; color: white; font-size: 1.1em; padding: 3px 5px 3px 5px; }
+tr.alt1 { background-color: white; }
+tr.alt2 { background-color: #F0F0F0; }
+td { padding: 2px 5px 2px 5px; }
+</style>
+<title>SERVICE ERROR</title>
+</head>
+<body>
+<h1 style="text-align: center; background-color:red; color: white; font-weight: bold;">SERVICE ERROR - 404</h1>
+<h2>Description</h2>
+<ul>
+<li><b>Context: </b>DataRetrieval</li>
+<li><b>Exception: </b>esavo.sl.dd.requests.DDException</li>
+<li><b>Message: </b>No products found</li>
+</ul>
+<h2>Stack trace</h2>
+<table style="width: ihnerit;">
+<tr><th>Class</th><th>Method</th><th>Line</th></tr>
+<tr class="alt1"><td>esavo.sl.dd.DDDataRetrieval</td><td>executeRequestNormal</td><td>155</td></tr>
+<tr class="alt2"><td>esavo.sl.dd.DDDataRetrieval</td><td>executeRequest</td><td>96</td></tr>
+<tr class="alt1"><td>esavo.sl.services.actions.DataRetrievalServlet</td><td>service</td><td>88</td></tr>
+<tr class="alt2"><td>javax.servlet.http.HttpServlet</td><td>service</td><td>728</td></tr>
+<tr class="alt1"><td>org.apache.catalina.core.ApplicationFilterChain</td><td>internalDoFilter</td><td>305</td></tr>
+<tr class="alt2"><td>org.apache.catalina.core.ApplicationFilterChain</td><td>doFilter</td><td>210</td></tr>
+<tr class="alt1"><td>org.springframework.security.web.FilterChainProxy$VirtualFilterChain</td><td>doFilter</td><td>316</td></tr>
+<tr class="alt2"><td>org.springframework.security.web.access.intercept.FilterSecurityInterceptor</td><td>invoke</td><td>126</td></tr>
+<tr class="alt1"><td>org.springframework.security.web.access.intercept.FilterSecurityInterceptor</td><td>doFilter</td><td>90</td></tr>
+<tr class="alt2"><td>org.springframework.security.web.FilterChainProxy$VirtualFilterChain</td><td>doFilter</td><td>330</td></tr>
+<tr class="alt1"><td>org.springframework.security.web.access.ExceptionTranslationFilter</td><td>doFilter</td><td>114</td></tr>
+<tr class="alt2"><td>org.springframework.security.web.FilterChainProxy$VirtualFilterChain</td><td>doFilter</td><td>330</td></tr>
+<tr class="alt1"><td>org.springframework.security.web.session.SessionManagementFilter</td><td>doFilter</td><td>122</td></tr>
+<tr class="alt2"><td>org.springframework.security.web.FilterChainProxy$VirtualFilterChain</td><td>doFilter</td><td>330</td></tr>
+<tr class="alt1"><td>org.springframework.security.web.authentication.AnonymousAuthenticationFilter</td><td>doFilter</td><td>111</td></tr>
+<tr class="alt2"><td>org.springframework.security.web.FilterChainProxy$VirtualFilterChain</td><td>doFilter</td><td>330</td></tr>
+<tr class="alt1"><td>org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter</td><td>doFilter</td><td>168</td></tr>
+<tr class="alt2"><td>org.springframework.security.web.FilterChainProxy$VirtualFilterChain</td><td>doFilter</td><td>330</td></tr>
+<tr class="alt1"><td>org.springframework.security.web.savedrequest.RequestCacheAwareFilter</td><td>doFilter</td><td>48</td></tr>
+<tr class="alt2"><td>org.springframework.security.web.FilterChainProxy$VirtualFilterChain</td><td>doFilter</td><td>330</td></tr>
+<tr class="alt1"><td>org.springframework.security.web.authentication.www.BasicAuthenticationFilter</td><td>doFilterInternal</td><td>158</td></tr>
+<tr class="alt2"><td>org.springframework.web.filter.OncePerRequestFilter</td><td>doFilter</td><td>107</td></tr>
+<tr class="alt1"><td>org.springframework.security.web.FilterChainProxy$VirtualFilterChain</td><td>doFilter</td><td>330</td></tr>
+<tr class="alt2"><td>org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter</td><td>doFilter</td><td>162</td></tr>
+<tr class="alt1"><td>org.springframework.security.web.FilterChainProxy$VirtualFilterChain</td><td>doFilter</td><td>330</td></tr>
+<tr class="alt2"><td>org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter</td><td>doFilter</td><td>205</td></tr>
+<tr class="alt1"><td>org.springframework.security.web.FilterChainProxy$VirtualFilterChain</td><td>doFilter</td><td>330</td></tr>
+<tr class="alt2"><td>org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter</td><td>doFilter</td><td>205</td></tr>
+<tr class="alt1"><td>org.springframework.security.web.FilterChainProxy$VirtualFilterChain</td><td>doFilter</td><td>330</td></tr>
+<tr class="alt2"><td>org.springframework.security.web.authentication.logout.LogoutFilter</td><td>doFilter</td><td>120</td></tr>
+<tr class="alt1"><td>org.springframework.security.web.FilterChainProxy$VirtualFilterChain</td><td>doFilter</td><td>330</td></tr>
+<tr class="alt2"><td>org.springframework.security.web.header.HeaderWriterFilter</td><td>doFilterInternal</td><td>64</td></tr>
+<tr class="alt1"><td>org.springframework.web.filter.OncePerRequestFilter</td><td>doFilter</td><td>107</td></tr>
+<tr class="alt2"><td>org.springframework.security.web.FilterChainProxy$VirtualFilterChain</td><td>doFilter</td><td>330</td></tr>
+<tr class="alt1"><td>org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter</td><td>doFilterInternal</td><td>53</td></tr>
+<tr class="alt2"><td>org.springframework.web.filter.OncePerRequestFilter</td><td>doFilter</td><td>107</td></tr>
+<tr class="alt1"><td>org.springframework.security.web.FilterChainProxy$VirtualFilterChain</td><td>doFilter</td><td>330</td></tr>
+<tr class="alt2"><td>org.springframework.security.web.context.SecurityContextPersistenceFilter</td><td>doFilter</td><td>91</td></tr>
+<tr class="alt1"><td>org.springframework.security.web.FilterChainProxy$VirtualFilterChain</td><td>doFilter</td><td>330</td></tr>
+<tr class="alt2"><td>org.springframework.security.web.FilterChainProxy</td><td>doFilterInternal</td><td>213</td></tr>
+<tr class="alt1"><td>org.springframework.security.web.FilterChainProxy</td><td>doFilter</td><td>176</td></tr>
+<tr class="alt2"><td>org.springframework.web.filter.DelegatingFilterProxy</td><td>invokeDelegate</td><td>344</td></tr>
+<tr class="alt1"><td>org.springframework.web.filter.DelegatingFilterProxy</td><td>doFilter</td><td>261</td></tr>
+<tr class="alt2"><td>org.apache.catalina.core.ApplicationFilterChain</td><td>internalDoFilter</td><td>243</td></tr>
+<tr class="alt1"><td>org.apache.catalina.core.ApplicationFilterChain</td><td>doFilter</td><td>210</td></tr>
+<tr class="alt2"><td>org.apache.catalina.core.StandardWrapperValve</td><td>invoke</td><td>222</td></tr>
+<tr class="alt1"><td>org.apache.catalina.core.StandardContextValve</td><td>invoke</td><td>123</td></tr>
+<tr class="alt2"><td>org.apache.catalina.authenticator.AuthenticatorBase</td><td>invoke</td><td>472</td></tr>
+<tr class="alt1"><td>org.apache.catalina.core.StandardHostValve</td><td>invoke</td><td>171</td></tr>
+<tr class="alt2"><td>org.apache.catalina.valves.ErrorReportValve</td><td>invoke</td><td>99</td></tr>
+<tr class="alt1"><td>org.apache.catalina.valves.AccessLogValve</td><td>invoke</td><td>936</td></tr>
+<tr class="alt2"><td>org.apache.catalina.valves.RemoteIpValve</td><td>invoke</td><td>680</td></tr>
+<tr class="alt1"><td>org.apache.catalina.core.StandardEngineValve</td><td>invoke</td><td>118</td></tr>
+<tr class="alt2"><td>org.apache.catalina.connector.CoyoteAdapter</td><td>service</td><td>407</td></tr>
+<tr class="alt1"><td>org.apache.coyote.http11.AbstractHttp11Processor</td><td>process</td><td>1004</td></tr>
+<tr class="alt2"><td>org.apache.coyote.AbstractProtocol$AbstractConnectionHandler</td><td>process</td><td>589</td></tr>
+<tr class="alt1"><td>org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor</td><td>run</td><td>310</td></tr>
+<tr class="alt2"><td>java.util.concurrent.ThreadPoolExecutor</td><td>runWorker</td><td>1149</td></tr>
+<tr class="alt1"><td>java.util.concurrent.ThreadPoolExecutor$Worker</td><td>run</td><td>624</td></tr>
+<tr class="alt2"><td>java.lang.Thread</td><td>run</td><td>748</td></tr>
+</table><br/>
+</body>
+</html>
