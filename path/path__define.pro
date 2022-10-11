@@ -1,6 +1,6 @@
 
 @path::save_format.pro
-@path::file_name.pro
+@path::filename.pro
 @path::format_list.pro
 
 FUNCTION path::init
