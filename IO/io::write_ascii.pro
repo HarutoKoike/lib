@@ -30,7 +30,8 @@ PRO io::write_ascii, filename, $
                      arr1, arr2, arr3, arr4, arr5,      $
                      arr6, arr7, arr8, arr9, arr10,     $
                      arr11, arr12, arr13, arr14, arr15, $
-                     format=format, header=header
+                     format=format, header=header,      $
+                     nodata=nodata
 ;
 ; ++ PURPOSE ++
 ;  --> write ascii data file
@@ -43,6 +44,8 @@ PRO io::write_ascii, filename, $
 ; ++ KEYWORDS ++
 ; --> format: print IO format (strongly recommended)
 ; --> header: string array of header sentenses
+; --> nodata: if this keyword is set, file is created even when
+;             no data arrays are present or data array has no data(N_ELEMENTS(array) is 0)
 ;
 ; ++ CALLING SEQUENCE ++
 ;  -->
@@ -51,10 +54,16 @@ PRO io::write_ascii, filename, $
 ;     09/2022, H.Koike 
 ;===========================================================+
 COMPILE_OPT IDL2, STATIC
-
+;
 
 nvar = N_PARAMS() - 1 
-IF nvar EQ 0 THEN RETURN
+n1   = N_ELEMENTS(arr1)
+;
+IF nvar EQ 0 THEN BEGIN
+    MESSAGE, 'No data', CONTINUE=nodata
+    ;
+    IF KEYWORD_SET(nodata) THEN GOTO, SKIP0
+ENDIF
 ;
 
 ;
@@ -71,12 +80,12 @@ ENDFOR
 ;
 ;*---------- check all vars have same size ----------*
 ;
-n1 = N_ELEMENTS(arr1)
+IF n1 EQ 0 THEN GOTO, SKIP0
+;
 FOR i = 1, nvar - 1  DO BEGIN
   n = N_ELEMENTS( *(vars[i]) )
   IF n NE n1 THEN BEGIN
-    PRINT, '% All variables must be same size'
-    RETURN
+    MESSAGE, '% All variables must be same size'
   ENDIF
 ENDFOR
 
@@ -94,17 +103,21 @@ out = REPLICATE(out, n1)
 FOR i = 0, nvar - 1 DO BEGIN
   out.(i) = *(vars[i])
 ENDFOR
+;
 
 
 
+SKIP0:
 ;
 ;*---------- header configuration ----------*
 ;
 vartype = STRING(nvar, FORMAT='(I02)')
+;
 FOR i = 0, nvar-1 DO $
   vartype += STRING( SIZE( *(vars[i]), /TYPE ), FORMAT='(I02)')
+PTR_FREE, vars
 ;
-header_lines = N_ELEMENTS(headers) + 3   ; vartype, format, separator
+header_lines = N_ELEMENTS(header) + 3   ; vartype, format, separator
 vartype = STRING(header_lines, FORMAT='(I05)') + vartype
 ;
 separator = '--------------------------------------------' 
@@ -138,5 +151,4 @@ ENDFOR
 FREE_LUN, lun
 
 
-PTR_FREE, vars
 END

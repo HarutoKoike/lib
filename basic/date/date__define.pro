@@ -1,5 +1,6 @@
 @date::string.pro
 @date::format_list.pro
+@date::days_in_month
 
 
 FUNCTION date::init, _EXTRA=e

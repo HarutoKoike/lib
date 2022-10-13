@@ -182,9 +182,7 @@ IF KEYWORD_SET(extension) THEN $
 ;
 ;*---------- make directory  ----------*
 ;
-dir = FILE_DIRNAME(filename)
-IF ~FILE_TEST(dir) AND KEYWORD_SET(mkdir) THEN FILE_MKDIR, dir
-
+IF ~FILE_TEST(filepath) AND KEYWORD_SET(mkdir) THEN FILE_MKDIR, filepath
 
 RETURN, FILEPATH(filename, ROOT=filepath)
 END

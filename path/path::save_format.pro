@@ -67,7 +67,7 @@ ENDIF
 ;*---------- check existence ----------*
 ;
 IF FILE_TEST(format_file) AND ~KEYWORD_SET(overwrite) THEN $
-  MESSAGE, 'format of ' + class + ' already exists'
+    MESSAGE, 'format of ' + class + ' already exists', /CONTINUE
    
 
 ;

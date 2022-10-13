@@ -1,25 +1,4 @@
-
-
-;===========================================================+
-; ++ NAME ++
 FUNCTION dmsp::filename, ssm=ssm, ssj=ssj 
-;
-; ++ PURPOSE ++
-;  -->
-;
-; ++ POSITIONAL ARGUMENTS ++
-;  -->
-;
-; ++ KEYWORDS ++
-; -->
-;
-; ++ CALLING SEQUENCE ++
-;  -->
-;
-; ++ HISTORY ++
-;  H.Koike 1/9,2021
-;===========================================================+
-
 COMPILE_OPT IDL2
 
 f   = STRING(self.f  , FORMAT='(I02)')
@@ -37,8 +16,8 @@ IF KEYWORD_SET(ssm) THEN suffix = 'SSM.dat.gz'
 
 fn = 'DMSP_F' + f + '_' + yr + doy + $
 		  suffix  
-fp = GETENV('DMSP_DATA_PATH') 
+fp = self->root_dir()
 
-RETURN, fp + fn
+RETURN, FILEPATH(fn, root_dir=fp)
 
 END

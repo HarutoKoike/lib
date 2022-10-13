@@ -36,7 +36,8 @@ fn = STRMID(fn, 0, STRPOS(fn, '.gz') )
 ;------------------------------------------------------+
 ; read SSM ascii file  (template file)
 ;------------------------------------------------------+
-RESTORE, GETENV('DMSP_PROGRAM_PATH') + 'background/format_ssm_MFR.sav'
+
+RESTORE, FILE_WHICH('format_ssm_MFR.sav')
 ON_IOERROR, errlab
 OPENR, lun, fn, /GET_LUN
 d = READ_ASCII(fn, TEMPLATE = temp_ssm_MFR)
@@ -103,6 +104,3 @@ RETURN, 0
 
 
 END
-
-
- 

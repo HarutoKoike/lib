@@ -17,5 +17,4 @@ void = {               $
         name:'pathlib' $
        }
        
-RESOLVE_ALL, CLASS='PATH'
 END
