@@ -23,15 +23,17 @@ FUNCTION str::contain, char, list, partly=partly
 COMPILE_OPT IDL2, STATIC
 ;
 nl   = N_ELEMENTS(list)
-disc = 0
+disc = LONARR(N_ELEMENTS(char))
 ;
-FOR i = 0, nl - 1 DO BEGIN
-  disc += STRMATCH(char, '*' + list[i] + '*')
+FOR j = 0, N_ELEMENTS(disc) - 1 DO BEGIN
+    FOR i = 0, nl - 1 DO BEGIN
+        disc[j] += STRMATCH(char[j], '*' + list[i] + '*')
+    ENDFOR
 ENDFOR
 
 
 IF KEYWORD_SET(partly) THEN $
   RETURN, disc GE 1
 ;
-RETURN, nl EQ disc
+RETURN, disc EQ nl
 END

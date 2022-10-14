@@ -80,20 +80,9 @@ IF ~FILE_TEST(save_dir) THEN FILE_MKDIR, save_dir
 ;
 ;*---------- check format  ----------*
 ;
-format_char_list = [          $
-                    '%c',     $   ; class name
-                    '%sc',    $   ; subclass name
-                    '%suf',   $   ; suffix
-                    '%pre',   $   ; prefix
-                    '_',      $   ; separator 1
-                    '-',      $   ; separator 2
-                    ':',      $   ; separator 3
-                    '/'       $   ; separator 4
-                    ]
+path->format_char, format=form, sep, date
 ;
-; add date format
-format_char_list = [format_char_list, date->format_list()]
-;
+format_char_list = [form, sep, date]
 
 ; regular expression of format
 format_reg = '(' + STRJOIN(format_char_list, '|') + ')+'

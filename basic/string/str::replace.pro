@@ -1,3 +1,16 @@
+FUNCTION str::split_one, char
+COMPILE_OPT IDL2, STATIC
+;
+arr = STRARR(STRLEN(char))
+FOR i = 0, STRLEN(char) - 1 DO BEGIN
+    arr[i] = STRMID(char, i, 1)
+ENDFOR
+RETURN, arr
+;
+END
+
+
+
 ;===========================================================+
 ; ++ NAME ++
 FUNCTION str::replace, source, pre, post 
@@ -31,28 +44,29 @@ IF SIZE(post, /TYPE) NE 7 THEN $
 ;
 str_arr = source
 ;
-dum = '@'
-IF STRMATCH(dum, pre) THEN dum = '&'
 ;
-idx = 0
-FOREACH str, str_arr DO BEGIN
-    WHILE 1 DO BEGIN
-        i = STRPOS(str, pre)
-        IF i EQ -1 THEN BREAK
-        ;
-        str   = dum + str + dum
-        i     = STRPOS(str, pre)
-        l     = STRLEN(str)
-        l_pre = STRLEN(pre)
-        str0  = STRMID(str, 0, i)
-        str1  = STRMID(str, i + l_pre, l - i - l_pre)
-        str   = str0 + post + str1
-        str   = STRMID(str, 1, STRLEN(str) - 2)
-    ENDWHILE
+FOR i = 0, N_ELEMENTS(source) - 1 DO BEGIN
+    str = source[i] 
     ;
-    str_arr[idx] = str
-    idx ++
-ENDFOREACH
+    str_done = []
+    str_res  = str
+    ;
+    WHILE 1 DO BEGIN
+        pos = STRPOS(str_res, pre)
+        IF pos EQ -1 THEN BEGIN 
+            str_done = [str_done, str_res]
+            BREAK
+        ENDIF
+        ;
+        ; replace
+        str_rep  = STRMID(str_res, 0, pos) + post
+        str_done = [str_done, str_rep] 
+        ;
+        str_res  = STRMID(str_res, pos + STRLEN(pre), $
+                          STRLEN(str_res) - pos - 1)
+    ENDWHILE
+    str_arr[i] = STRJOIN(str_done)
+ENDFOR
 
 RETURN, str_arr
 END

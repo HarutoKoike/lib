@@ -1,4 +1,5 @@
 
+@path::format_char.pro
 @path::save_format.pro
 @path::filename.pro
 @path::format_list.pro
