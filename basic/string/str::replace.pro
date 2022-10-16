@@ -13,7 +13,7 @@ END
 
 ;===========================================================+
 ; ++ NAME ++
-FUNCTION str::replace, source, pre, post 
+FUNCTION str::replace, source, pre, post, complete=complete 
 ;
 ; ++ PURPOSE ++
 ;  --> replace words into other words
@@ -43,6 +43,15 @@ IF SIZE(post, /TYPE) NE 7 THEN $
     MESSAGE, 'argument must be string'
 ;
 str_arr = source
+;
+IF KEYWORD_SET(complete) THEN BEGIN
+    FOR i = 0, N_ELEMENTS(str_arr) - 1 DO BEGIN
+        IF STRMATCH(str_arr[i], pre) THEN $
+            str_arr[i] = post
+    ENDFOR
+    RETURN, str_arr
+ENDIF
+
 ;
 ;
 FOR i = 0, N_ELEMENTS(source) - 1 DO BEGIN

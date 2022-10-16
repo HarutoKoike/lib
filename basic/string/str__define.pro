@@ -1,5 +1,8 @@
 @str::replace.pro
 @str::contain.pro
+@str::split2.pro
+@str::join2.pro
+
 
 FUNCTION str::init
 COMPILE_OPT IDL2

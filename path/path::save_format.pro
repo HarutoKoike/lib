@@ -80,11 +80,10 @@ IF ~FILE_TEST(save_dir) THEN FILE_MKDIR, save_dir
 ;
 ;*---------- check format  ----------*
 ;
-path->format_char, format=form, sep, date
+path->format_char, all=format_char_list
 ;
-format_char_list = [form, sep, date]
 
-; regular expression of format
+; regular expression of format 
 format_reg = '(' + STRJOIN(format_char_list, '|') + ')+'
 boo        = STREGEX(format, format_reg, LENGTH=len)
 ;
@@ -104,7 +103,6 @@ IF ~KEYWORD_SET(subdir_format) THEN $
 ;
 path_format = FILEPATH('dummy', subdir=subdir_format, root=root_dir_format)
 path_format = FILE_DIRNAME(path_format)
-
 
 ;
 ;*---------- save  ----------*

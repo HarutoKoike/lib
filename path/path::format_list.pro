@@ -26,7 +26,7 @@ FOREACH l, list DO BEGIN
   RESTORE, l
   PRINT, '% --------------------------------------------'
   PRINT, '% ' + l
-  PRINT, '% format: ' + FILEPATH(format, root=path_format)
+  PRINT, '% format     : ' + FILEPATH(format, root=path_format)
 ENDFOREACH
 
 END

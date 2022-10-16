@@ -65,49 +65,86 @@ ENDIF
 ; restore vars "format" and "path_format"
 RESTORE, format_file
 ;
-; separator
-path->format_char, separator=sep 
-sep = '[(*|' + STRJOIN(sep, '|') + ')+]'
 ;
-filename = STRSPLIT(format, '%', /EXTRACT)
-filepath = STRSPLIT(path_format, '%', /EXTRACT)
+
+;
+;*---------- separator list  ----------*
+;
+print, format
+print, path_format
+dummy0 = 'dummy0dummy0dummy0dummy0' 
+format = dummy0 + format + dummy0
+path_format = dummy0 + format + dummy0
+;
+path->format_char, separator=sep 
+sep = [sep, '%']
+sep = '[(*|' + STRJOIN(sep, '|') + ')+]'
+file_sep_idx = (STRSPLIT(format, sep, /REGEX) - 1)[1:-1] 
+path_sep_idx = (STRSPLIT(path_format, sep, /REGEX) - 1)[1:-1]
+;
+IF TOTAL(file_sep_idx) GE 0 THEN BEGIN
+    file_sep_list  = STRARR(N_ELEMENTS(file_sep_idx))
+    FOR i = 0, N_ELEMENTS(file_sep_list) -1 DO $
+        file_sep_list[i] = STRMID(format, file_sep_idx[i],$
+                                  1)
+ENDIF
+;
+IF TOTAL(path_sep_idx) GE 0 THEN BEGIN
+    path_sep_list  = STRARR(N_ELEMENTS(path_sep_idx))
+    FOR i = 0, N_ELEMENTS(path_sep_list) -1 DO $
+        path_sep_list[i] = STRMID(path_format, $
+                                  path_sep_idx[i], 1)
+ENDIF   
 
 
+print, path_sep_list
+print, file_sep_list
 
 
+; separator
+dummy = 'dummydummydummydummy'
+filename = str->replace(format, '%', '%' + dummy) 
+filepath = str->replace(path_format, '%', '%' + dummy) 
+;
+filename = STRSPLIT(filename, sep, /EXTRACT, /REGEX)
+filepath = STRSPLIT(filepath, sep, /EXTRACT, /REGEX)
 
 
 ;
 ;*---------- class  ----------*
 ;
-in_class = str->contain(format, 'c') OR $
-           str->contain(path_format, 'c') 
+in0 = TOTAL(str->contain(filename, dummy+'c')) GE 0
+in1 = TOTAL(str->contain(filepath, dummy+'c')) GE 0
+in_class = in0 OR in1
 ;
 IF ~KEYWORD_SET(class) AND in_class THEN BEGIN 
     MESSAGE, '"Class" not specified'
 ENDIF
 ;
 IF KEYWORD_SET(class) THEN BEGIN
-    filename = str->replace(filename, 'c', class, regex=sep+'c'+sep)
-    filepath = str->replace(filepath, 'c', class, regex=sep+'c'+sep)
+    filename = str->replace(filename, dummy+'c', class, $
+                            /complete)
+    filepath = str->replace(filepath, dummy+'c', class, $
+                            /complete)
 ENDIF
-
 
 
 ;
 ;*---------- subclass  ----------*
 ;
 ;
-in_subclass =  str->contain(format, 'sc') OR $
-               str->contain(path_format, 'sc') 
+in_subclass =  str->contain(format, dummy+'sc') OR $
+               str->contain(path_format, dummy+'sc') 
 ;
 IF ~KEYWORD_SET(subclass) AND in_subclass THEN BEGIN 
     MESSAGE, '"Subclass" not specified'
 ENDIF
 ;
 IF KEYWORD_SET(subclass) THEN BEGIN
-    filename = str->replace(filename, 'sc', subclass, regex=sep+'sc'+sep)
-    filepath = str->replace(filepath, 'sc', subclass, regex=sep+'sc'+sep)
+    filename = str->replace(filename, dummy+'sc', subclass,$
+                            /complete)
+    filepath = str->replace(filepath, dummy+'sc', subclass,$
+                            /complete)
 ENDIF
 
 
@@ -115,16 +152,18 @@ ENDIF
 ;
 ;*---------- suffix  ----------*
 ;
-in_suffix = str->contain(format, 'suf') OR $
-            str->contain(path_format, 'suf')
+in_suffix = str->contain(format, dummy+'suf') OR $
+            str->contain(path_format, dummy+'suf')
 ;
 IF ~KEYWORD_SET(suffix) AND in_suffix THEN BEGIN 
     MESSAGE, '"suffix" not specified'
 ENDIF
 ;
 IF KEYWORD_SET(suffix) THEN BEGIN
-    filename = str->replace(filename, 'suf', suffix, regex=sep+'suf'+sep)
-    filepath = str->replace(filepath, 'suf', suffix, regex=sep+'suf'+sep)
+    filename = str->replace(filename, dummy+'suf', suffix,$
+                            /complete)
+    filepath = str->replace(filepath, dummy+'suf', suffix,$
+                            /complete)
 ENDIF
  
 
@@ -133,16 +172,18 @@ ENDIF
 ;*---------- prefix  ----------*
 ;
 ;
-in_prefix = str->contain(filename, 'pre') OR $
-            str->contain(path_format, 'pre')
+in_prefix = str->contain(filename, dummy+'pre') OR $
+            str->contain(path_format, dummy+'pre')
 ;
 IF ~KEYWORD_SET(prefix) AND in_prefix THEN BEGIN 
     MESSAGE, '"prefix" not specified'
 ENDIF
 ;
 IF KEYWORD_SET(prefix) THEN BEGIN
-    filename = str->replace(filename, 'pre', prefix, regex=sep+'pre'+sep)   
-    filepath = str->replace(filepath, 'pre', prefix, regex=sep+'pre'+sep)
+    filename = str->replace(filename, dummy+'pre', prefix, $
+                            /complete)   
+    filepath = str->replace(filepath, 'pre', dummy+prefix, $
+                            /complete)
 ENDIF
 
 
@@ -152,8 +193,10 @@ ENDIF
 ;
 ;
 IF KEYWORD_SET(misc) THEN BEGIN
-    filename = str->replace(filename, 'misc', misc, regex=sep+'misc'+sep)   
-    filepath = str->replace(filepath, 'misc', misc, regex=sep+'misc'+sep)
+    filename = str->replace(filename, dummy+'misc', misc, $
+                            /complete)   
+    filepath = str->replace(filepath, dummy+'misc', misc, $
+                            /complete)
 ENDIF 
 
 
@@ -166,9 +209,11 @@ IF KEYWORD_SET(julday) THEN date = date(julday=julday)
 ;
 ; check format contains date
 format_list  = date->format_list()
+format_list  = str->replace(format_list, '%', '')
 ;
-in_date = str->contain(filename, format_list, /partly) OR $
-          str->contain(path_format, format_list, /partly) 
+in0 = str->contain(filename, dummy+format_list, /partly) 
+in1 = str->contain(filepath, dummy+format_list, /partly) 
+in_date = (TOTAL(in0) GE 1) OR (TOTAL(in1) GE 1)
 ;
 ; if julday not set
 IF ~KEYWORD_SET(julday) AND in_date THEN BEGIN
@@ -180,9 +225,11 @@ ENDIF
 ; replace date format by value
 IF KEYWORD_SET(julday) THEN BEGIN
     FOREACH f, format_list DO BEGIN
-        dc       = date->string(format=f)
-        filename = str->replace(filename, f, dc, regex=sep+f+sep)
-        filepath = str->replace(filepath, f, dc, regex=sep+f+sep)
+        dc       = date->string(format='%' + f)
+        filename = str->replace(filename, dummy+f, dc, $
+                                /complete)
+        filepath = str->replace(filepath, dummy+f, dc, $
+                                /complete)
     ENDFOREACH
 ENDIF
 
@@ -193,9 +240,24 @@ ENDIF
 ;
 ;*---------- join filename  ----------*
 ;
-filename = STRJOIN(filename)
-filepath = STRJOIN(filepath)
-print, filename
+
+
+filename_join = filename[0]
+FOR i = 0, N_ELEMENTS(file_sep_list) - 1 DO BEGIN
+    sep = file_sep_list[i]
+    filename_join = STRJOIN([filename_join, filename[i+1]],$
+                            sep) 
+ENDFOR
+;
+filepath_join = filepath[0]
+FOR i = 0, N_ELEMENTS(path_sep_list) - 1 DO BEGIN
+    sep = path_sep_list[i]
+    filepath_join = STRJOIN([filepath_join, filepath[i+1]],$
+                            sep) 
+ENDFOR
+
+filename = filename_join
+filepath = filepath_join
 
 ;
 ;*---------- add extension  ----------*
@@ -215,5 +277,7 @@ END
 
 
 
+filename = path->filename(class='Cusp', sub='nbz', exten='.txt', julday=julday(1, 1, 2000), prefix='pre', misc='aaa')
+print, filename
 
-
+end
