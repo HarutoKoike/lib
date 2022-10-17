@@ -75,9 +75,3 @@ ylim, 'T_HIA_perp_all', 1, 30, 1
 
 
 end
-
-
-
-
-
-

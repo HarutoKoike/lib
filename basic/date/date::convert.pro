@@ -81,5 +81,33 @@ END
 
 
 
+;-------------------------------------------------+
+; 
+;-------------------------------------------------+
+FUNCTION date::iso2time_string, iso
+COMPILE_OPT IDL2, STATIC
+;
+; ISO 2000-01-01T00:00:00Z
+; ts  2000-01-01/00:00:00
+ts = STRMID(iso, 0, 10) + '/' + STRMID(iso, 11, 8)
+RETURN, ts
+END
+
+
+;-------------------------------------------------+
+; 
+;-------------------------------------------------+
+FUNCTION date::time_string2iso, ts
+COMPILE_OPT IDL2, STATIC
+;
+; ISO 2000-01-01T00:00:00Z
+; ts  2000-01-01/00:00:00
+iso = STRMID(ts, 0, 10) + 'T' + STRMID(ts, 11, 8) + 'Z' 
+RETURN, iso
+END
+ 
+
+
+
 PRO date::convert
 END

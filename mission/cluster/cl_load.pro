@@ -1,19 +1,20 @@
- 
-sc = 3
-mytimespan, 2004, 3, 10, 12, 20, dmin=20
-cluster->load_vars, sc, /all 
-
-;tn = cluster->tplot_names(/ion, /mag, /electron,  sc)
-;idx = [0, 1, 2, 6, 3, 4, 5]
-
-
-;popen, '~/test_cl';, xs=30, ys=30
-;tplot, tn[idx]                 
-;tplot_apply_databar
+PRO cl_load, sc, yr, mon, dy, hr, min, sec, _EXTRA=e, $
+             cis=cis, fgm=fgm, aux=aux
+myspedas->timespan, yr, mon, dy, hr, min, sec, _EXTRA=e
 ;
-;pclose
-
-
-
-
-end
+IF KEYWORD_SET(cis) THEN BEGIN
+    cis = cis(sc=sc)
+    cis->load
+ENDIF
+;
+IF KEYWORD_SET(fgm) THEN BEGIN
+    fgm = fgm(sc=sc)
+    fgm->load
+ENDIF
+;
+IF KEYWORD_SET(aux) THEN BEGIN
+    aux = aux(sc=sc)
+    aux->load
+ENDIF
+;
+END
