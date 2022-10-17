@@ -25,20 +25,31 @@ PRO cluster::authentication, renew =renew
 COMPILE_OPT IDL2, STATIC
 ;
 ;
-username = 'hkoike'
-password = '@_2CLDBBmjpbrss'
-log      = '~/idl/cluster/common/csa_log'
+cl       = OBJ_NEW('cluster')
+cl->getprop, username=username, password=password
+OBJ_DESTROY, cl 
+;
+root = GETENV('HOME')
+log  = FILEPATH('.csa_log', ROOT=root)
+
 ;
 last_login = 0d
 elasped    = 3600D / 86400D
 format     = '(F20.11)'
+;
+IF ~FILE_TEST(log) THEN BEGIN
+    OPENW, lun, log, /GET_LUN
+    PRINTF, lun, JULDAY(1, 1, 2000), format=format    
+    CLOSE, lun
+ENDIF  
+
 ;
 OPENR, lun, log, /GET_LUN
 READF, lun, last_login, FORMAT=format 
 CLOSE, lun
 ;
 now = SYSTIME(/JUL)
-PRINT, '% Last login : ' + julday2iso(last_login)
+PRINT, '% Last login : ' + date->julday2iso(last_login)
 IF (now - last_login LT elasped) AND ~KEYWORD_SET(renew) THEN $
   RETURN
 
@@ -96,5 +107,4 @@ CLOSE, lun
  
 
 PRINT, '% login completed'
-
 END

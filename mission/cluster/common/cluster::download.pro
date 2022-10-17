@@ -33,7 +33,8 @@ PRO cluster::download, $
 ; ++ NOTE ++
 ;===========================================================+
 COMPILE_OPT IDL2, STATIC
-
+;
+ON_ERROR, 0
 ;
 ;*---------- authentication ----------*
 ;
@@ -43,8 +44,7 @@ st  = start_date
 et  = end_date
 
 IF N_ELEMENTS(st) NE 1 OR N_ELEMENTS(et) NE 1 THEN BEGIN 
-    PRINT, '% start_date and end date must be 1-element'
-    RETURN
+    MESSAGE, 'start_date and end date must be 1-element'
 ENDIF
 
 PRINT, ''
@@ -214,7 +214,3 @@ odir = separator + STRJOIN(odir[0:-2], separator)
 FILE_DELETE, odir, /RECURSIVE
 
 END
-
-
-
-
