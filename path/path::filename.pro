@@ -68,46 +68,31 @@ RESTORE, format_file
 ;
 
 ;
-;*---------- separator list  ----------*
+;*---------- separator list and position ----------*
 ;
-print, format
-print, path_format
-dummy0 = 'dummy0dummy0dummy0dummy0' 
-format = dummy0 + format + dummy0
-path_format = dummy0 + format + dummy0
-;
-path->format_char, separator=sep 
+path->format_char, sep=sep
 sep = [sep, '%']
-sep = '[(*|' + STRJOIN(sep, '|') + ')+]'
-file_sep_idx = (STRSPLIT(format, sep, /REGEX) - 1)[1:-1] 
-path_sep_idx = (STRSPLIT(path_format, sep, /REGEX) - 1)[1:-1]
+sep = '(' + STRJOIN(sep, '|') + ')+'
 ;
-IF TOTAL(file_sep_idx) GE 0 THEN BEGIN
-    file_sep_list  = STRARR(N_ELEMENTS(file_sep_idx))
-    FOR i = 0, N_ELEMENTS(file_sep_list) -1 DO $
-        file_sep_list[i] = STRMID(format, file_sep_idx[i],$
-                                  1)
-ENDIF
+l0       = str->split2(format, sep, /REGEX)
+filename = l0[0]
+sep_list_filename = l0[1]
+sep_idx_filename  = l0[2]
 ;
-IF TOTAL(path_sep_idx) GE 0 THEN BEGIN
-    path_sep_list  = STRARR(N_ELEMENTS(path_sep_idx))
-    FOR i = 0, N_ELEMENTS(path_sep_list) -1 DO $
-        path_sep_list[i] = STRMID(path_format, $
-                                  path_sep_idx[i], 1)
-ENDIF   
+l1  = str->split2(path_format, sep, /REGEX)
+filepath = l1[0]
+sep_list_filepath = l1[1]
+sep_idx_filepath  = l1[2]
 
 
-print, path_sep_list
-print, file_sep_list
 
-
-; separator
-dummy = 'dummydummydummydummy'
-filename = str->replace(format, '%', '%' + dummy) 
-filepath = str->replace(path_format, '%', '%' + dummy) 
 ;
-filename = STRSPLIT(filename, sep, /EXTRACT, /REGEX)
-filepath = STRSPLIT(filepath, sep, /EXTRACT, /REGEX)
+;*---------- dummy charactor  ----------*
+;
+dummy = 'dummydummydummydummy122241'
+filename = dummy + filename
+filepath = dummy + filepath
+
 
 
 ;
@@ -197,7 +182,13 @@ IF KEYWORD_SET(misc) THEN BEGIN
                             /complete)   
     filepath = str->replace(filepath, dummy+'misc', misc, $
                             /complete)
-ENDIF 
+ENDIF ELSE BEGIN
+    filename = str->replace(filename, dummy+'misc', '', $
+                            /complete)
+    filepath = str->replace(filepath, dummy+'misc', '', $
+                            /complete)
+ENDELSE
+
 
 
 
@@ -238,26 +229,23 @@ ENDIF
 
 
 ;
-;*---------- join filename  ----------*
+;*---------- join ----------*
 ;
+filename = str->join2(filename, sep_list_filename, $
+                      sep_idx_filename)
+filepath = str->join2(filepath, sep_list_filepath, $
+                      sep_idx_filepath)
+filename = str->replace(filename, '%', '')
+filepath = str->replace(filepath, '%', '')
 
 
-filename_join = filename[0]
-FOR i = 0, N_ELEMENTS(file_sep_list) - 1 DO BEGIN
-    sep = file_sep_list[i]
-    filename_join = STRJOIN([filename_join, filename[i+1]],$
-                            sep) 
-ENDFOR
 ;
-filepath_join = filepath[0]
-FOR i = 0, N_ELEMENTS(path_sep_list) - 1 DO BEGIN
-    sep = path_sep_list[i]
-    filepath_join = STRJOIN([filepath_join, filepath[i+1]],$
-                            sep) 
-ENDFOR
+;*---------- delete dummy charactor ----------*
+;
+filename = str->replace(filename, dummy, '')
+filepath = str->replace(filepath, dummy, '')
 
-filename = filename_join
-filepath = filepath_join
+
 
 ;
 ;*---------- add extension  ----------*
@@ -269,15 +257,8 @@ IF KEYWORD_SET(extension) THEN $
 ;
 ;*---------- make directory  ----------*
 ;
-IF ~FILE_TEST(filepath) AND KEYWORD_SET(mkdir) THEN FILE_MKDIR, filepath
+IF ~FILE_TEST(filepath) AND KEYWORD_SET(mkdir) THEN $
+    FILE_MKDIR, filepath
 
 RETURN, FILEPATH(filename, ROOT=filepath)
 END
-
-
-
-
-filename = path->filename(class='Cusp', sub='nbz', exten='.txt', julday=julday(1, 1, 2000), prefix='pre', misc='aaa')
-print, filename
-
-end
