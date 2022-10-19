@@ -1,22 +1,5 @@
-;===========================================================+
-; ++ NAME ++
-PRO cl_staff::load
-;
-; ++ PURPOSE ++
-;  -->
-;
-; ++ POSITIONAL ARGUMENTS ++
-;  -->
-;
-; ++ KEYWORDS ++
-; -->
-;
-; ++ CALLING SEQUENCE ++
-;  -->
-;
-; ++ HISTORY ++
-;  H.Koike 1/9,2021
-;===========================================================+
+PRO staff::load
+
 COMPILE_OPT IDL2
 ;
 ;*---------- setting  ----------*
@@ -42,7 +25,7 @@ IF ~suc THEN RETURN
 ;
 ;*---------- read cdf  ----------*
 ;
-files = self->cluster::filesearch(id, st, et)
+files = self->cluster::file_search(id, st, et)
 ;
 foreach fn, files do $
   cdf2tplot, fn, /all
@@ -178,5 +161,3 @@ options, tname, 'ysubtitle', '[deg]'
 
 
 END
-
-

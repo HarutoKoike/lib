@@ -209,8 +209,6 @@ CD, current=current
 pos0 = STRPOS(untar_files[0], 'CSA_Download_')
 odir = STRMID(untar_files[0], pos0, STRLEN(untar_files[0]) - pos0)
 odir = (STRSPLIT(odir, separator, /EXTRACT))[0]
-print, 'odir'
-print, odir
 FILE_DELETE, odir, /RECURSIVE
 ;
 END

@@ -1,22 +1,5 @@
-;===========================================================+
-; ++ NAME ++
-PRO cl_efw::load
-;
-; ++ PURPOSE ++
-;  -->
-;
-; ++ POSITIONAL ARGUMENTS ++
-;  -->
-;
-; ++ KEYWORDS ++
-; -->
-;
-; ++ CALLING SEQUENCE ++
-;  -->
-;
-; ++ HISTORY ++
-;  H.Koike 1/9,2021
-;===========================================================+
+PRO efw::load
+
 COMPILE_OPT IDL2
 ;
 ;*---------- dataset id  ----------*
@@ -74,16 +57,3 @@ options, tname, 'colors', [0, 50, 230]
 ;options, tname_gsm, 'colors', [0, 50, 230]
 
 END
-
-
-
-;mytimespan, 2004, 3, 10, 11,  dmin=120
-;efw=cl_efw(sc=3)
-;efw->load
-;
-;end
-
-
-
-
-

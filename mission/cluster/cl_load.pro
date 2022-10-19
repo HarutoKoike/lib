@@ -1,20 +1,49 @@
 PRO cl_load, sc, yr, mon, dy, hr, min, sec, _EXTRA=e, $
-             cis=cis, fgm=fgm, aux=aux
+             cis=cis, fgm=fgm, aux=aux, peace=peace, $
+             edi=edi, efw=efw, staff=staff
+
 myspedas->timespan, yr, mon, dy, hr, min, sec, _EXTRA=e
 ;
 IF KEYWORD_SET(cis) THEN BEGIN
-    cis = cis(sc=sc)
+    cis = OBJ_NEW('cis')
+    cis->setprop, sc=sc
     cis->load
 ENDIF
 ;
 IF KEYWORD_SET(fgm) THEN BEGIN
-    fgm = fgm(sc=sc)
+    fgm = OBJ_NEW('fgm')
+    fgm->setprop, sc=sc
     fgm->load
 ENDIF
 ;
 IF KEYWORD_SET(aux) THEN BEGIN
-    aux = aux(sc=sc)
+    aux = OBJ_NEW('aux')
+    aux->setprop, sc=sc
     aux->load
 ENDIF
 ;
+IF KEYWORD_SET(peace) THEN BEGIN
+    peace = OBJ_NEW('peace')
+    peace->setprop, sc=sc
+    peace->load
+ENDIF  
+;
+IF KEYWORD_SET(edi) THEN BEGIN
+    edi = OBJ_NEW('edi')
+    edi->setprop, sc=sc
+    edi->load
+ENDIF  
+;
+IF KEYWORD_SET(efw) THEN BEGIN
+    efw = OBJ_NEW('efw')
+    efw->setprop, sc=sc
+    efw->load
+ENDIF  
+;
+IF KEYWORD_SET(staff) THEN BEGIN
+    staff = OBJ_NEW('staff')
+    staff->setprop, sc=sc
+    staff->load
+ENDIF  
+
 END

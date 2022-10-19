@@ -1,23 +1,7 @@
-;===========================================================+
-; ++ NAME ++
-PRO cl_peace::load
+PRO peace::load
 ;
-; ++ PURPOSE ++
-;  -->
-;
-; ++ POSITIONAL ARGUMENTS ++
-;  -->
-;
-; ++ KEYWORDS ++
-; -->
-;
-; ++ CALLING SEQUENCE ++
-;  -->
-;
-; ++ HISTORY ++
-;  H.Koike 1/9,2021
-;===========================================================+
 COMPILE_OPT IDL2
+
 ;
 ;*---------- settings ----------*
 ;
@@ -44,7 +28,7 @@ IF ~self->cluster::filetest(id, st, et) THEN $
 ;
 ;*---------- read cdf  ----------*
 ;
-files = self->cluster::filesearch(id, st, et)
+files = self->cluster::file_search(id, st, et)
 
 ;
 FOREACH fn, files DO  $
