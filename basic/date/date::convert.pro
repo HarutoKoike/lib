@@ -89,8 +89,20 @@ COMPILE_OPT IDL2, STATIC
 ;
 ; ISO 2000-01-01T00:00:00Z
 ; ts  2000-01-01/00:00:00
+;
 ts = STRMID(iso, 0, 10) + '/' + STRMID(iso, 11, 8)
 RETURN, ts
+END
+
+
+
+;-------------------------------------------------+
+; 
+;-------------------------------------------------+
+FUNCTION date::julday2time_string, julday
+COMPILE_OPT IDL2, STATIC
+;
+RETURN, date->iso2time_string( date->julday2iso(julday) )
 END
 
 
@@ -108,6 +120,23 @@ END
  
 
 
+;-------------------------------------------------+
+; 
+;-------------------------------------------------+
+FUNCTION date::julday2time_double, jul
+COMPILE_OPT IDL2, STATIC
+RETURN, ( jul - JULDAY(1, 1, 1970, 0, 0, 0) ) * 86400D
+END
 
-PRO date::convert
+
+
+
+
+
+
+
+
+
+PRO date::convert 
+COMPILE_OPT IDL2, STATIC
 END
