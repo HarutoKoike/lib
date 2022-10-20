@@ -34,7 +34,16 @@ PRO date::setprop, julday=julday, year=year, month=month, $
 ;
 COMPILE_OPT IDL2
 ;
-IF KEYWORD_SET(julday) THEN self.julday = julday
+IF KEYWORD_SET(julday) THEN BEGIN 
+    self.julday = julday
+    CALDAT, julday, month, day, year, hour, minute, second
+    self.year   = year  
+    self.month  = month 
+    self.day    = day   
+    self.hour   = hour  
+    self.minute = minute
+    self.second = second
+ENDIF
 IF KEYWORD_SET(year)   THEN self.year   = year
 IF KEYWORD_SET(month)  THEN self.month  = month
 IF KEYWORD_SET(day)    THEN self.day    = day

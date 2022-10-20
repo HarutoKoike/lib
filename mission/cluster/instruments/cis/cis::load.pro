@@ -184,7 +184,7 @@ get_data, tname, dlim=dlim
 str_element, dlim, 'spec', 1, /add
 store_data, tname, dlim=dlim
 ylim, tname, 5, 32.e3, /log
-zlim, tname, 0, 0, 1
+;zlim, tname, 0, 0, 1
 ;
 options, tname, 'ytitle', 'omni flux'
 options, tname, ysubtitle='[eV]'
@@ -196,6 +196,10 @@ options, tname, 'eV/eV cm!U2!N s sr]'
 ;*---------- ion pitch angle distribution  ----------*
 ;
 tname = 'Differential_Particle_Flux__C' + sc + '_CP_CIS-HIA_PAD_HS_MAG_IONS_PF'
+options, tname, 'spec', 1
+zlim, tname, 0, 0, 1
+ylim, tname, 0, 180
+;
 get_data, tname, dlim=dlim, data=d
 ;
 str_element, dlim, 'spec', 1, /add

@@ -14,6 +14,7 @@ tnames = []
 IF KEYWORD_SET(ion) OR KEYWORD_SET(all) THEN BEGIN
   tnames = [tnames, $ 
             'flux__C' + sc + '_CP_CIS-HIA_HS_1D_PEF', $ 
+            ;'Differential_Particle_Flux__C' + sc + '_CP_CIS-HIA_PAD_HS_MAG_IONS_PF', $
             'N_HIA__C' + sc + '_PP_CIS',  $             
             'T_HIA__C' + sc + '_PP_CIS',  $           
             'V_para_perp__C' + sc ]               

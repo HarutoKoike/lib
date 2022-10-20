@@ -2,7 +2,9 @@ PRO cl_load, sc, yr, mon, dy, hr, min, sec, _EXTRA=e, $
              cis=cis, fgm=fgm, aux=aux, peace=peace, $
              edi=edi, efw=efw, staff=staff
 
-myspedas->timespan, yr, mon, dy, hr, min, sec, _EXTRA=e
+IF ISA(yr) AND ISA(mon) AND ISA(dy) THEN BEGIN
+    myspedas->timespan, yr, mon, dy, hr, min, sec, _EXTRA=e
+ENDIF
 ;
 IF KEYWORD_SET(cis) THEN BEGIN
     cis = OBJ_NEW('cis')

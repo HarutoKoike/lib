@@ -4,7 +4,8 @@ FUNCTION path::filename, class=class, subclass=subclass, $
                          suffix=suffix, prefix=prefix,   $
                          misc=misc, $
                          julday=julday, extension=extension, $
-                         format_file=format_file, mkdir=mkdir
+                         format_file=format_file, mkdir=mkdir, $
+                         filename_only=filename_only
 ;
 ; ++ PURPOSE ++
 ;  --> This function returns file-name, following the format file 
@@ -261,5 +262,7 @@ IF KEYWORD_SET(extension) THEN $
 IF ~FILE_TEST(filepath) AND KEYWORD_SET(mkdir) THEN $
     FILE_MKDIR, filepath
 
+
+IF KEYWORD_SET(filename_only) THEN RETURN, filename 
 RETURN, FILEPATH(filename, ROOT=filepath)
 END

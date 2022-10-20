@@ -74,8 +74,8 @@ ENDFOR
 nd   = FILE_LINES(filename) - header_line
 data = REPLICATE(receiver, nd)
 ;
-i = 1
-l = 0
+i = 0
+l = 1
 dum = ''
 ;
 OPENR, lun, filename, /GET_LUN 

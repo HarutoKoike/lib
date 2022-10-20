@@ -3,6 +3,7 @@
 @cluster::download.pro
 @cluster::input.pro
 @cluster::tplot_names.pro
+@cluster::plot_basic_var.pro
 
 FUNCTION cluster::init
 COMPILE_OPT IDL2
