@@ -1,7 +1,7 @@
 ;===========================================================+
 ; ++ NAME ++
 PRO ptr::store, vname, data, description=description, $
-                overwrite=overwrite
+                overwrite=overwrite, read_only=read_only
 ;
 ; ++ PURPOSE ++
 ;  --> "ptr::store" stores variable and memorize variable name and pointer in !PTR. 

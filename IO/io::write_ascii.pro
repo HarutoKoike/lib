@@ -42,8 +42,7 @@ PRO io::write_ascii, filename, $
 ;       data arrays, all arrays must be same size 
 ;
 ; ++ KEYWORDS ++
-; --> format: print IO format (strongly recommended)
-; --> header: string array of header sentenses
+; --> format: print IO format (strongly recommended) ; --> header: string array of header sentenses
 ; --> nodata: if this keyword is set, file is created even when
 ;             no data arrays are present or data array has no data(N_ELEMENTS(array) is 0)
 ;
