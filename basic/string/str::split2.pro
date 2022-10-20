@@ -59,7 +59,6 @@ last = 0
 IF ~STRMATCH(spl[-1], dummy) THEN BEGIN
     spl[-1] = STRMID(spl[-1], 0, $
                      STRLEN(spl[-1]) - STRLEN(dummy) )
-    print, spl[-1]
 ENDIF ELSE BEGIN
     spl = spl[0:-2]
     last = 1
@@ -73,6 +72,5 @@ IF ~first THEN $
 IF ~last THEN $
     sep_pos = sep_pos[0:-2]
 
-print, spl
 RETURN, list(spl, seplist, sep_pos)
 END

@@ -38,7 +38,7 @@ COMPILE_OPT IDL2, STATIC
 ;*---------- path to save format file ----------*
 ;
 IF ~KEYWORD_SET(format_file) THEN $
-  save_dir = FILEPATH('naming_format', ROOT=!PACKAGE_PATH)
+  save_dir = FILEPATH( 'naming_format', ROOT=!PACKAGE_PATH)
 ;
 IF KEYWORD_SET(format_file) THEN $
   save_dir = FILE_DIRNAME(format_file)
