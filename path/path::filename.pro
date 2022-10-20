@@ -70,8 +70,6 @@ RESTORE, format_file
 ;
 ;*---------- separator list  ----------*
 ;
-print, format
-print, path_format
 dummy0 = 'dummy0dummy0dummy0dummy0' 
 format = dummy0 + format + dummy0
 path_format = dummy0 + format + dummy0
@@ -256,8 +254,6 @@ FOR i = 0, N_ELEMENTS(path_sep_list) - 1 DO BEGIN
                             sep) 
 ENDFOR
 
-filename = filename_join
-filepath = filepath_join
 
 ;
 ;*---------- add extension  ----------*

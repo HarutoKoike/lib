@@ -2,6 +2,7 @@
 @cluster::file_search.pro
 @cluster::download.pro
 @cluster::input.pro
+@cluster::tplot_names.pro
 
 FUNCTION cluster::init
 COMPILE_OPT IDL2
@@ -54,6 +55,8 @@ FUNCTION cluster::data_rootdir
 COMPILE_OPT IDL2, STATIC
 ;
 root = GETENV('DATA_PATH')
+root = FILEPATH('Cluster', root=root)
+;
 IF STRLEN(root) EQ 0 THEN root = GETENV('SPEDAS_DATA_PATH')
 IF STRLEN(root) EQ 0 THEN CD, CURRENT=root  
 ;
