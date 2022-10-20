@@ -19,10 +19,8 @@ PRO path::format_list
 ;===========================================================+
 COMPILE_OPT IDL2, STATIC
 ;
-name  = FILEPATH('*', SUBDIR='naming_format', ROOT=!PACKAGE_PATH)
-print, name
+name  = FILEPATH('*', SUBDIR='naming_format', ROOT=ptr->get('path_root') )
 list = FILE_SEARCH(name)
-print, list
 
 FOREACH l, list DO BEGIN
   RESTORE, l

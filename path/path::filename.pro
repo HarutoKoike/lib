@@ -51,7 +51,7 @@ IF ~KEYWORD_SET(format_file) THEN BEGIN
     MESSAGE, '"Class" must be set'
   ENDIF
   ;
-  save_dir    = FILEPATH('naming_format', ROOT=!PACKAGE_PATH)
+  save_dir    = FILEPATH('naming_format', ROOT=ptr->get('path_root') )
   format_file = class + '_format.sav'
   format_file = FILEPATH(format_file, ROOT=save_dir)
 ENDIF 
