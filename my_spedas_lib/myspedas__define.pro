@@ -1,4 +1,5 @@
 @myspedas::timespan.pro
+@mytimespan.pro
 
 FUNCTION myspedas::init
 COMPILE_OPT IDL2, STATIC

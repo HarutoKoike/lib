@@ -184,7 +184,7 @@ get_data, tname, dlim=dlim
 str_element, dlim, 'spec', 1, /add
 store_data, tname, dlim=dlim
 ylim, tname, 5, 32.e3, /log
-;zlim, tname, 0, 0, 1
+zlim, tname, 0, 0, 1
 ;
 options, tname, 'ytitle', 'omni flux'
 options, tname, ysubtitle='[eV]'

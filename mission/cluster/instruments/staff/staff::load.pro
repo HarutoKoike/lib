@@ -123,36 +123,30 @@ options, tname, 'ysubtitle', '[(mV/m)!U2!N/Hz]'
 ;*---------- polarization angle  ----------*
 ;
 tname = 'POLSVD__C' + sc + '_CP_STA_PPP'
-get_data, tname, dlim=dlim, data=d
-str_element, dlim, 'spec', 1, /add
-store_data, tname, dlim=dlim
+options, tname, 'spec', 1
 ;
 ylim, tname, 8, 4000., 1
 options, tname, 'ytitle', 'polarization'
 options, tname, 'ysubtitle', ''
-
-
-
 ;
-;*---------- ellipcity  ----------*
 ;
+;
+;;
+;;*---------- ellipcity  ----------*
+;;
 tname = 'ELLSVD__C' + sc + '_CP_STA_PPP'
-get_data, tname, dlim=dlim, data=d
-str_element, dlim, 'spec', 1, /add
-store_data, tname, dlim=dlim
+options, tname, 'spec', 1
 ;
 ylim, tname, 8, 4000., 1
 options, tname, 'ytitle', 'ellipcity'
 options, tname, 'ysubtitle', ''
-
-
+;
+;
 ;
 ;*---------- plopagetion  ----------*
 ;
 tname = 'THSVD_mfa__C' + sc + '_CP_STA_PPP'
-get_data, tname, dlim=dlim, data=d
-str_element, dlim, 'spec', 1, /add
-store_data, tname, dlim=dlim
+options, tname, 'spec', 1
 ;
 ylim, tname, 8, 4000., 1
 options, tname, 'ytitle', 'propagetion'

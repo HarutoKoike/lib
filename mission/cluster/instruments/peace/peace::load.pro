@@ -1,7 +1,6 @@
 PRO peace::load
 ;
 COMPILE_OPT IDL2
-
 ;
 ;*---------- settings ----------*
 ;

@@ -10,8 +10,8 @@ COMPILE_OPT IDL2, STATIC
 IF KEYWORD_SET(open) THEN BEGIN 
     !P.FONT=4
     ;
-    SET_PLOT, 'PS', /INTERPOLATE
-    DEVICE, COLOR=1
+    SET_PLOT, 'PS';, /INTERPOLATE
+    DEVICE, COLOR=1, /ENCAPSULATED, BIT=8
     ;
     IF KEYWORD_SET(filename) THEN BEGIN
         dir = FILE_DIRNAME(filename)
@@ -24,7 +24,7 @@ IF KEYWORD_SET(open) THEN BEGIN
         filename = now->string(format='%Y%m%d_%H%M%S') + '.eps'
     ENDIF
     ;
-	DEVICE, FILENAME=filename, /ENCAPSULATED, _EXTRA=ex
+	DEVICE, FILENAME=filename,  _EXTRA=ex
 ENDIF
 
 

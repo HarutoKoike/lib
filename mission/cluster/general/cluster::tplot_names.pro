@@ -45,12 +45,20 @@ ENDIF
 ;
 IF KEYWORD_SET(wave) OR KEYWORD_SET(all) THEN BEGIN
   tnames = [tnames, $
+            'BB_xx_st2__C3_CP_STA_PSD'    , $
+            'BB_yy_st2__C3_CP_STA_PSD'    , $
+            'BB_zz_st2__C3_CP_STA_PSD'    , $
+            ;'BSUM__C3_CP_STA_PPP'         , $
+            'EE_xx_sr2__C3_CP_STA_PSD'    , $
+            'EE_yy_sr2__C3_CP_STA_PSD'      $
+            ;'ESUM__C3_CP_STA_PPP'         , $
+
            ;'Electric_Spectral_Power_Density__C' + sc + '_CP_WHI_ACTIVE', $
-           'ESUM__C' + sc + '_CP_STA_PPP', $
-           'BSUM__C' + sc + '_CP_STA_PPP', $
-           'POLSVD__C' + sc + '_CP_STA_PPP', $
-           'ELLSVD__C' + sc + '_CP_STA_PPP', $
-           'THSVD_mfa__C' + sc + '_CP_STA_PPP'$
+           ;'ESUM__C' + sc + '_CP_STA_PPP', $
+           ;'BSUM__C' + sc + '_CP_STA_PPP', $
+           ;'POLSVD__C' + sc + '_CP_STA_PPP', $
+           ;'ELLSVD__C' + sc + '_CP_STA_PPP', $
+           ;'THSVD_mfa__C' + sc + '_CP_STA_PPP'$
            ]
 ENDIF
  
