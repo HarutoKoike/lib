@@ -34,7 +34,7 @@ ENDIF
 ;
 OPENR, lun, log, /GET_LUN
 READF, lun, last_login, FORMAT=format 
-CLOSE, lun
+FREE_LUN, lun
 ;
 now = SYSTIME(/JUL)
 PRINT, '% Last login : ' + date->julday2iso(last_login)
@@ -92,7 +92,7 @@ FILE_DELETE, filename, /VERBOSE
 ;                        
 OPENW, lun, log, /GET_LUN
 PRINTF, lun, last_login, FORMAT=format
-CLOSE, lun
+FREE_LUN, lun
  
 
 PRINT, '% login completed'
