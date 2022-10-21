@@ -105,17 +105,17 @@ IF error_status NE 0 THEN BEGIN
     CATCH, /CANCEL
     MESSAGE, !ERROR_STATE.MSG, /CONTINUE
     ;
-    ourl->GetProperty, RESPONSE_CODE=rc, RESPONSE_HEADER=rh, $
-        	      	 RESPONSE_FILENAME=rf
-    ;
-    PRINT, '% Response Code = ' + rc
-    PRINT, '% Response Header = ' + rh
-    PRINT, '% Response Filename = ' + rf
-    PRINT, '% Request stoped'
-    OBJ_DESTROY, ourl
+    ;ourl->GetProperty, RESPONSE_CODE=rc, RESPONSE_HEADER=rh, $
+    ;        	      	 RESPONSE_FILENAME=rf
+    ;;
+    ;PRINT, '% Response Code = ' + rc
+    ;PRINT, '% Response Header = ' + rh
+    ;PRINT, '% Response Filename = ' + rf
+    ;PRINT, '% Request stoped'
+    ;OBJ_DESTROY, ourl
     RETURN
 ENDIF
- 
+; 
 
 
 ;
@@ -133,7 +133,7 @@ ourl->SetProperty, URL_PATH  = url_path
 ourl->SetProperty, URL_QUERY = query
 ourl->SetProperty, HEADERS   = 'User-Agent:<' + user_agent + '>'
 ;
-filename = ourl->GET(filename='buffer.tar.gz')
+filename = ourl->GET( filename=FILEPATH('buffer.tar.gz', root=cluster->data_rootdir() ) )
 ourl->GetProperty, RESPONSE_HEADER=rh
 OBJ_DESTROY, ourl
 
@@ -147,8 +147,6 @@ OBJ_DESTROY, ourl
 ;
 ;*---------- uncompress gzip file  ----------*
 ;
-directory_out = STRJOIN(STRSPLIT(SYSTIME(), /EXTRACT), '-')
-directory_out = 'Cluster-'+directory_out
 FILE_GUNZIP, filename, /DELETE
 ;
 ;
