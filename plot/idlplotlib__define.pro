@@ -1,4 +1,5 @@
 @idlplotlib::psplot.pro
+@idlplotlib::psym.pro
 
 
 FUNCTION idlplotlib::init
