@@ -1,5 +1,6 @@
 @idlplotlib::psplot.pro
 @idlplotlib::psym.pro
+@idlplotlib::field_line2d.pro
 
 
 FUNCTION idlplotlib::init

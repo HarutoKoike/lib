@@ -1,0 +1,105 @@
+function e_field, x, y
+c  = [1, -1]
+xc = [-1, 1]
+yc = [0, 0]
+;
+ex = 0
+ey = 0
+for i = 0, n_elements(c) - 1 do begin
+    dino = sqrt( (x-xc)^2 + (y-yc)^2 )^3 
+    ;
+    ex += -(x - xc) / dino * c[i]
+    ey += -(y - yc) / dino * c[i]
+endfor
+
+end
+
+
+charges      = [-1., 1]
+pos_charge_x = [-50, 50]
+pos_charge_y = [0, 0]
+pos_charge_z = [0, 0]
+
+
+
+xrange = [-10, 10]
+yrange = [-10, 10]
+zrange = [-10, 10]
+;
+nx = 10 
+ny = 10 
+nz = 10 
+;
+x = (findgen(nx) - (nx-1)/2.) / (nx - 1) * 2. * (xrange[1] - xrange[0])
+y = (findgen(ny) - (ny-1)/2.) / (ny - 1) * 2. * (yrange[1] - yrange[0])
+z = (findgen(nz) - (nz-1)/2.) / (nz - 1) * 2. * (zrange[1] - zrange[0])
+
+y = transpose(y)
+;
+zbuff = fltarr(1, 1, nz) 
+zbuff[0, 0, *] = z
+z = zbuff
+
+
+xg = rebin(x, nx, ny, nx)
+yg = rebin(y, nx, ny, ny)
+zg = rebin(z, nx, ny, nz)
+
+
+
+e  = fltarr(3, nx, ny, nz)
+
+for i = 0, n_elements(charges) - 1 do begin
+    xc = pos_charge_x(i)
+    yc = pos_charge_y(i)
+    zc = pos_charge_z(i)
+    c  = charges[i]
+    ;
+    denom = sqrt( (xg - xc)^2 + (yg - yc)^2 + (zg - zc)^2 )^3
+    ;
+    e[0, *, *, *] += -c*(xg - xc) / denom 
+    e[1, *, *, *] += -c*(yg - yc) / denom 
+    e[2, *, *, *] += -c*(zg - zc) / denom 
+endfor
+
+
+
+
+e  = e*1.e4
+ex = reform(e[0, *, *, 5])
+ey = reform(e[1, *, *, 5])
+e  = reform(e[[0, 1], *, *, 5])
+help, e
+;
+velovect, ex, ey, x, y 
+
+particle_trace, e, [4, 3], vertices, conn, max_iterations=100, $
+                max_stepsize=0.1, integ=1
+
+
+
+i = 0
+sz = SIZE(vertices, /STRUCTURE)
+print, sz.dimensions[1]
+WHILE (i LT sz.dimensions[1]) DO BEGIN
+   nverts = conn[i]
+
+; OLD METHOD: Uses 'x' and 'y' as lookup tables, losing the fractional
+;                part of the result, ending up only using data grid points.
+PLOTS, xg[vertices[0, conn[i+1:i+nverts]]], $
+   yg[vertices[1, conn[i+1:i+nverts]]], $
+   COLOR=50, THICK=1
+
+; NEW METHOD: Find 'index' locations of desired points, then scale them
+;                correctly to exact degrees. Plotting both to show improvement.
+;;xIndices = vertices[0, conn[i+1:i+nverts]]
+;;yIndices = vertices[1, conn[i+1:i+nverts]]
+;;xDeg = (xIndices / 128) * 360 - 180
+;;yDeg = (yIndices /  64) * 180 -  90
+;;
+;;PLOTS, xDeg, yDeg, COLOR='0000FF'x, THICK=2
+i += nverts + 1
+ENDWHILE
+
+
+end

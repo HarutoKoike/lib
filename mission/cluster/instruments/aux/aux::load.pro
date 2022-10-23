@@ -106,6 +106,3 @@ tplot_options, 'var_label', ['pos_z_gsm_c' + sc0 , 'pos_y_gsm_c' + sc0, $
                              'pos_x_gsm_c'+sc]
 
 END
-
-
-

@@ -1,4 +1,5 @@
 @math::in_range.pro
+@math::fote.pro
 
 FUNCTION math::init
 COMPILE_OPT IDL2
