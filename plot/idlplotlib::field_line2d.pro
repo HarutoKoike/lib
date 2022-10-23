@@ -76,10 +76,6 @@ COMPILE_OPT IDL2, STATIC
 ;
 idlplotlib->psym, size=1
 ;
-nx = 101
-ny = 101
-nz = 101
-;
 nx = 11
 ny = 11
 nz = 11
@@ -216,12 +212,14 @@ vmag_max = MAX(vmag, /NAN)
 
 
 
-CONTOUR, vmag, grid1, grid2, /fill, nlevels=100 , xrange=range1, $
-         yrange=range2, xsty=1, ysty=1, _EXTRA=ex
+zrange = [min(alog10(vmag)), max(alog10(vmag))]  
+zrange = [min(vmag), max(vmag)]  
+CONTOUR, vmag, grid1, grid2, /fill, xrange=range1, $
+         yrange=range2, xsty=1, ysty=1, _EXTRA=ex, zrange=zrange, zsty=1
 ;plot, range1, range2, xsty=1, ysty=1, /nodata, _EXTRA=ex
 ;velovect, v1, v2, grid1, grid2, xsty=4, ysty=4, /noerase
 
-mycolorbar, 0, 100
+mycolorbar, zrange[0], zrange[1], /log
 
 
 

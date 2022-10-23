@@ -53,13 +53,15 @@ m = math->fote(x1, x2, x3, x4, b1, b2, b3, b4, xref=xref, /save)
 !p.position = [0.07, 0.07, 0.92, 0.92]
 idlplotlib->field_line2d, xrange=[1.65, 1.85], zrange=[-9.7, -9.5], /xz, $
                           cut=center[1], xtitle='X(Re)', ytitle='Z(Re)', $
-                          title='Magnetic Field Line (' + t_cut + ')' 
+                          title='Magnetic Field Line (' + t_cut + ')',   $
+                          nlevels=150
+
 
 
 s = 6.
 x = [0, 0.5, 1, 0]
 y = [0, 1, 0, 0]
-print, x1, x4
+
 usersym, x*s, y*s, /fill 
 
 oplot, [x1[0], x1[0]], [x1[2], x1[2]], color=255, psym=8 
