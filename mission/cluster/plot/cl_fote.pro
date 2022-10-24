@@ -4,14 +4,37 @@ PRO cl_fote, t_cut
 END
 
 
-myspedas->timespan, 2004, 3, 10, 12, dhr=1
+;myspedas->timespan, 2004, 3, 10, 12, dhr=1
+myspedas->timespan, 2003, 10, 9, 14, dhr=1
 
 cl_load, 1, /fgm
 cl_load, 2, /fgm
 cl_load, 3, /fgm
 cl_load, 4, /fgm
 
-t_cut = '2004-03-10/12:30:00'
+;trange = ['2004-03-10/12:28:00', '2004-03-10/12:31:00']
+;trange = ['2003-10-09/02:24:20', '2003-10-09/02:25:00']
+
+;myspedas->tmva,'B_xyz_gsm__C1_PP_FGM', 'B_xyz_gsm__C3_PP_FGM', trange
+;myspedas->tmva,'B_xyz_gsm__C2_PP_FGM', 'B_xyz_gsm__C3_PP_FGM', trange
+;myspedas->tmva,'B_xyz_gsm__C3_PP_FGM', 'B_xyz_gsm__C3_PP_FGM', trange
+;myspedas->tmva,'B_xyz_gsm__C4_PP_FGM', 'B_xyz_gsm__C3_PP_FGM', trange
+;
+
+;t_cut = '2004-03-10/12:30:30'
+t_cut = '2003-10-09/02:25:04'
+;
+
+;get_data, 'B_xyz_gsm__C1_PP_FGM_LMN', data=b1 
+;get_data, 'B_xyz_gsm__C2_PP_FGM_LMN', data=b2 
+;get_data, 'B_xyz_gsm__C3_PP_FGM_LMN', data=b3 
+;get_data, 'B_xyz_gsm__C4_PP_FGM_LMN', data=b4 
+;;
+;idx1 = nn('B_xyz_gsm__C1_PP_FGM_LMN', t_cut)
+;idx2 = nn('B_xyz_gsm__C2_PP_FGM_LMN', t_cut)
+;idx3 = nn('B_xyz_gsm__C3_PP_FGM_LMN', t_cut)
+;idx4 = nn('B_xyz_gsm__C4_PP_FGM_LMN', t_cut)
+;
 
 get_data, 'B_xyz_gsm__C1_PP_FGM', data=b1 
 get_data, 'B_xyz_gsm__C2_PP_FGM', data=b2 
@@ -22,7 +45,8 @@ idx1 = nn('B_xyz_gsm__C1_PP_FGM', t_cut)
 idx2 = nn('B_xyz_gsm__C2_PP_FGM', t_cut)
 idx3 = nn('B_xyz_gsm__C3_PP_FGM', t_cut)
 idx4 = nn('B_xyz_gsm__C4_PP_FGM', t_cut)
-;
+
+
 b1 = reform(b1.Y[idx1, *])
 b2 = reform(b2.Y[idx1, *])
 b3 = reform(b3.Y[idx1, *])
@@ -31,30 +55,67 @@ b4 = reform(b4.Y[idx1, *])
 
 
 
-get_data, 'pos_gsm_c1', data=x1
-get_data, 'pos_gsm_c2', data=x2
-get_data, 'pos_gsm_c3', data=x3
-get_data, 'pos_gsm_c4', data=x4
 ;
-idx1 = nn('pos_gsm_c1', t_cut)
-idx2 = nn('pos_gsm_c2', t_cut)
-idx3 = nn('pos_gsm_c3', t_cut)
-idx4 = nn('pos_gsm_c4', t_cut)
+;*----------   ----------*
 ;
+;myspedas->tmva, 'pos_gsm_c1', 'B_xyz_gsm__C3_PP_FGM_LMN', trange, /coord
+;myspedas->tmva, 'pos_gsm_c2', 'B_xyz_gsm__C3_PP_FGM_LMN', trange, /coord
+;myspedas->tmva, 'pos_gsm_c3', 'B_xyz_gsm__C3_PP_FGM_LMN', trange, /coord
+;myspedas->tmva, 'pos_gsm_c4', 'B_xyz_gsm__C3_PP_FGM_LMN', trange, /coord
+
+;get_data, 'pos_gsm_c1_LMN', data=x1
+;get_data, 'pos_gsm_c2_LMN', data=x2
+;get_data, 'pos_gsm_c3_LMN', data=x3
+;get_data, 'pos_gsm_c4_LMN', data=x4
+;;
+;idx1 = nn('pos_gsm_c1_LMN', t_cut)
+;idx2 = nn('pos_gsm_c2_LMN', t_cut)
+;idx3 = nn('pos_gsm_c3_LMN', t_cut)
+;idx4 = nn('pos_gsm_c4_LMN', t_cut)
+
+get_data, 'pos_gsm_c1', data=x1 
+get_data, 'pos_gsm_c2', data=x2 
+get_data, 'pos_gsm_c3', data=x3 
+get_data, 'pos_gsm_c4', data=x4 
+;                               
+idx1 = nn('pos_gsm_c1', t_cut)  
+idx2 = nn('pos_gsm_c2', t_cut)  
+idx3 = nn('pos_gsm_c3', t_cut)  
+idx4 = nn('pos_gsm_c4', t_cut)  
+
 x1 = reform(x1.Y[idx1, *])
 x2 = reform(x2.Y[idx2, *])
 x3 = reform(x3.Y[idx3, *])
 x4 = reform(x4.Y[idx4, *])
 
 center = (x1 + x2 + x3 +x4) / 4.
+x1 -= center 
+x2 -= center
+x3 -= center
+x4 -= center
+ 
 
-m = math->fote(x1, x2, x3, x4, b1, b2, b3, b4, xref=xref, /save)
+
+
+
+
+;
+;*----------   ----------*
+;
+
+;
+
+
+m = math->fote(x1, x2, x3, x4, b1, b2, b3, b4, /save)
                                                  
-!p.position = [0.07, 0.07, 0.92, 0.92]
-idlplotlib->field_line2d, xrange=[1.65, 1.85], zrange=[-9.7, -9.5], /xz, $
-                          cut=center[1], xtitle='X(Re)', ytitle='Z(Re)', $
+!p.position = [0.07, 0.07, 0.92, 0.95]
+xrange = [-0.05, 0.05]*100.
+zrange = [-0.05, 0.05]*100.
+yrange = zrange
+idlplotlib->field_line2d, xrange=xrange, zrange=zrange, /xz, $
+                          cut=center[1], xtitle='L(Re)', ytitle='M(Re)', $
                           title='Magnetic Field Line (' + t_cut + ')',   $
-                          nlevels=150
+                          nlevels=100
 
 
 

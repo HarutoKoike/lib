@@ -1,4 +1,3 @@
-
 FUNCTION mvab, bx, by, bz, bl, bm, bn
 ;
 m_bb = FLTARR(3, 3)
@@ -111,7 +110,7 @@ END
 
 ;===========================================================+
 ; ++ NAME ++
-PRO tmva, tname, tname_mag=tname_mag, trange, newname=newname, coord=coord
+PRO myspedas::tmva, tname, tname_mag, trange, newname=newname, coord=coord
 ;
 ; ++ PURPOSE ++
 ;  -->
@@ -128,12 +127,13 @@ PRO tmva, tname, tname_mag=tname_mag, trange, newname=newname, coord=coord
 ; ++ HISTORY ++
 ;  H.Koike 1/9,2021
 ;===========================================================+
-tn  = tnames()
+COMPILE_OPT IDL2, STATIC
 ;
-IF ~KEYWORD_SET(tname_mag) THEN BEGIN
-   PRINT, '% tplot name for magnetic field data should be set to "tname_mag"'
-   RETURN
-ENDIF
+tn  = tnames()
+idx = WHERE(STRMATCH(tn, tname_mag), count)
+;
+IF count EQ 0 THEN $
+    PRINT, '% tplot name for magnetic field data should be set to "tname_mag"'
 ;
 tmvab_eigenvec, tname_mag, trange, kl, km, kn
 
@@ -143,13 +143,7 @@ tmvab_eigenvec, tname_mag, trange, kl, km, kn
 IF ~KEYWORD_SET(newname) THEN newname = tname + '_LMN'
 ;
 FOR i = 0, N_ELEMENTS(tname) - 1 DO $
-  trotate, kl, km, kn, tname[i], newname[i], coord=coord
+  myspedas->trotate, kl, km, kn, tname[i], newname[i], coord=coord
 
 
 END
-
-
-
-
-
-

@@ -1,6 +1,6 @@
 ;===========================================================+
 ; ++ NAME ++
-PRO trotate, ex, ey, ez, tname, tname_new, coord=coord
+PRO myspedas::trotate, ex, ey, ez, tname, tname_new, coord=coord
 ;
 ; ++ PURPOSE ++
 ;  -->
@@ -17,6 +17,8 @@ PRO trotate, ex, ey, ez, tname, tname_new, coord=coord
 ; ++ HISTORY ++
 ;  H.Koike 1/9,2021
 ;===========================================================+
+COMPILE_OPT IDL2, STATIC
+;
 get_data, tname, data=vec
 ;
 IF ~KEYWORD_SET(coord) THEN BEGIN
@@ -28,9 +30,8 @@ ENDIF
 
 IF KEYWORD_SET(coord) THEN BEGIN
   mat = [[ex], [ey], [ez]]
-  vec_new = {x:vec.x, y:INVERT(mag) ## vec.Y}
+  vec_new = {x:vec.x, y:INVERT(mat) ## vec.Y}
 ENDIF
 ;
 store_data, tname_new, data=vec_new
 END
- 

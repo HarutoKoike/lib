@@ -1,6 +1,7 @@
 @idlplotlib::psplot.pro
 @idlplotlib::psym.pro
 @idlplotlib::field_line2d.pro
+@idlplotlib::field_line3d.pro
 
 
 FUNCTION idlplotlib::init

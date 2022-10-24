@@ -1,4 +1,6 @@
 @myspedas::timespan.pro
+@myspedas::trotate.pro
+@myspedas::tmva.pro
 @mytimespan.pro
 
 FUNCTION myspedas::init

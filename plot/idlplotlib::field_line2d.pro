@@ -76,9 +76,9 @@ COMPILE_OPT IDL2, STATIC
 ;
 idlplotlib->psym, size=1
 ;
-nx = 11
-ny = 11
-nz = 11
+nx = 101
+ny = 101
+nz = 101
 ;
 coeffs = ptr->get('fote_coeffs')
 x0 = coeffs[12]
@@ -86,7 +86,7 @@ y0 = coeffs[13]
 z0 = coeffs[14]
 ;
 ; integration
-IF ~KEYWORD_SET(max_loop) THEN max_loop = 1000L
+IF ~KEYWORD_SET(max_loop) THEN max_loop = 10000L
 ;
 IF ~KEYWORD_SET(xrange) THEN $
     xrange = [x0 - x0/10., x0 + x0/10.]
@@ -214,12 +214,12 @@ vmag_max = MAX(vmag, /NAN)
 
 zrange = [min(alog10(vmag)), max(alog10(vmag))]  
 zrange = [min(vmag), max(vmag)]  
-CONTOUR, vmag, grid1, grid2, /fill, xrange=range1, $
-         yrange=range2, xsty=1, ysty=1, _EXTRA=ex, zrange=zrange, zsty=1
+CONTOUR, alog10(vmag), grid1, grid2, /fill, xrange=range1, $
+         yrange=range2, xsty=1, ysty=1, _EXTRA=ex
 ;plot, range1, range2, xsty=1, ysty=1, /nodata, _EXTRA=ex
 ;velovect, v1, v2, grid1, grid2, xsty=4, ysty=4, /noerase
 
-mycolorbar, zrange[0], zrange[1], /log
+;mycolorbar, zrange[0], zrange[1], /log
 
 
 
