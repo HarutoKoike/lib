@@ -36,7 +36,8 @@ end
 ;===========================================================+
 ; ++ NAME ++
 PRO idlplotlib::field_line3d, funcname, xrange, yrange, $
-                              zrange, seed=seed
+                              zrange, seed=seed, nseed=nseed, $
+                              max_mag=max_mag, _EXTRA=ex
 ;
 ; ++ PURPOSE ++
 ;  --> plot field line in 3-D using 4th Runge-Kutta 
@@ -72,12 +73,11 @@ COMPILE_OPT IDL2, STATIC
 ;PLOT_3DBOX, xrange, yrange, zrange, /NODATA
 ; Create some data.
  
-;p = PLOT3D(xrange, yrange, zrange, 'o', /SYM_FILLED, $
-;           XRANGE=[-6, 6], YRANGE=[-6, 6], $
-;           ZRANGE=[-1.4, 1.4],$
-;           AXIS_STYLE=2, MARGIN=[0.2, 0.3, 0.1, 0], $
-;           DEPTH_CUE=[0, 2], /PERSPECTIVE, $
-;           XTITLE='x', YTITLE='y', /nodata)
+rgb_table = 33
+;
+p = PLOT3D(xrange, yrange, zrange, /NODATA, $
+           AXIS_STYLE=1, $
+           _EXTRA=ex, RGB_TABLE=rgb_table)
 
 
 
@@ -86,7 +86,7 @@ COMPILE_OPT IDL2, STATIC
 ;
 ;*---------- setting for tracing  ----------*
 ;
-max_loop = 10000L
+max_loop = 1000L
 h        = 1.5*SQRT( (xrange[1] - xrange[0])^2 +$
                      (yrange[1] - yrange[0])^2 +$
                      (zrange[1] - zrange[0])^2 ) / $
@@ -96,7 +96,9 @@ h        = 1.5*SQRT( (xrange[1] - xrange[0])^2 +$
 ;
 
 IF ~KEYWORD_SET(seed) THEN BEGIN
-    ns   = 10
+    IF ~KEYWORD_SET(nseed) THEN ns = 10
+    IF  KEYWORD_SET(nseed) THEN ns = nseed
+    ;
     seed = FINDGEN(3, ns)
     ;
     ;seed[0, *] = (FINDGEN(ns) / (ns - 1) - 0.5) * (xrange[1] - xrange[0]) + MEAN(xrange)
@@ -113,7 +115,7 @@ seed_size = SIZE(seed, /DIMENSION)
 nseed     = seed_size[1]
 
 
-
+max_mag = 30.
 
 ;
 ;*---------- Runge-Kutta ----------*
@@ -155,7 +157,7 @@ FOR i = 0, nseed - 1 DO BEGIN
            ~math->in_range(p[2]+dp[2], zrange) THEN BREAK
         ;
         p    = p + dp
-        mag  = [mag, CALL_FUNCTION(funcname, p)] 
+        mag  = [mag, NORM(CALL_FUNCTION(funcname, p))] 
         ;
         ;
         posx = [posx, p[0]]
@@ -167,7 +169,8 @@ FOR i = 0, nseed - 1 DO BEGIN
     ;
     IF count LE 1 THEN CONTINUE
     ;
-    p = PLOT3D(posx, posy, posz, vert_color=bytscl(mag), rgb_table=33, /OVERPLOT, 'o', /sym_filled)
+    vert_color = mag/max_mag*255. < 255.
+    p = PLOT3D(posx, posy, posz, vert_color=vert_color, rgb_table=rgb_table, /OVERPLOT, _EXTRA=ex);, 'o', /sym_filled)
 ENDFOR
 ;
 ; backward
@@ -207,7 +210,7 @@ FOR i = 0, nseed - 1 DO BEGIN
            ~math->in_range(p[2]+dp[2], zrange) THEN BREAK
         ;
         p    = p + dp
-        mag  = [mag, CALL_FUNCTION(funcname, p)] 
+        mag  = [mag, NORM(CALL_FUNCTION(funcname, p))] 
         ;
         ;
         posx = [posx, p[0]]
@@ -219,10 +222,13 @@ FOR i = 0, nseed - 1 DO BEGIN
     ;
     IF count LE 1 THEN CONTINUE
     ;
-    p = PLOT3D(posx, posy, posz, vert_color=bytscl(mag), rgb_table=33, /OVERPLOT, 'o', /sym_filled)
+    vert_color = mag/max_mag*255. < 255.
+    p = PLOT3D(posx, posy, posz, vert_color=vert_color, RGB_TABLE=rgb_table, /OVERPLOT, _EXTRA=ex);, 'o', /sym_filled)
 ENDFOR   
 
-
+cb = COLORBAR(ORIENTATION=1, $
+              POSITION=[0.90,0.1,0.93,0.75], $
+              RANGE=[0, max_mag], title='|B| (nT)', RGB_TABLE=rgb_table)
 
 END
 

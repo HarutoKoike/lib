@@ -1,3 +1,13 @@
+FUNCTION fote_polynominal, r
+coeff = ptr->get('fote_coeffs')
+;
+vx = coeff[0] + total(coeff[1:3]*r)
+vy = coeff[4] + total(coeff[5:7]*r)
+vz = coeff[8] + total(coeff[9:11]*r)
+;
+RETURN, [vx, vy, vz]
+END
+
 ;===========================================================+
 ; ++ NAME ++
 FUNCTION math::fote, x1, x2, x3, x4, b1, b2, b3, b4, xref=xref, save=save
@@ -20,7 +30,7 @@ FUNCTION math::fote, x1, x2, x3, x4, b1, b2, b3, b4, xref=xref, save=save
 COMPILE_OPT IDL2, STATIC
 ;
 IF ~KEYWORD_SET(xref) THEN $
-    xref = (x1 + x2 + x3 + x4) / 4.
+    xref = [0, 0, 0]
 ;
 dx1 = [1, x1 - xref]
 dx2 = [1, x2 - xref]
@@ -53,3 +63,6 @@ IF KEYWORD_SET(save) THEN ptr->store, 'fote_coeffs', [m, xref], /over
 
 RETURN, [m, xref]
 END
+
+
+

@@ -4,8 +4,8 @@ PRO cl_fote, t_cut
 END
 
 
-;myspedas->timespan, 2004, 3, 10, 12, dhr=1
-myspedas->timespan, 2003, 10, 9, 14, dhr=1
+myspedas->timespan, 2004, 3, 10, 12, dhr=1
+;myspedas->timespan, 2003, 10, 9, 2, dhr=1
 
 cl_load, 1, /fgm
 cl_load, 2, /fgm
@@ -21,9 +21,8 @@ cl_load, 4, /fgm
 ;myspedas->tmva,'B_xyz_gsm__C4_PP_FGM', 'B_xyz_gsm__C3_PP_FGM', trange
 ;
 
-;t_cut = '2004-03-10/12:30:30'
-t_cut = '2003-10-09/02:25:04'
-;
+t_cut = '2004-03-10/12:30:30'
+;t_cut = '2003-10-09/02:25:04'
 
 ;get_data, 'B_xyz_gsm__C1_PP_FGM_LMN', data=b1 
 ;get_data, 'B_xyz_gsm__C2_PP_FGM_LMN', data=b2 
@@ -89,10 +88,10 @@ x3 = reform(x3.Y[idx3, *])
 x4 = reform(x4.Y[idx4, *])
 
 center = (x1 + x2 + x3 +x4) / 4.
-x1 -= center 
-x2 -= center
-x3 -= center
-x4 -= center
+;x1 -= center 
+;x2 -= center
+;x3 -= center
+;x4 -= center
  
 
 
@@ -109,25 +108,45 @@ x4 -= center
 m = math->fote(x1, x2, x3, x4, b1, b2, b3, b4, /save)
                                                  
 !p.position = [0.07, 0.07, 0.92, 0.95]
-xrange = [-0.05, 0.05]*100.
-zrange = [-0.05, 0.05]*100.
-yrange = zrange
-idlplotlib->field_line2d, xrange=xrange, zrange=zrange, /xz, $
-                          cut=center[1], xtitle='L(Re)', ytitle='M(Re)', $
-                          title='Magnetic Field Line (' + t_cut + ')',   $
-                          nlevels=100
+xrange = [-0.1, 0.1]*3 + center[0]
+yrange = [-0.1, 0.1]*3 + center[1]
+zrange = [-0.1, 0.1]*3 + center[2]
+;idlplotlib->field_line2d, xrange=xrange, zrange=zrange, /xz, $
+;                          cut=center[1], xtitle='L(Re)', ytitle='M(Re)', $
+;                          title='Magnetic Field Line (' + t_cut + ')',   $
+;                          nlevels=100
 
+title = 'Magnetic Field Line Topology (' + t_cut + ')'
+idlplotlib->field_line3d, 'fote_polynominal', xrange, yrange, zrange, nseed=50, $
+                          xtitle='X!DGSE!N(R!DE!N)', ytitle='Y!DGSE!N(R!DE!N)', $
+                          ztitle='Z!DGSE!N(R!DE!N)', title=title
 
+p1 = scatterplot3d([x1[0], x1[0]], [x1[1], x1[1]], [x1[2], x1[2]], /over, /sym_filled, $
+                   sym_object=orb(), sym_color='black', name='C1')
+p2 = scatterplot3d([x2[0], x2[0]], [x2[1], x2[1]], [x2[2], x2[2]], /over, /sym_filled, $
+                   sym_object=orb(), sym_color='blue', name='C2')
+p3 = scatterplot3d([x3[0], x3[0]], [x3[1], x3[1]], [x3[2], x3[2]], /over, /sym_filled, $
+                   sym_object=orb(), sym_color='red', name='C3')
+p4 = scatterplot3d([x4[0], x4[0]], [x4[1], x4[1]], [x4[2], x4[2]], /over, /sym_filled, $
+                   sym_object=orb(), sym_color='green', name='C4')
 
-s = 6.
-x = [0, 0.5, 1, 0]
-y = [0, 1, 0, 0]
+pl1 = plot3d([x1[0], x2[0]], [x1[1], x2[1]], [x1[2], x2[2]], /over)
+pl2 = plot3d([x2[0], x3[0]], [x2[1], x3[1]], [x2[2], x3[2]], /over)
+pl3 = plot3d([x3[0], x4[0]], [x3[1], x4[1]], [x3[2], x4[2]], /over)
+pl4 = plot3d([x4[0], x1[0]], [x4[1], x1[1]], [x4[2], x1[2]], /over)
+pl5 = plot3d([x2[0], x4[0]], [x2[1], x4[1]], [x2[2], x4[2]], /over)
+pl6 = plot3d([x3[0], x1[0]], [x3[1], x1[1]], [x3[2], x1[2]], /over)
 
-usersym, x*s, y*s, /fill 
-
-oplot, [x1[0], x1[0]], [x1[2], x1[2]], color=255, psym=8 
-oplot, [x2[0], x2[0]], [x2[2], x2[2]], color=50, psym=8 
-oplot, [x3[0], x3[0]], [x3[2], x3[2]], color=150, psym=8 
-oplot, [x4[0], x4[0]], [x4[2], x4[2]], color=230, psym=8 
+leg = legend(target=[p1, p2, p3, p4]) 
+;s = 6.
+;x = [0, 0.5, 1, 0]
+;y = [0, 1, 0, 0]
+;
+;usersym, x*s, y*s, /fill 
+;
+;oplot, [x1[0], x1[0]], [x1[2], x1[2]], color=255, psym=8 
+;oplot, [x2[0], x2[0]], [x2[2], x2[2]], color=50, psym=8 
+;oplot, [x3[0], x3[0]], [x3[2], x3[2]], color=150, psym=8 
+;oplot, [x4[0], x4[0]], [x4[2], x4[2]], color=230, psym=8 
 
 end          
