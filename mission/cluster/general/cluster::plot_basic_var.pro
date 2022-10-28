@@ -20,11 +20,10 @@ PRO cluster::plot_basic_var, sc, filename=filename
 COMPILE_OPT IDL2, STATIC
 ;
 ;
-tnames1 = cluster->tplot_names(sc, /ion, /electron, /mag)
+tnames1 = cluster->tplot_names(sc, /ion, /electron, /mag, /walen)
 tnames2 = cluster->tplot_names(sc, /wave)
 ;
 ;
-
 
 IF KEYWORD_SET(filename) THEN BEGIN
     dir = FILE_DIRNAME(filename)
@@ -33,37 +32,21 @@ IF KEYWORD_SET(filename) THEN BEGIN
     filename2 = str->replace(filename, '.eps', '_2.eps')
 endif
 
-;;
-;; open ps
-;IF KEYWORD_SET(filename) THEN $
-;    idlplotlib->psplot, /open, filename=filename1, xsize=20, ysize=20
-;
-;tplot, tnames1
-;
-;; close ps
-;IF KEYWORD_SET(filename) THEN $
-;    idlplotlib->psplot, /close
-;
-;
-;
-;; open ps
-;IF KEYWORD_SET(filename) THEN $
-;    idlplotlib->psplot, /open, filename=filename2, xsize=20, ysize=20
-;
-;tplot, tnames2
-;
-;; close ps
-;IF KEYWORD_SET(filename) THEN $
-;    idlplotlib->psplot, /close
-;
- 
+
+
 
 IF KEYWORD_SET(filename) THEN BEGIN
     idlplotlib->psplot, /open, filename=filename, xsize=40, ysize=40
-    tplot, [tnames1, tnames2]
-    tplot_apply_databar
 ENDIF
     
+print, tnames1, tnames2
+tplot, [tnames1, tnames2]
+;
+FOREACH tn, tnames2 DO $
+    tplot_panel, var=tn, oplotvar='Electron_cyclotoron_frequency__C'+sc
+
+tplot_apply_databar
+
 IF KEYWORD_SET(filename) THEN $
     idlplotlib->psplot, /close
 

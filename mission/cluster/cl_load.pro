@@ -1,6 +1,6 @@
 PRO cl_load, sc, yr, mon, dy, hr, min, sec, _EXTRA=e, $
              cis=cis, fgm=fgm, aux=aux, peace=peace, $
-             edi=edi, efw=efw, staff=staff
+             edi=edi, efw=efw, staff=staff, walen_test=walen_test
 
 IF ISA(yr) AND ISA(mon) AND ISA(dy) THEN BEGIN
     myspedas->timespan, yr, mon, dy, hr, min, sec, _EXTRA=e
@@ -47,5 +47,9 @@ IF KEYWORD_SET(staff) THEN BEGIN
     staff->setprop, sc=sc
     staff->load
 ENDIF  
+
+IF KEYWORD_SET(walen_test) THEN BEGIN
+    cluster->walen_test, sc
+ENDIF
 
 END

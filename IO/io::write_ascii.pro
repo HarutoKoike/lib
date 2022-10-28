@@ -114,7 +114,6 @@ vartype = STRING(nvar, FORMAT='(I02)')
 ;
 FOR i = 0, nvar-1 DO $
   vartype += STRING( SIZE( *(vars[i]), /TYPE ), FORMAT='(I02)')
-PTR_FREE, vars
 ;
 header_lines = N_ELEMENTS(header) + 3   ; vartype, format, separator
 vartype = STRING(header_lines, FORMAT='(I05)') + vartype
@@ -150,4 +149,7 @@ ENDFOR
 FREE_LUN, lun
 
 
+
+
+IF ISA(vars) THEN PTR_FREE, vars
 END

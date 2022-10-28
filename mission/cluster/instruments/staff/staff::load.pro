@@ -36,6 +36,11 @@ foreach fn, files do $
 ;
 tname = 'BB_xxyyzz_sr2__C' + sc + '_CP_STA_PSD'
 get_data, tname, data=d, dlim=dlim
+;
+IF SIZE(d, /TYPE) EQ 2 THEN BEGIN
+    GOTO, SKIP1
+ENDIF
+;
 del_data, tname
 ;
 str_element, dlim, 'SPEC', 1, /add
@@ -48,6 +53,8 @@ ylim, tname, d.v[0], d.v[-1]
 ;
 options, tname, 'ytitle', 'Bx'
 options, tname, 'ysubtitle', '[nT!U2!N/Hz]' 
+;
+;
 ; Y
 tname = 'BB_yy_st2__C' + sc + '_CP_STA_PSD'
 store_data, tname, data={x:d.x, y:REFORM(d.y[*, 1, *]), v:d.v}, dlim=dlim
@@ -56,6 +63,7 @@ ylim, tname, d.v[0], d.v[-1]
 options, tname, 'ytitle', 'By'
 options, tname, 'ysubtitle', '[nT!U2!N/Hz]' 
 ;
+;
 ; Z 
 tname = 'BB_zz_st2__C' + sc + '_CP_STA_PSD'
 store_data, tname, data={x:d.x, y:REFORM(d.y[*, 2, *]), v:d.v}, dlim=dlim
@@ -63,6 +71,7 @@ zlim, tname, 0, 0, 1
 ylim, tname, d.v[0], d.v[-1]
 options, tname, 'ytitle', 'Bz'
 options, tname, 'ysubtitle', '[nT!U2!N/Hz]' 
+;
 ;
 ; total
 tname = 'BSUM__C' + sc + '_CP_STA_PPP'
@@ -82,8 +91,14 @@ options, tname, 'ysubtitle', '[nT!U2!N/Hz]'
 ;
 ;*---------- electric field  ----------*
 ;
+SKIP1:
+;
 tname = 'EE_xxyy_sr2__C' + sc + '_CP_STA_PSD'
 get_data, tname, data=d, dlim=dlim
+;
+IF SIZE(d, /TYPE) EQ 2 THEN RETURN
+;
+;
 del_data, tname
 ;
 str_element, dlim, 'SPEC', 1, /add
@@ -97,6 +112,7 @@ ylim, tname, d.v[0], d.v[-1]
 options, tname, 'ytitle', 'Ex'
 options, tname, 'ysubtitle', '[(mV/m)!U2!N/Hz]' 
 ;
+;
 ; Y
 tname = 'EE_yy_sr2__C' + sc + '_CP_STA_PSD'
 store_data, tname, data={x:d.x, y:REFORM(d.y[*, 1, *]), v:d.v}, dlim=dlim
@@ -104,6 +120,7 @@ zlim, tname, 0, 0, 1
 ylim, tname, d.v[0], d.v[-1]
 options, tname, 'ytitle', 'Ey'
 options, tname, 'ysubtitle', '[(mV/m)!U2!N/Hz]' 
+;
 ;
 ; total
 tname = 'ESUM__C' + sc + '_CP_STA_PPP'

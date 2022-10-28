@@ -4,6 +4,7 @@
 @cluster::input.pro
 @cluster::tplot_names.pro
 @cluster::plot_basic_var.pro
+@cluster::walen_test.pro
 
 FUNCTION cluster::init
 COMPILE_OPT IDL2

@@ -26,8 +26,7 @@ COMPILE_OPT IDL2, STATIC
 ;*---------- check file  ----------*
 ;
 IF ~FILE_TEST(filename) THEN BEGIN
-  PRINT, '% No file found: ' + filename
-  RETURN
+  MESSAGE, '% No file found: ' + filename
 ENDIF
 
 
@@ -44,6 +43,9 @@ READF, lun, format
 FREE_LUN, lun
 ;
 line = LONG( STRSPLIT(line, '0', /EXTRACT) )
+;
+IF N_ELEMENTS(line) EQ 1 THEN RETURN
+;
 header_line = line[0]
 nvar        = line[1]
 vartypes    = line[2:-1]

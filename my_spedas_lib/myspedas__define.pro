@@ -1,7 +1,8 @@
 @myspedas::timespan.pro
+@mytimespan.pro
 @myspedas::trotate.pro
 @myspedas::tmva.pro
-@mytimespan.pro
+@myspedas::twalen_test.pro
 
 FUNCTION myspedas::init
 COMPILE_OPT IDL2, STATIC

@@ -1,5 +1,5 @@
 FUNCTION cluster::tplot_names, ion=ion, electron=electron, mag=mag, wave=wave, $
-                               all=all, sc
+                               walen_test=walen_test, all=all, sc
 
 COMPILE_OPT IDL2, STATIC
 ;
@@ -36,7 +36,7 @@ ENDIF
 ;*---------- mag  ----------*
 ;
 IF KEYWORD_SET(mag) OR KEYWORD_SET(all) THEN BEGIN
-  tnames = [tnames, 'B_xyz_gsm__C3_PP_FGM']
+  tnames = [tnames, 'B_gsm__C'+sc]
 ENDIF
 
 
@@ -61,6 +61,14 @@ IF KEYWORD_SET(wave) OR KEYWORD_SET(all) THEN BEGIN
            ;'THSVD_mfa__C' + sc + '_CP_STA_PPP'$
            ]
 ENDIF
+
+
+ 
+;
+;*----------   ----------*
+;
+IF KEYWORD_SET(walen_test) THEN $
+    tnames = [tnames, 'Walen_test__C' + sc]
  
 RETURN, tnames
 END

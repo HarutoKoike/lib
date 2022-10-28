@@ -88,6 +88,8 @@ options, tname, 'databar', {yval:0, linestyle:2}
 ;
 ;
 get_data, tname, data=v
+IF SIZE(v, /TYPE) EQ 2 THEN RETURN
+;
 tname = 'V_HIA_mag__C' + sc + '_PP_CIS'
 vx = v.Y[*, 0]
 vy = v.Y[*, 1]
@@ -101,6 +103,8 @@ IF count EQ 0 THEN BEGIN
 ENDIF
 ;
 get_data, 'B_xyz_gse__C'+sc+'_PP_FGM', data=b
+IF SIZE(b, /TYPE) EQ 2 THEN RETURN
+;
 bx = b.Y[*, 0]
 by = b.Y[*, 1]
 bz = b.Y[*, 2]
@@ -111,12 +115,14 @@ v_perp = SQRT(vmag^2 - v_para^2)
 ;
 store_data, 'V_para__C'+sc, data={x:v.x, y:v_para}
 store_data, 'V_perp__C'+sc, data={x:v.x, y:v_perp}
+store_data, 'V_mag__C' + sc, data={x:v.x, y:SQRT(v_para^2+v_perp^2)}
 ;
 options, 'V_perp__C'+ sc, 'labels', 'perp'
 options, 'V_para__C'+ sc, 'labels', 'para'
+options, 'V_mag__C'+ sc, 'labels', '|V|'
 ;
-store_data, 'V_para_perp__C'+sc, data=['V_para__C'+sc, 'V_perp__C'+sc]
-options, 'V_para_perp__C'+ sc, 'colors', [50, 220]
+store_data, 'V_para_perp__C'+sc, data=['V_para__C'+sc, 'V_perp__C'+sc, 'V_mag__C'+sc]
+options, 'V_para_perp__C'+ sc, 'colors', [50, 220, 0]
 options, 'V_para_perp__C'+sc, 'databar', {yval:0, linestyle:2}
 options, 'V_para_perp__C'+sc, 'ytitle', 'V!Di!N'
 
@@ -130,6 +136,8 @@ aux->load
 OBJ_DESTROY, aux
 ;
 get_data, 'gse_gsm__CL_SP_AUX', data=ang
+IF SIZE(ang, /TYPE) EQ 2 THEN RETURN
+;
 ang = ang.Y * !DTOR
 ang = INTERPOL(ang, N_ELEMENTS(b.X))
 ;
