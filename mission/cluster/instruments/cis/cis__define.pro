@@ -1,6 +1,7 @@
 @cis::load.pro
 @cis::instrument.pro
-@cis::slice2d_plot.pro
+;@cis::slice2d_plot.pro
+@cis::vdf_plot.pro
 ;
 FUNCTION cis::init, _EXTRA=e
 ;

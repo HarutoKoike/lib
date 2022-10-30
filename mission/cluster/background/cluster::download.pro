@@ -133,7 +133,8 @@ ourl->SetProperty, URL_PATH  = url_path
 ourl->SetProperty, URL_QUERY = query
 ourl->SetProperty, HEADERS   = 'User-Agent:<' + user_agent + '>'
 ;
-filename = ourl->GET( filename=FILEPATH('buffer.tar.gz', root=cluster->data_rootdir() ) )
+buff_file = STRCOMPRESS(SYSTIME()+'buffer.tar.gz', /REMOVE_ALL)
+filename = ourl->GET( filename=FILEPATH(buff_file, root=cluster->data_rootdir() ) )
 ourl->GetProperty, RESPONSE_HEADER=rh
 OBJ_DESTROY, ourl
 
