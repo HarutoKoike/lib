@@ -5,6 +5,8 @@
 @cluster::tplot_names.pro
 @cluster::plot_basic_var.pro
 @cluster::walen_test.pro
+@cluster::curlometer.pro
+@cluster::fote.pro
 
 FUNCTION cluster::init
 COMPILE_OPT IDL2

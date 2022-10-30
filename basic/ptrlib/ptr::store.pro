@@ -44,7 +44,7 @@ IF KEYWORD_SET(overwrite) THEN BEGIN
   ;
   IF ~ISA(idx) THEN BEGIN
     PRINT, '% Variable "' + vname + '" is not stored' 
-    RETURN
+    GOTO, SKIP
   ENDIF
   ;
   IF KEYWORD_SET(description) THEN $
