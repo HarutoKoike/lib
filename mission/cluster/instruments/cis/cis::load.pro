@@ -187,7 +187,7 @@ IF KEYWORD_SET(only_pp) THEN GOTO, jump
 ;*---------- ion omni directional ion flux  ----------*
 ;
 tname = 'flux__C'+sc+'_CP_CIS-HIA_HS_1D_PEF'
-get_data, tname, dlim=dlim
+get_data, tname, dlim=dlim, lim=lim
 ;
 str_element, dlim, 'spec', 1, /add
 store_data, tname, dlim=dlim

@@ -43,7 +43,7 @@ IF KEYWORD_SET(overwrite) THEN BEGIN
   idx = ptr->index(vname)
   ;
   IF ~ISA(idx) THEN BEGIN
-    PRINT, '% Variable "' + vname + '" is not stored' 
+    ;PRINT, '% Variable "' + vname + '" is not stored' 
     GOTO, SKIP
   ENDIF
   ;
@@ -79,5 +79,3 @@ id = ( PTR_VALID( PTR_VALID(), /GET_HEAP_IDENTIFIER ) )[-1]
 
 
 END
-
-

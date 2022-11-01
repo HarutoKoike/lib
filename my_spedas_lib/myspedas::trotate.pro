@@ -19,7 +19,7 @@ PRO myspedas::trotate, ex, ey, ez, tname, tname_new, coord=coord
 ;===========================================================+
 COMPILE_OPT IDL2, STATIC
 ;
-get_data, tname, data=vec
+get_data, tname, data=vec, dlim=dlim, lim=lim
 ;
 IF ~KEYWORD_SET(coord) THEN BEGIN
   vec_new_x = vec.y[*, 0]*ex[0] + vec.y[*, 1]*ex[1] + vec.y[*, 2]*ex[2]
@@ -33,5 +33,5 @@ IF KEYWORD_SET(coord) THEN BEGIN
   vec_new = {x:vec.x, y:INVERT(mat) ## vec.Y}
 ENDIF
 ;
-store_data, tname_new, data=vec_new
+store_data, tname_new, data=vec_new, dlim=dlim, lim=lim
 END

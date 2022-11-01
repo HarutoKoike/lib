@@ -26,6 +26,9 @@ PRO cis::vdf_plot, _EXTRA=e, proton=proton, ion=ion, hs=hs, ls=ls, rpa=rpa,     
 ;
 COMPILE_OPT IDL2, STATIC  
 ;
+IF KEYWORD_SET(sc) THEN sc = 3
+sc = STRING(sc, FORMAT='(I1)')
+;
 get_timespan, ts
 st = date->time_double2iso(ts[0])
 et = date->time_double2iso(ts[1])
