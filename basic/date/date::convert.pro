@@ -145,6 +145,14 @@ RETURN, ( jul - JULDAY(1, 1, 1970, 0, 0, 0) ) * 86400D
 END
 
 
+;-------------------------------------------------+
+; 
+;-------------------------------------------------+
+FUNCTION date::time_double2iso, td
+COMPILE_OPT IDL2, STATIC
+RETURN, date->time_string2iso(time_string(td))
+END
+ 
 
 
 

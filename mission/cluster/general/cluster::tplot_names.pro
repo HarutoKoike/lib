@@ -1,5 +1,5 @@
 FUNCTION cluster::tplot_names, ion=ion, electron=electron, mag=mag, wave=wave, $
-                               walen_test=walen_test, all=all, sc
+                               walen_test=walen_test, fote=fote, all=all, sc
 
 COMPILE_OPT IDL2, STATIC
 ;
@@ -39,6 +39,18 @@ IF KEYWORD_SET(mag) OR KEYWORD_SET(all) THEN BEGIN
   tnames = [tnames, 'B_gsm__C'+sc]
 ENDIF
 
+
+
+;
+;*---------- fote  ----------*
+;
+IF KEYWORD_SET(fote) OR KEYWORD_SET(all) THEN BEGIN
+    tnames = [tnames, $
+              'FOTE_curl_current_mag', $
+              'FOTE_null_distance'   , $
+              'FOTE_null_in_tetra'     $
+             ]
+ENDIF
 
 ;
 ;*---------- wave ----------*

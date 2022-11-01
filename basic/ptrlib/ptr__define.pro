@@ -8,6 +8,7 @@
 @ptr::delete.pro
 @ptr::save.pro
 @ptr::restore.pro
+@ptr::exists.pro
 
 
 

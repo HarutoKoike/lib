@@ -1,8 +1,8 @@
 ;===========================================================+
 ; ++ NAME ++
-PRO cis::slice2d_plot, _EXTRA=e, proton=proton, ion=ion, hs=hs, ls=ls, rpa=rpa,      $
-                        mag=mag, sw=sw, pef=pef, pf=pf, cs=cs, psd=psd, time=time ,   $
-                        one_dim=one_dim , trange=trange
+PRO cis::vdf_plot, _EXTRA=e, proton=proton, ion=ion, hs=hs, ls=ls, rpa=rpa,      $
+                   mag=mag, sw=sw, pef=pef, pf=pf, cs=cs, psd=psd, time=time ,   $
+                   dim=dim, trange=trange, sc=sc, ignore_load=ignore_load
 ;
 ; ++ PURPOSE ++
 ;  -->
@@ -23,13 +23,20 @@ PRO cis::slice2d_plot, _EXTRA=e, proton=proton, ion=ion, hs=hs, ls=ls, rpa=rpa, 
 ; ++ HISTORY ++
 ;  H.Koike 1/9,2021
 ;===========================================================+
-COMPILE_OPT IDL2
-
-;time = '2004-03-10/12:26:38'
-self->cluster::GetProp, st=st, et=et, sc=sc
 ;
-; proton 3-D phase space density (default)
-id = 'C' + sc + '_CP_CIS-CODIF_HS_H1_PSD'
+COMPILE_OPT IDL2, STATIC  
+;
+get_timespan, ts
+st = date->time_double2iso(ts[0])
+et = date->time_double2iso(ts[1])
+;
+;-------------------------------------------------+
+; determine dataset ID
+;-------------------------------------------------+
+;
+; default ID
+; ion 3-D phase space density (default)
+id = 'C' + sc + '_CP_CIS-HIA_HS_MAG_IONS_PSD'
 unit = 'df_km'
 ;
 ;*---------- proton  ----------*
@@ -93,10 +100,12 @@ IF KEYWORD_SET(cs)  THEN unit = ''
 
 
 
+
 ;
 ;*---------- data name  ----------*
 ;
-IF KEYWORD_SET(ion) THEN data_name = 'CIS-HIA'
+data_name = 'CIS-HIA'
+IF KEYWORD_SET(proton) THEN data_name = 'CIS-CODIF'
 
 
 
@@ -104,31 +113,25 @@ IF KEYWORD_SET(ion) THEN data_name = 'CIS-HIA'
 ;*---------- downlowd  ----------*
 ;
 suc = 1
-IF ~self->cluster::filetest(id, st, et) THEN $
-  self->cluster::download, id, st, et, suc
+IF ~cluster->filetest(id, st, et) THEN $
+    cluster->download, id, st, et, suc
 IF ~suc THEN RETURN
-
-
+ 
 
 ;
 ;*---------- read cdf  ----------*
 ;
-files = self->cluster::filesearch(id, st, et)
+files = cluster->file_search(id, st, et)
 ;
-foreach fn, files do $
-  cdf2tplot, fn, /all
+IF ~KEYWORD_SET(ignore_load) THEN BEGIN
+   foreach fn, files do cdf2tplot, fn, /all
+ENDIF
  
 
-
-;
-;*---------- load basic vars  ----------*
-;
-self->load
 
 
 ;
 ;*---------- SPEDAS distribution structure  ----------*
-;
 ;
 struct = {$
           project_name    : 'Cluster'          , $
@@ -155,13 +158,11 @@ struct = {$
           }
 
 
-
-
 ;
 ;*---------- get H+ distribution  ----------*
 ;
 get_data, '3d_ions__' + id, data=distr
-n_time = N_ELEMENTS(distr.x)
+n_time      = N_ELEMENTS(distr.x)
 dist_struct = REPLICATE(struct, n_time) 
 dist_struct.data   = TRANSPOSE(distr.y, [1, 2, 3, 0]) 
 
@@ -173,7 +174,7 @@ dist_struct.time     = time_double(distr.X)
 delta_t    = distr.X[1:*]-distr.X[*]
 integ_time = average(delta_t, /nan, /ret_median)
 dist_struct.end_time = time_double(distr.X) + integ_time
-
+                                                       
 
 
 
@@ -207,70 +208,53 @@ theta = TRANSPOSE( REBIN(theta, 8, 16, 31), [2, 1, 0])
 dist_struct.theta = theta
 dist_struct.dtheta += 22.5
 
-
-
+ 
 
 ;
-;*---------- magnetic field  ----------*
+;*---------- magnetic field data  ----------*
 ;
-fgm = cl_fgm(st=st, et=et, sc=sc)
-fgm->load
-OBJ_DESTROY, fgm
 mag_data = 'B_xyz_gse__C' + sc + '_PP_FGM'
+;
+dum = WHERE( STRMATCH(tnames(), mag_data) EQ 1, count )
+IF count EQ 0 THEN BEGIN
+    fgm = OBJ_NEW('fgm', sc=sc)
+    fgm->load
+    OBJ_DESTROY, fgm
+ENDIF
+
 
 ;
 ;*---------- bulk velocity  ----------*
 ;
-vel_data = 'V_p_xyz_gse__C' + sc + '_PP_CIS'
 vel_data = 'V_HIA_xyz_gse__C' + sc + '_PP_CIS'
 ;
-
-
-
+IF KEYWORD_SET(proton) THEN $
+    vel_data = 'V_p_xyz_gse__C' + sc + '_PP_CIS'
+IF KEYWORD_SET(ion) THEN $
+    vel_data = 'V_HIA_xyz_gse__C' + sc + '_PP_CIS'
 ;
-;*---------- displacement(bulk flow in the BxV direction)  ----------*
-;
-; bulk velocity
-;get_data, vel_data, data = v_bulk 
-;idx_nearest = nn(vel_data, time)
-;v_bulk      = TEMPORARY(v_bulk.Y[idx_nearest, *])
-;;
-;; magnetic field vector
-;get_data, mag_data, data=b_vec
-;;
-;idx_nearest = nn(mag_data, time)
-;b_vec       = TEMPORARY(b_vec.Y[idx_nearest, *])
-;;
-;displacement = CROSSP(b_vec, v_bulk) / NORM(b_vec)
+dum = WHERE( STRMATCH(tnames(), vel_data) EQ 1, count )
+IF count EQ 0 THEN BEGIN
+    cis = OBJ_NEW('cis', sc=sc)
+    cis->load
+    OBJ_DESTROY, cis
+ENDIF
 
 
+ 
 
-;
-;*---------- make slice  ----------*
-;
-; http://themis.ssl.berkeley.edu/socware/spedas_4_1/idl/general/science/spd_slice2d/spd_slice2d.pro
-;
+
+;-------------------------------------------------+
+;  make slice plot
+;-------------------------------------------------+
 dist_ptr = PTR_NEW(dist_struct, /no_copy)
 ;
-
-;
-;tcrossp, mag_data, vel_data, /diff_tsize_ok
-;slice_norm = mag_data + '_cross_' + vel_data
-;slice_x    = mag_data
-; 
-
-slice = spd_slice2d(dist_ptr, time=time, trange=trange, mag_data=mag_data, rotation='BE',$
-                    vel_data=vel_data, /perp_subtract_bulk, $
+slice = spd_slice2d(dist_ptr, time=time, trange=trange, mag_data=mag_data, $
+                    rotation='BE',vel_data=vel_data, /perp_subtract_bulk, $
                     _extra=e)
-                    ;slice_norm=slice_norm, slice_x=slice_x, displacement=displecement)
 
 IF KEYWORD_SET(trange) AND ISA(slice, 'BYTE') THEN $
   slice = spd_slice2d(dist_ptr, time=trange[0], mag_data=mag_data, rotation='BE',$
-                      vel_data=vel_data, /perp_subtract_bulk, $
-                      _extra=e)
-;
-IF KEYWORD_SET(trange) AND ISA(slice, 'BYTE') THEN $
-  slice = spd_slice2d(dist_ptr, time=trange[1], mag_data=mag_data, rotation='BE',$
                       vel_data=vel_data, /perp_subtract_bulk, $
                       _extra=e)
 
@@ -278,31 +262,27 @@ IF KEYWORD_SET(trange) AND ISA(slice, 'BYTE') THEN $
 ;
 ;*---------- plot  ----------*
 ;
+IF ~KEYWORD_SET(dim) THEN dim = 2
 ;
 ; 2-D cut
 ;
-IF ~KEYWORD_SET(one_dim) THEN BEGIN
-  spd_slice2d_plot, slice, xrange=xrange, yrange=yrange, $
-                    background_color_index=0,  _extra=e, $
-                    xtitle='V!Dpara!N(km/s)', ytitle='V!Dperp!N(km/s)'
-  RETURN
-ENDIF
-
-
+IF dim EQ 2 THEN BEGIN
+    spd_slice2d_plot, slice, xrange=xrange, yrange=yrange, $
+                      background_color_index=0,  _extra=e, $
+                      xtitle='V!Dpara!N(km/s)', ytitle='V!Dperp!N(km/s)'
+ENDIF ELSE BEGIN
 ; 1-D cut ( pitch angle 0 )
-
-fmax = MAX(slice.data, /NAN)
-pow  = CEIL(ALOG10(fmax)) 
-yrange = [10^(pow-4), 10^pow] 
-
-yval = [slice.ygrid[0], slice.ygrid[-1]]
-yval = 0 
-IF KEYWORD_SET(one_dim) THEN BEGIN
-  spd_slice1d_plot, slice, 'x', yval, xrange=xrange, _extra=e, $
-                    yrange=yrange, /ylog, xtitle='V!Dpara!N(km/s)'
-  OPLOT, [0, 0], yrange, linestyle=2
-ENDIF
+    fmax = MAX(slice.data, /NAN)
+    pow  = CEIL(ALOG10(fmax)) 
+    yrange = [10^(pow-4), 10^pow] 
+    
+    yval = [slice.ygrid[0], slice.ygrid[-1]]
+    yval = 0 
+    spd_slice1d_plot, slice, 'x', yval, xrange=xrange, _extra=e, $
+                      yrange=yrange, /ylog, xtitle='V!Dpara!N(km/s)'
+    OPLOT, [0, 0], yrange, linestyle=2
+ENDELSE
 
 
-PTR_FREE, dist_ptr
+PTR_FREE, dist_ptr   
 END

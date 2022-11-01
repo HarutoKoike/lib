@@ -1,6 +1,6 @@
 ;===========================================================+
 ; ++ NAME ++
-PRO cl_fgm::curlometer 
+PRO cluster::curlometer 
 ;
 ; ++ PURPOSE ++
 ;  -->
@@ -17,19 +17,12 @@ PRO cl_fgm::curlometer
 ; ++ HISTORY ++
 ;  H.Koike 1/9,2021
 ;===========================================================+
+;
 COMPILE_OPT IDL2, STATIC
 ;
-fgm = cl_fgm(sc=1)
-fgm->load
-fgm->setprop, sc=2
-fgm->load
-fgm->setprop, sc=3
-fgm->load
-fgm->setprop, sc=4
-fgm->load
+cl_load, [1, 2, 3, 4], /fgm, /aux
 ;
 ;
-
 
 ;
 ;*---------- magnetic field  ----------*
@@ -52,10 +45,12 @@ tname_pos[2] = 'pos_gse_c3'
 tname_pos[3] = 'pos_gse_c4' 
 ;
 ; Re -> km
-cluster->common_var, re=re
+re = STRING(!CONST.R_EARTH*1.e-3)
+re = STRCOMPRESS(re, /REMOVE)
+;
 FOR i = 0, 3 DO $
   calc, '"' + tname_pos[i] + '(km)"="' + tname_pos[i] + '"' +$
-        '*' + STRING(re)
+        '*' + re
 
 
 ;
@@ -75,7 +70,7 @@ ylim, efficiency, 0, 0, 1
 ;
 ;
 calc, '"jtotal"*=1.e9'
-options, 'jtotal', 'colors', [0, 50, 220]
+options, 'jtotal', 'colors', [220, 150, 50]
 options, 'jtotal', 'databar', {yval:0, linestyle:2}
 
 ;
@@ -104,38 +99,31 @@ ylim, 'ACOS(JB)', 0, 180
 
 
 
+;;
+;;*---------- E*J ----------*
 ;
-;*---------- E*J ----------*
+;cis = cl_cis(sc=sc)
+;cis->load
+;efw = cl_efw(sc=sc)
+;efw->load
+;;
+;suffix = '_interp_jtotal'
+;tinterpol, 'E_xyz_GSE__C' + sc + '_EFW', 'jtotal', suffix=suffix  
+;tinterpol, 'E_gse_VxB__C' + sc, 'jtotal', suffix=suffix  
+;;
+;; E field in ion frame
+;newname = 'E_ion_frame_GSM__C'+sc
+;dif_data,  'E_xyz_GSE__C' + sc + '_EFW'+suffix, 'E_gse_VxB__C' + sc + suffix, $
+;           newname = newname
+;;
+;;
+;tname = 'EdotJ'
+;tdotp, newname, 'jtotal', newname=tname
+;;tdotp, 'E_xyz_GSM__C'+sc+'_EFW'+suffix, 'jtotal', newname=tname
+;;
+;options, tname, 'ytitle', "E'J"
+;options, tname, 'ysubtitle', '[pW/m!U3!N]'
+;options, tname, 'databar', {yval:0, linestyle:2}
+;ylim, tname, -600, 600
 ;
-sc='3'
-cis = cl_cis(sc=sc)
-cis->load
-efw = cl_efw(sc=sc)
-efw->load
-;
-suffix = '_interp_jtotal'
-tinterpol, 'E_xyz_GSE__C' + sc + '_EFW', 'jtotal', suffix=suffix  
-tinterpol, 'E_gse_VxB__C' + sc, 'jtotal', suffix=suffix  
-;
-; E field in ion frame
-newname = 'E_ion_frame_GSM__C'+sc
-dif_data,  'E_xyz_GSE__C' + sc + '_EFW'+suffix, 'E_gse_VxB__C' + sc + suffix, $
-           newname = newname
-;
-;
-tname = 'EdotJ'
-tdotp, newname, 'jtotal', newname=tname
-;tdotp, 'E_xyz_GSM__C'+sc+'_EFW'+suffix, 'jtotal', newname=tname
-;
-options, tname, 'ytitle', "E'J"
-options, tname, 'ysubtitle', '[pW/m!U3!N]'
-options, tname, 'databar', {yval:0, linestyle:2}
-ylim, tname, -600, 600
-
 END
-
-
-;mytimespan, 2003, 10, 9, 2, 22, dmin=10
-;mytimespan, 2004, 3, 10,12, 20, dmin=20
-;cl_fgm->curlometer
-;end
