@@ -39,7 +39,6 @@ IF KEYWORD_SET(filename) THEN BEGIN
     idlplotlib->psplot, /open, filename=filename, xsize=40, ysize=40
 ENDIF
     
-print, tnames1, tnames2
 tplot, [tnames1, tnames2]
 ;
 FOREACH tn, tnames2 DO $
