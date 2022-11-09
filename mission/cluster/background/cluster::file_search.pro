@@ -1,9 +1,22 @@
+FUNCTION iso2julday, iso
+
+yr  = FIX( STRMID(iso, 0, 4) )
+mon = FIX( STRMID(iso, 5, 2) )
+dy  = FIX( STRMID(iso, 8, 2) )
+hr  = FIX( STRMID(iso, 11, 2) )
+min = FIX( STRMID(iso, 14, 2) )
+sec = FIX( STRMID(iso, 17, 2) )
+
+jd  = JULDAY(mon, dy, yr, hr, min, sec)
+
+RETURN, jd
+
+END
+
 ;-------------------------------------------------+
 ; 
 ;-------------------------------------------------+
 FUNCTION julday_devide, st, et, hourly=hourly, daily=daily
-;st = iso2julday('1999-12-30T20:40:43Z')
-;et = iso2julday('2000-01-02T05:30:00Z')
 ;
 sec = 1D / 86400D ; 1 second
 interval   = 1D   ; daily
@@ -69,23 +82,21 @@ END
 FUNCTION cluster::filename, id, start_date, end_date, $
                             hourly=hourly, full=full, daily=daily
 
-COMPILE_OPT IDL2, STATIC
-;start_date = '2000-01-01T20:40:43Z'
-;end_date = '2000-01-01T22:30:00Z'
+COMPILE_OPT IDL2
 ;
 IF N_ELEMENTS(start_date) NE 1 OR $
    N_ELEMENTS(end_date) NE 1 THEN BEGIN $
    MESSAGE, '% start_date, end date must be 1-element'
 ENDIF
 ;
-st  = date->iso2julday(start_date)
-et  = date->iso2julday(end_date)
+st  = iso2julday(start_date)
+et  = iso2julday(end_date)
 ;
 dev = julday_devide(st, et, daily=daily)
 
 ;
 fn = []
-root = cluster->data_rootdir()
+root = self->data_rootdir()
 ;
 FOR i = 0, N_ELEMENTS(id) - 1 DO BEGIN
    IF KEYWORD_SET(full) THEN BEGIN
@@ -106,8 +117,8 @@ END
 ; 
 ;-------------------------------------------------+
 FUNCTION cluster::filetest, id, start_date, end_date, daily=daily
-COMPILE_OPT IDL2, STATIC
-files = cluster->filename(id, start_date, end_date, /full, daily=daily)
+COMPILE_OPT IDL2
+files = self->cluster::filename(id, start_date, end_date, /full, daily=daily)
 RETURN, N_ELEMENTS(files) EQ TOTAL(FILE_TEST(files))
 END
 
@@ -136,9 +147,9 @@ FUNCTION cluster::file_search, id, start_date, end_date, daily=daily
 ; ++ HISTORY ++
 ;  H.Koike 8/9,2021
 ;===========================================================+
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 ;*---------- file name format ----------*
 ;
-RETURN, FILE_SEARCH(cluster->filename(id, start_date, end_date, /full, daily=daily))
+RETURN, FILE_SEARCH(self->cluster::filename(id, start_date, end_date, /full, daily=daily))
 END

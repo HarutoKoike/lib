@@ -11,13 +11,11 @@ END
 ;-------------------------------------------------+
 PRO cluster::authentication, renew =renew
 ;
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
-cl       = OBJ_NEW('cluster')
-cl->getprop, username=username, password=password
-OBJ_DESTROY, cl 
+self->getprop, username=username, password=password
 ;
-root = GETENV('HOME')
+root = self->lib_rootdir()
 log  = FILEPATH('.csa_log', ROOT=root)
 
 ;
@@ -36,8 +34,13 @@ OPENR, lun, log, /GET_LUN
 READF, lun, last_login, FORMAT=format 
 FREE_LUN, lun
 ;
-now = SYSTIME(/JUL)
-PRINT, '% Last login : ' + date->julday2iso(last_login)
+now = SYSTIME(/JULIAN)
+CALDAT, last_login, mon, dy, yr, hr, min, sec
+last = STRING(yr, format='(I04)') + '-' + STRING(mon, format='(I02)') + '-' + $
+             STRING(dy, format='(I02)') + '/' + STRING(hr, format='(I02)') + ':' + $
+             STRING(min, format='(I02)') + ':' + STRING(sec, format='(I02)') 
+PRINT, '% Last login : ' + last
+;
 IF (now - last_login LT elasped) AND ~KEYWORD_SET(renew) THEN $
   RETURN
 
@@ -46,21 +49,21 @@ IF (now - last_login LT elasped) AND ~KEYWORD_SET(renew) THEN $
 ;
 ;*---------- Error handle  ----------*
 ;
-CATCH, error_status
-IF error_status NE 0 THEN BEGIN
-	CATCH, /CANCEL
-    MESSAGE, !ERROR_STATE.MSG
-    ;
-	ourl->GetProperty, RESPONSE_CODE=rc, RESPONSE_HEADER=rh, $
-										 RESPONSE_FILENAME=rf
-    ;
-	PRINT, '% Response Code = ' + rc
-	PRINT, '% Response Header = ' + rh
-	PRINT, '% Response Filename = ' + rf
-	PRINT, '% Request stoped'
-	OBJ_DESTROY, ourl
-	RETURN
-ENDIF
+;CATCH, error_status
+;IF error_status NE 0 THEN BEGIN
+;	CATCH, /CANCEL
+;    MESSAGE, !ERROR_STATE.MSG
+;    ;
+;	ourl->GetProperty, RESPONSE_CODE=rc, RESPONSE_HEADER=rh, $
+;										 RESPONSE_FILENAME=rf
+;    ;
+;	PRINT, '% Response Code = ' + rc
+;	PRINT, '% Response Header = ' + rh
+;	PRINT, '% Response Filename = ' + rf
+;	PRINT, '% Request stoped'
+;	OBJ_DESTROY, ourl
+;	RETURN
+;ENDIF
 
 
 
@@ -81,11 +84,12 @@ ourl->SetProperty, URL_USERNAME=username
 ourl->SetProperty, URL_PASSWORD=password
 ourl->SetProperty, HEADERS   = 'User-Agent:<' + user_agent + '>'
 ;
-filename = ourl->GET()
+datadir  = FILEPATH('buff.dat', root=self->data_rootdir())
+filename = ourl->GET(filename=datadir)
 OBJ_DESTROY, ourl
 last_login = SYSTIME(/JUL)
 ;
-FILE_DELETE, filename, /VERBOSE
+FILE_DELETE, filename;, /VERBOSE
 
 ;
 ;*---------- renew login history  ----------*

@@ -1,12 +1,12 @@
 @cluster::authentication.pro
+@cluster::input.pro
 @cluster::file_search.pro
 @cluster::download.pro
-@cluster::input.pro
-@cluster::tplot_names.pro
-@cluster::plot_basic_var.pro
-@cluster::walen_test.pro
-@cluster::curlometer.pro
-@cluster::fote.pro
+;@cluster::tplot_names.pro
+;@cluster::plot_basic_var.pro
+;@cluster::walen_test.pro
+;@cluster::curlometer.pro
+;@cluster::fote.pro
 
 FUNCTION cluster::init
 COMPILE_OPT IDL2
@@ -55,8 +55,19 @@ END
 ;-------------------------------------------------+
 ; 
 ;-------------------------------------------------+
+FUNCTION cluster::lib_rootdir
+COMPILE_OPT IDL2
+;
+root = FILE_DIRNAME(ROUTINE_FILEPATH('cluster__define'))
+RETURN, root
+END
+
+
+;-------------------------------------------------+
+; 
+;-------------------------------------------------+
 FUNCTION cluster::data_rootdir
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 root = GETENV('DATA_PATH')
 root = FILEPATH('Cluster', root=root)
@@ -70,7 +81,6 @@ RETURN, root
 END
 
 
-
 ;-------------------------------------------------+
 ; 
 ;-------------------------------------------------+
@@ -78,11 +88,11 @@ PRO cluster__define
 COMPILE_OPT IDL2
 void = {                                 $
         cluster,                         $
+        st       : '',                   $
+        et       : '',                   $
+        sc       : '',                   $
         username : 'hkoike'             ,$
         password : '@_2CLDBBmjpbrss'    ,$
-        st:''                           ,$ 
-        et:''                           ,$ 
-        sc:'3'                          ,$ 
         INHERITS IDL_OBJECT              $
         }
 END

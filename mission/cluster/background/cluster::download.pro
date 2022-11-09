@@ -27,13 +27,13 @@ PRO cluster::download, $
 ; 
 ; ++ NOTE ++
 ;===========================================================+
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 ON_ERROR, 0
 ;
 ;*---------- authentication ----------*
 ;
-cluster->authentication
+self->authentication
 suc = 0
 st  = start_date
 et  = end_date
@@ -105,14 +105,14 @@ IF error_status NE 0 THEN BEGIN
     CATCH, /CANCEL
     MESSAGE, !ERROR_STATE.MSG, /CONTINUE
     ;
-    ;ourl->GetProperty, RESPONSE_CODE=rc, RESPONSE_HEADER=rh, $
+    ourl->GetProperty, RESPONSE_CODE=rc, RESPONSE_HEADER=rh, $
     ;        	      	 RESPONSE_FILENAME=rf
-    ;;
-    ;PRINT, '% Response Code = ' + rc
-    ;PRINT, '% Response Header = ' + rh
-    ;PRINT, '% Response Filename = ' + rf
-    ;PRINT, '% Request stoped'
-    ;OBJ_DESTROY, ourl
+    ;
+    PRINT, '% Response Code = ' + rc
+    PRINT, '% Response Header = ' + rh
+    PRINT, '% Response Filename = ' + rf
+    PRINT, '% Request stoped'
+    OBJ_DESTROY, ourl
     RETURN
 ENDIF
 ; 
@@ -134,7 +134,7 @@ ourl->SetProperty, URL_QUERY = query
 ourl->SetProperty, HEADERS   = 'User-Agent:<' + user_agent + '>'
 ;
 buff_file = STRCOMPRESS(SYSTIME()+'buffer.tar.gz', /REMOVE_ALL)
-filename = ourl->GET( filename=FILEPATH(buff_file, root=cluster->data_rootdir() ) )
+filename = ourl->GET( filename=FILEPATH(buff_file, root=self->data_rootdir() ) )
 ourl->GetProperty, RESPONSE_HEADER=rh
 OBJ_DESTROY, ourl
 
@@ -168,7 +168,7 @@ myfile_untar, filename, untar_files, /verbose
 ;*---------- save files  ----------*
 ;
 ; root directory
-root_dir = cluster->data_rootdir()
+root_dir = self->data_rootdir()
 
 ; subdirectory
 separator = PATH_SEP()
