@@ -17,7 +17,7 @@ FUNCTION ptr::exists, vname
 ; ++ HISTORY ++
 ;  H.Koike 
 ;===========================================================+
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 exist  = BYTARR(N_ELEMENTS(vname))
 ;

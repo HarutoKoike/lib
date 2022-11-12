@@ -17,10 +17,10 @@ PRO ptr::save, _EXTRA=ex
 ; ++ HISTORY ++
 ;   09/2022 H.Koike 
 ;===========================================================+
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 ; check
-ptr->list, count=count
+self->list, count=count
 IF count EQ 0 THEN BEGIN
   PRINT, '% No data has been stored ! '
   RETURN

@@ -1,6 +1,6 @@
 PRO ptr::help, vname, _EXTRA=ex
 
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 
 
 vname_list = *(!PTR.VNAME)

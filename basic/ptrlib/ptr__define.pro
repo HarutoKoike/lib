@@ -22,7 +22,7 @@ END
 ;*---------- return index of variable  ----------*
 ;
 FUNCTION ptr::index, vname
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 IF N_ELEMENTS(vname) NE 1 OR ~ISA(vname, 'STRING') THEN BEGIN
   PRINT, '% vname must be scalar and STRING'

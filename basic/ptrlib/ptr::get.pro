@@ -21,7 +21,7 @@ FUNCTION ptr::get, vname, id=id, description=description
 ; ++ HISTORY ++
 ;  09/2022 H.Koike 
 ;===========================================================+
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 IF ~ISA(vname, 'STRING') THEN BEGIN
   PRINT, '% vname must be STRING'
@@ -29,7 +29,7 @@ IF ~ISA(vname, 'STRING') THEN BEGIN
 ENDIF 
 
 ;
-idx = ptr->index(vname)
+idx = self->index(vname)
 IF ~ISA(idx) THEN BEGIN
   PRINT, '% Variable "' + vname + '" is not be stored'
   RETURN, !NULL

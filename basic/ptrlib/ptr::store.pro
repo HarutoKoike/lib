@@ -21,7 +21,7 @@ PRO ptr::store, vname, data, description=description, $
 ; ++ HISTORY ++
 ;   09/2022, H.Koike(koike@kugi.kyoto-u.ac.jp)
 ;===========================================================+
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 IF ~ISA(vname, 'STRING') THEN BEGIN
   PRINT, '% vname must be STRING'
@@ -40,7 +40,7 @@ IF ~ISA( *(!PTR.VNAME) ) THEN GOTO, SKIP
 ;*---------- overwrite data ----------*
 ;
 IF KEYWORD_SET(overwrite) THEN BEGIN
-  idx = ptr->index(vname)
+  idx = self->index(vname)
   ;
   IF ~ISA(idx) THEN BEGIN
     ;PRINT, '% Variable "' + vname + '" is not stored' 
@@ -59,7 +59,7 @@ ENDIF
 ;
 ;*---------- check existence of variable ----------*
 ;
-IF ISA(ptr->index(vname)) THEN BEGIN
+IF ISA(self->index(vname)) THEN BEGIN
   PRINT, '% variable "' + vname + '" is already stored'
   RETURN
 ENDIF

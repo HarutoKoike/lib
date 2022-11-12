@@ -1,7 +1,7 @@
 
 PRO ptr::array_delete, arr, idx
 
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 
 IF N_ELEMENTS(arr) EQ 2 THEN BEGIN
   idx0 = WHERE( INDGEN(2) NE idx, /NULL)
@@ -34,7 +34,7 @@ PRO ptr::delete, vname
 ; ++ HISTORY ++
 ;  H.Koike 
 ;===========================================================+
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 IF ~ISA(vname, 'STRING') THEN BEGIN
   PRINT, '% vname must be STRING'
@@ -42,7 +42,7 @@ IF ~ISA(vname, 'STRING') THEN BEGIN
 ENDIF 
 
 
-idx = ptr->index(vname)
+idx = self->index(vname)
 ;
 IF ~ISA(idx) THEN BEGIN
   PRINT, '% Variable "' + vname + '" is not stored'
@@ -61,16 +61,10 @@ ENDIF
 
 
 PTR_FREE, (*(!PTR.DATA))[idx]
-ptr->array_delete, *(!PTR.VNAME), idx
-ptr->array_delete, *(!PTR.DATA), idx
-ptr->array_delete, *(!PTR.ID), idx
-ptr->array_delete, *(!PTR.DESCRIPTION), idx
+self->array_delete, *(!PTR.VNAME), idx
+self->array_delete, *(!PTR.DATA), idx
+self->array_delete, *(!PTR.ID), idx
+self->array_delete, *(!PTR.DESCRIPTION), idx
 
 
 END
-
-
-
-
-
-

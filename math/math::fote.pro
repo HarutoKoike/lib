@@ -1,4 +1,5 @@
 FUNCTION fote_polynominal, r
+ptr   = OBJ_NEW('PTR')
 coeff = ptr->get('fote_coefficients')
 ;
 vx = coeff[0] + total(coeff[1:3]*r)
@@ -36,6 +37,8 @@ FUNCTION math::fote, x1, x2, x3, x4, b1, b2, b3, b4, xref=xref, save=save, $
 ;===========================================================+
 ;
 COMPILE_OPT IDL2, STATIC
+;
+ptr   = OBJ_NEW('PTR')
 ;
 IF ~KEYWORD_SET(xref) THEN $
     xref = [0, 0, 0]
@@ -84,6 +87,8 @@ IF ARG_PRESENT(null) THEN BEGIN
     null = INVERT(TRANSPOSE(mat)) # v + xref
 ENDIF
 
+;
+OBJ_DESTROY, ptr
 RETURN, [m, xref]
 
 END

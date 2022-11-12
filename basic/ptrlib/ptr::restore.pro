@@ -17,7 +17,7 @@ PRO ptr::restore, filename
 ; ++ HISTORY ++
 ;   09/2022 H.Koike 
 ;===========================================================+
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 RESTORE, filename
 DEFSYSV, '!PTR', ptr_save

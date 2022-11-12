@@ -17,7 +17,7 @@ PRO ptr::list, count=count, names=names
 ; ++ HISTORY ++
 ;   09/2022 H.Koike 
 ;===========================================================+
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 IF ARG_PRESENT(count) THEN BEGIN
   count = N_ELEMENTS( *(!PTR.VNAME) )
