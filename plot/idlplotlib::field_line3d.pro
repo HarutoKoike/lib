@@ -11,9 +11,9 @@
 ;
 function coulomb, r
 c  = [1, -1]
-xc = [20, -20]
-yc = [0, 0]
-zc = [0, 0]
+xc = [20, -5, 10]
+yc = [0, 5, 10]
+zc = [0, 20, 15]
 ;
 ex = 0
 ey = 0
@@ -233,14 +233,14 @@ cb = COLORBAR(ORIENTATION=1, $
 END
 
 
-;seed = fltarr(3, 2)
-;seed[0, 0] = 0
-;seed[1, 0] = 30
-;seed[2, 0] = -50
-;seed[0, 0] = 0
-;seed[1, 0] = 10
-;seed[2, 0] = -50
+seed = fltarr(3, 2)
+seed[0, 0] = 0
+seed[1, 0] = 30
+seed[2, 0] = -50
+seed[0, 0] = 0
+seed[1, 0] = 10
+seed[2, 0] = -50
 
-;idlplotlib->field_line3d, 'coulomb', [-10, 10], [-20, 20], [40, 80]
+idlplotlib->field_line3d, 'coulomb', [-40, 40], [-40, 40], [-40, 40], nseed=50
 
-;end
+end

@@ -20,7 +20,7 @@ FUNCTION str::contain, char, list, partly=partly
 ; ++ HISTORY ++
 ;  H.Koike 
 ;===========================================================+
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 nl   = N_ELEMENTS(list)
 disc = LONARR(N_ELEMENTS(char))

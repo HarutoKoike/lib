@@ -21,3 +21,12 @@ et = time_string2iso( time_string(ts[1]) )
 IF ~KEYWORD_SET(sc) THEN sc='1'
 RETURN, {st:st, et:et, sc:STRING(sc, FORMAT='(I1)')}
 END
+
+
+
+PRO cluster::reload_timerange
+;
+COMPILE_OPT IDL2
+self->getprop, sc=sc
+self->setprop, _EXTRA=self->input(sc=sc)
+END

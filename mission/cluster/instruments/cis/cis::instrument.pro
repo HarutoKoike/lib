@@ -1,7 +1,7 @@
 PRO cis::instrument, azimuth=azimuth, elevation=elevation, $
                      energy=energy, hia=hia, codif=codif 
 ;
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 IF KEYWORD_SET(hia) THEN GOTO, hia
 

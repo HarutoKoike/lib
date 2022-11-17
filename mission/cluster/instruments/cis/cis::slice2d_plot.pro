@@ -183,7 +183,7 @@ dist_struct.end_time = time_double(distr.X) + integ_time
 IF KEYWORD_SET(proton) THEN codif = 1
 IF KEYWORD_SET(ion)    THEN hia = 1
 ;
-cis->instrument, energy=ebin, codif=codif, hia=hia  
+self->instrument, energy=ebin, codif=codif, hia=hia  
 dist_struct.energy = REBIN(ebin, 31, 16, 8) 
  
 

@@ -1,4 +1,5 @@
 @aux::load.pro
+@aux::plot_configuration.pro
 
 FUNCTION aux::init, _EXTRA=e
 ;
@@ -19,4 +20,3 @@ void = {                    $
         INHERITS cluster    $
        }
 END
- 

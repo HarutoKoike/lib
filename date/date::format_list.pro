@@ -17,7 +17,7 @@ FUNCTION date::format_list
 ; ++ HISTORY ++
 ;  H.Koike 
 ;===========================================================+
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 list = ['%Y', '%y', '%m', '%d', '%H', '%M', '%S']
 RETURN, list

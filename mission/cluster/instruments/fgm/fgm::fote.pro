@@ -1,6 +1,6 @@
 ;===========================================================+
 ; ++ NAME ++
-PRO cluster::fote
+PRO fgm::fote
 ;
 ; ++ PURPOSE ++
 ;  --> calculate magnetic field by FOTE (Fu et al., 2015)
@@ -17,9 +17,14 @@ PRO cluster::fote
 ; ++ HISTORY ++
 ;    2022/06/01 H.Koike 
 ;===========================================================+
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ; 
-cl_load, [1, 2, 3, 4], /fgm, /aux
+self->getprop, sc=sc
+FOR i = 1, 4 DO BEGIN
+    self->setprop, sc=i
+    self->load
+ENDFOR
+self->setprop, sc=sc
 ;
 get_data, 'B_xyz_gsm__C1_PP_FGM', data=b1
 get_data, 'B_xyz_gsm__C2_PP_FGM', data=b2

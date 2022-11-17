@@ -94,8 +94,5 @@ void = { date,         $
          minute :0B,   $
          second :0B,   $
          format :'',   $
-         INHERITS IDL_OBJECT $
-        }
+         INHERITS str}
 END
-
-

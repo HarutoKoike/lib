@@ -1,5 +1,5 @@
 FUNCTION date::days_in_month, month, year
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 ;
 IF ~ISA(year)  THEN year = 2001
@@ -14,7 +14,7 @@ END
 ; 
 ;-------------------------------------------------+
 FUNCTION date::day_of_year, year, month, day
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 doy = JULDAY(month, day, year) - JULDAY(1, 1, year) + 1L
 RETURN, doy
@@ -24,7 +24,7 @@ END
 ; 
 ;-------------------------------------------------+
 FUNCTION  date::inv_doy, year, doy
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 
 jul = JULDAY(1, 1, yr) + doy - 1
 CALDAT, jul, mon, dy, yr
@@ -42,7 +42,7 @@ END
 ; 
 ;-------------------------------------------------+
 FUNCTION date::iso2julday, iso
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 
 yr  = FIX( STRMID(iso, 0, 4) )
 mon = FIX( STRMID(iso, 5, 2) )
@@ -62,7 +62,7 @@ END
 ; 
 ;-------------------------------------------------+
 FUNCTION date::julday2iso, jd
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 
 CALDAT, jd, mon, dy, yr, hr, min, sec
 yr  = STRING(yr, FORMAT='(I04)')
@@ -85,7 +85,7 @@ END
 ; 
 ;-------------------------------------------------+
 FUNCTION date::iso2time_string, iso
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 ; ISO 2000-01-01T00:00:00Z
 ; ts  2000-01-01/00:00:00
@@ -100,7 +100,7 @@ END
 ; 
 ;-------------------------------------------------+
 FUNCTION date::time_string2iso, ts
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 ; ISO 2000-01-01T00:00:00Z
 ; ts  2000-01-01/00:00:00
@@ -116,9 +116,9 @@ END
 ; 
 ;-------------------------------------------------+
 FUNCTION date::julday2time_string, julday
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
-RETURN, date->iso2time_string( date->julday2iso(julday) )
+RETURN, self->iso2time_string( date->julday2iso(julday) )
 END
 
 
@@ -127,10 +127,10 @@ END
 ; 
 ;-------------------------------------------------+
 FUNCTION date::time_string2julday, ts
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
-ts = date->time_string2iso(ts)
-ts = date->iso2julday(ts)
+ts = self->time_string2iso(ts)
+ts = self->iso2julday(ts)
 RETURN, ts
 END
  
@@ -140,7 +140,7 @@ END
 ; 
 ;-------------------------------------------------+
 FUNCTION date::julday2time_double, jul
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 RETURN, ( jul - JULDAY(1, 1, 1970, 0, 0, 0) ) * 86400D
 END
 
@@ -149,8 +149,8 @@ END
 ; 
 ;-------------------------------------------------+
 FUNCTION date::time_double2iso, td
-COMPILE_OPT IDL2, STATIC
-RETURN, date->time_string2iso(time_string(td))
+COMPILE_OPT IDL2
+RETURN, self->time_string2iso(time_string(td))
 END
  
 
@@ -162,5 +162,5 @@ END
 
 
 PRO date::convert 
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 END

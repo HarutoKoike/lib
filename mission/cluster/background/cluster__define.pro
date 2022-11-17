@@ -70,10 +70,11 @@ FUNCTION cluster::data_rootdir
 COMPILE_OPT IDL2
 ;
 root = GETENV('DATA_PATH')
-root = FILEPATH('Cluster', root=root)
 ;
 IF STRLEN(root) EQ 0 THEN root = GETENV('SPEDAS_DATA_PATH')
 IF STRLEN(root) EQ 0 THEN CD, CURRENT=root  
+;
+root = FILEPATH('Cluster', root=root)
 ;
 IF ~FILE_TEST(root) THEN FILE_MKDIR, root
 ;

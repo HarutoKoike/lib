@@ -17,7 +17,7 @@ FUNCTION str::split2, str, separator, _EXTRA=ex
 ; ++ HISTORY ++
 ;  H.Koike 
 ;===========================================================+
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 sep = separator
 

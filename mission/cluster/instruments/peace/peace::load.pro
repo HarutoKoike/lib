@@ -43,7 +43,7 @@ FOREACH fn, files DO  $
 ;
 ;*---------- parallel electron  ----------*
 ;
-get_data, 'Data__C'+sc+'_CP_PEA_PITCH_SPIN_DEFlux', data=d
+get_data, tname, data=d
 get_data, 'Sweep_Energy__C' + sc +'_CP_PEA_PITCH_SPIN_DEFlux', data=e
 str_element, dlim, 'spec', 1, /add
 IF ISA(d, 'INT') THEN RETURN
@@ -85,5 +85,5 @@ options, tname, 'ytitle', 'Electron!C(75-105)'
 options, tname, 'ysubtitle', '[eV]' 
 
 
-END
 
+END

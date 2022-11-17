@@ -31,7 +31,6 @@ tplot, tnames
 
 
 
-<<<<<<< HEAD
 IF KEYWORD_SET(filename) THEN BEGIN
     idlplotlib->psplot, /open, filename=filename, xsize=40, ysize=40
 ENDIF

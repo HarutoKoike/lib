@@ -17,7 +17,7 @@ PRO cluster::walen_test, sc, trange, span=span, window=window
 ; ++ HISTORY ++
 ;  H.Koike 1/9,2021
 ;===========================================================+
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 IF ~KEYWORD_SET(span)   THEN span = 10   ; seconds
 IF ~KEYWORD_SET(window) THEN window = 31   ; seconds

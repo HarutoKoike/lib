@@ -1,6 +1,6 @@
 ;===========================================================+
 ; ++ NAME ++
-PRO cluster::curlometer 
+PRO fgm::curlometer 
 ;
 ; ++ PURPOSE ++
 ;  -->
@@ -20,8 +20,12 @@ PRO cluster::curlometer
 ;
 COMPILE_OPT IDL2, STATIC
 ;
-cl_load, [1, 2, 3, 4], /fgm, /aux
-;
+self->getprop, sc=sc
+FOR i = 1, 4 DO BEGIN
+    self->setprop, sc=i
+    self->load
+ENDFOR
+self->setprop, sc=sc 
 ;
 
 ;

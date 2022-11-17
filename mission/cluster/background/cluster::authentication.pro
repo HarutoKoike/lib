@@ -2,14 +2,34 @@ FUNCTION url_callback, status, progress, data
 PRINT, status
 RETURN, 1
 END
- 
 
-
-
-;-------------------------------------------------+
-; 
-;-------------------------------------------------+
+;===========================================================+
+; ++ NAME ++
 PRO cluster::authentication, renew =renew
+;
+; ++ PURPOSE ++
+;  --> authenticate CSA-web
+;
+; ++ POSITIONAL ARGUMENTS ++
+;  -->
+;
+; ++ KEYWORDS ++
+; -->  renew(BOOLEAN): By default, if an authentication has been performed 
+;                      within an hour, no new authentication is performed.
+;                      Set this keyword to perform new authentication regardless of
+;                      whether or not an authentication has been performed within an hour.
+;
+; ++ CALLING SEQUENCE ++
+;  -->
+;
+; ++ HISTORY ++
+;  H.Koike 1/9,2021
+; 
+; ++ NOTE ++
+; username and password of CSA-web must be specified in 'cluster__define.pro'
+; as static properties of Cluster object.
+;
+;===========================================================+
 ;
 COMPILE_OPT IDL2
 ;
@@ -49,21 +69,21 @@ IF (now - last_login LT elasped) AND ~KEYWORD_SET(renew) THEN $
 ;
 ;*---------- Error handle  ----------*
 ;
-;CATCH, error_status
-;IF error_status NE 0 THEN BEGIN
-;	CATCH, /CANCEL
-;    MESSAGE, !ERROR_STATE.MSG
-;    ;
-;	ourl->GetProperty, RESPONSE_CODE=rc, RESPONSE_HEADER=rh, $
-;										 RESPONSE_FILENAME=rf
-;    ;
-;	PRINT, '% Response Code = ' + rc
-;	PRINT, '% Response Header = ' + rh
-;	PRINT, '% Response Filename = ' + rf
-;	PRINT, '% Request stoped'
-;	OBJ_DESTROY, ourl
-;	RETURN
-;ENDIF
+CATCH, error_status
+IF error_status NE 0 THEN BEGIN
+	CATCH, /CANCEL
+    MESSAGE, !ERROR_STATE.MSG
+    ;
+	ourl->GetProperty, RESPONSE_CODE=rc, RESPONSE_HEADER=rh, $
+										 RESPONSE_FILENAME=rf
+    ;
+	PRINT, '% Response Code = ' + rc
+	PRINT, '% Response Header = ' + rh
+	PRINT, '% Response Filename = ' + rf
+	PRINT, '% Request stoped'
+	OBJ_DESTROY, ourl
+	RETURN
+ENDIF
 
 
 

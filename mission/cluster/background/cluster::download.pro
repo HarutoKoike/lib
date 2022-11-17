@@ -11,22 +11,27 @@ PRO cluster::download, $
                       stream=stream, async=async,suc, daily=daily
 ;
 ; ++ PURPOSE ++
-;  -->
+;  --> download Cluster data from CSA-web (ESA)
 ;
 ; ++ POSITIONAL ARGUMENTS ++
-;  -->
+;  --> dataset_id(STRING) : 
+;  --> start_date(STRING) : start date in format of ISO (YYYY-MM-DDZhh:mm:ssT)
+;  --> end_date(STRING)   : end date in format of ISO (YYYY-MM-DDZhh:mm:ssT)
 ;
 ; ++ KEYWORDS ++
 ; -->
 ;
 ; ++ CALLING SEQUENCE ++
-;  -->
+;  --> cluster->download, 'C3_PP_FGM', '2004-01-01Z12:00:00T', '2004-01-02Z12:00:00T'
 ;
 ; ++ HISTORY ++
 ;  H.Koike 1/9,2021
 ; 
 ; ++ NOTE ++
+; Using a procedure 'myfile_untar' is temporal treatment because 
+; IDL native 'file_untar' is not able to be executed.
 ;===========================================================+
+;
 COMPILE_OPT IDL2
 ;
 ON_ERROR, 0
@@ -106,7 +111,7 @@ IF error_status NE 0 THEN BEGIN
     MESSAGE, !ERROR_STATE.MSG, /CONTINUE
     ;
     ourl->GetProperty, RESPONSE_CODE=rc, RESPONSE_HEADER=rh, $
-    ;        	      	 RESPONSE_FILENAME=rf
+            	      	 RESPONSE_FILENAME=rf
     ;
     PRINT, '% Response Code = ' + rc
     PRINT, '% Response Header = ' + rh

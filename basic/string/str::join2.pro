@@ -17,7 +17,7 @@ FUNCTION str::join2, str_list, sep_list, sep_idx
 ; ++ HISTORY ++
 ;  H.Koike 
 ;===========================================================+
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 n   = N_ELEMENTS(str_list) + N_ELEMENTS(sep_list)
 str = STRARR(n)

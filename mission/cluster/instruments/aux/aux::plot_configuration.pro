@@ -1,6 +1,6 @@
 ;===========================================================+
 ; ++ NAME ++
-PRO cl_aux::plot_config, time=time, trange=trange
+PRO aux::plot_configuration, time=time, trange=trange
 ;
 ; ++ PURPOSE ++
 ;  -->
@@ -56,15 +56,15 @@ PLOT_3DBOX, pos.x, pos.y, pos.z, psym=8;, /NODATA
 
 
 END
-
-
-
-
-
-loadct, 39
-mytimespan, 2004, 3, 10, 12, 20, dmin=20
-aux = cl_aux(sc=3)
-aux->plot_config, time='2004-03-10/12:30:00'
-
-
-end
+;
+;
+;
+;
+;
+;loadct, 39
+;mytimespan, 2004, 3, 10, 12, 20, dmin=20
+;aux = cl_aux(sc=3)
+;aux->plot_config, time='2004-03-10/12:30:00'
+;
+;
+;end

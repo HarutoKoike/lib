@@ -1,8 +1,8 @@
 ;===========================================================+
 ; ++ NAME ++
-PRO cis::vdf_plot, _EXTRA=e, proton=proton, ion=ion, hs=hs, ls=ls, rpa=rpa,      $
+PRO cis::plot_psd, _EXTRA=e, proton=proton, ion=ion, hs=hs, ls=ls, rpa=rpa,      $
                    mag=mag, sw=sw, pef=pef, pf=pf, cs=cs, psd=psd, time=time ,   $
-                   dim=dim, trange=trange, sc=sc, ignore_load=ignore_load
+                   dim=dim, trange=trange, ignore_load=ignore_load
 ;
 ; ++ PURPOSE ++
 ;  -->
@@ -14,7 +14,7 @@ PRO cis::vdf_plot, _EXTRA=e, proton=proton, ion=ion, hs=hs, ls=ls, rpa=rpa,     
 ; -->
 ;
 ; ++ CALLING SEQUENCE ++
-;  -->
+;  --> cis->plot_psd, /ion, /mag, /psd, time='2004-03-10/12:27:00'
 ; 
 ; ++ NOTE ++
 ; http://themis.ssl.berkeley.edu/socware/spedas_4_1/idl/projects/mms/fpi/mms_get_fpi_dist.pro ;
@@ -24,14 +24,17 @@ PRO cis::vdf_plot, _EXTRA=e, proton=proton, ion=ion, hs=hs, ls=ls, rpa=rpa,     
 ;  H.Koike 1/9,2021
 ;===========================================================+
 ;
-COMPILE_OPT IDL2, STATIC  
+COMPILE_OPT IDL2
 ;
-IF KEYWORD_SET(sc) THEN sc = 3
-sc = STRING(sc, FORMAT='(I1)')
+;IF KEYWORD_SET(sc) THEN sc = 3
+;sc = STRING(sc, FORMAT='(I1)')
+self->getprop, sc=sc
 ;
 get_timespan, ts
-st = date->time_double2iso(ts[0])
-et = date->time_double2iso(ts[1])
+date = OBJ_NEW('date')
+st   = date->time_double2iso(ts[0])
+et   = date->time_double2iso(ts[1])
+OBJ_DESTROY, date
 ;
 ;-------------------------------------------------+
 ; determine dataset ID
@@ -116,15 +119,15 @@ IF KEYWORD_SET(proton) THEN data_name = 'CIS-CODIF'
 ;*---------- downlowd  ----------*
 ;
 suc = 1
-IF ~cluster->filetest(id, st, et) THEN $
-    cluster->download, id, st, et, suc
+IF ~self->cluster::filetest(id, st, et) THEN $
+    self->cluster::download, id, st, et, suc
 IF ~suc THEN RETURN
  
 
 ;
 ;*---------- read cdf  ----------*
 ;
-files = cluster->file_search(id, st, et)
+files = self->cluster::file_search(id, st, et)
 ;
 IF ~KEYWORD_SET(ignore_load) THEN BEGIN
    foreach fn, files do cdf2tplot, fn, /all
@@ -187,7 +190,7 @@ dist_struct.end_time = time_double(distr.X) + integ_time
 IF KEYWORD_SET(proton) THEN codif = 1
 IF KEYWORD_SET(ion)    THEN hia = 1
 ;
-cis->instrument, energy=ebin, codif=codif, hia=hia  
+self->instrument, energy=ebin, codif=codif, hia=hia  
 dist_struct.energy = REBIN(ebin, 31, 16, 8) 
  
 

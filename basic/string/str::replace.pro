@@ -1,5 +1,5 @@
 FUNCTION str::split_one, char
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 arr = STRARR(STRLEN(char))
 FOR i = 0, STRLEN(char) - 1 DO BEGIN
@@ -33,7 +33,7 @@ FUNCTION str::replace, source, pre, post, complete=complete
 ; ++ HISTORY ++
 ;  H.Koike 
 ;===========================================================+
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 IF SIZE(source, /TYPE) NE 7 THEN $
     MESSAGE, 'argument must be string'

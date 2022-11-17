@@ -3,7 +3,7 @@ FUNCTION whisper::init,  _EXTRA=e
 ;
 COMPILE_OPT IDL2
 ;
-self->cluster::setprop, _EXTRA=cluster->datestruct(_EXTRA=e)
+self->cluster::setprop, _EXTRA=self->cluster::datestruct(_EXTRA=e)
 ;
 RETURN, 1
 END
