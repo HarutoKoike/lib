@@ -23,7 +23,6 @@ FUNCTION dmsp_load, f, yr, mon, dy, tvar = tvar, reload=reload
 ;     H.Koike 2020/05/10
 ;
 ;===========================================================+
-COMPILE_OPT IDL2, STATIC
 
 compile_aacgm
 ;-------------------------------------------------+

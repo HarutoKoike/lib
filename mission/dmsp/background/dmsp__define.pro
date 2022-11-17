@@ -81,7 +81,7 @@ END
 ;*----------   ----------*
 ;
 FUNCTION dmsp::root_dir
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 root = GETENV('DATA_PATH')
 IF STRLEN(root) EQ 0 THEN root = GETENV('SPEDAS_DATA_DIR')

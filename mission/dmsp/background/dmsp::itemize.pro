@@ -1,5 +1,5 @@
 PRO dmsp::itemize
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 PRINT, ''
 PRINT, ''
 PRINT, ''

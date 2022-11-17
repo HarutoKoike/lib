@@ -40,8 +40,8 @@ get_data, 'pos_z_gsm_c3', data=p3z
 get_data, 'pos_z_gsm_c4', data=p4z
 
 
-disc = ~ISA(b1, 'STRUCT') OR ~ISA(b2, 'STRUCT')  OR ~ISA(b3, 'STRUCT') OR $
-       ~ISA(b4, 'STRUCT') OR ~ISA(p1x, 'STRUCT') OR ~ISA(p2x, 'STRUCT') OR $
+disc = ~ISA(b1, 'STRUCT')  OR ~ISA(b2, 'STRUCT')  OR ~ISA(b3, 'STRUCT') OR $
+       ~ISA(b4, 'STRUCT')  OR ~ISA(p1x, 'STRUCT') OR ~ISA(p2x, 'STRUCT') OR $
        ~ISA(p3x, 'STRUCT') OR ~ISA(p4x, 'STRUCT') OR ~ISA(p1y, 'STRUCT') OR $  
        ~ISA(p2y, 'STRUCT') OR ~ISA(p3y, 'STRUCT') OR ~ISA(p4y, 'STRUCT') OR $  
        ~ISA(p1z, 'STRUCT') OR ~ISA(p2z, 'STRUCT') OR ~ISA(p3z, 'STRUCT') OR $  
@@ -49,6 +49,7 @@ disc = ~ISA(b1, 'STRUCT') OR ~ISA(b2, 'STRUCT')  OR ~ISA(b3, 'STRUCT') OR $
 
 IF disc THEN RETURN
 
+;
 ;*---------- interpolate  ----------*
 ;
 ;
@@ -119,7 +120,7 @@ FOR i = 0, N_ELEMENTS(t) - 1 DO BEGIN
     m = math->fote(REFORM(p1[i, *]), REFORM(p2[i, *]), REFORM(p3[i,*]), $
                    REFORM(p4[i, *]), $
                    REFORM(b1[i, *]), REFORM(b2[i, *]), REFORM(b3[i,*]), $
-                   REFORM(b4[i, *]), null=np, /save)
+                   REFORM(b4[i, *]), null=np)
     ;
     dp1[i] = SQRT(TOTAL( (p1[i, *] - np)^2 ))
     dp2[i] = SQRT(TOTAL( (p2[i, *] - np)^2 ))
