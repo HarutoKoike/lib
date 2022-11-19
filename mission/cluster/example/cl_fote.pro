@@ -21,7 +21,7 @@ cl_load, 4, /fgm
 ;myspedas->tmva,'B_xyz_gsm__C4_PP_FGM', 'B_xyz_gsm__C3_PP_FGM', trange
 ;
 
-t_cut = '2004-03-10/12:30:30'
+t_cut = '2004-03-10/12:29:59'
 ;t_cut = '2003-10-09/02:25:04'
 
 ;get_data, 'B_xyz_gsm__C1_PP_FGM_LMN', data=b1 
