@@ -4,8 +4,7 @@ PRO cl_fote, t_cut
 END
 
 
-myspedas->timespan, 2004, 3, 10, 12, dhr=1
-;myspedas->timespan, 2003, 10, 9, 2, dhr=1
+mytimespan, 2004, 3, 10, 11, dhr=2
 
 cl_load, 1, /fgm
 cl_load, 2, /fgm
@@ -103,7 +102,8 @@ center = (x1 + x2 + x3 +x4) / 4.
 ;
 
 ;
-
+math = obj_new('math')
+idlplotlib=obj_new('idlplotlib')
 
 m = math->fote(x1, x2, x3, x4, b1, b2, b3, b4, /save)
                                                  
@@ -121,15 +121,15 @@ idlplotlib->field_line3d, 'fote_polynominal', xrange, yrange, zrange, nseed=50, 
                           xtitle='X!DGSE!N(R!DE!N)', ytitle='Y!DGSE!N(R!DE!N)', $
                           ztitle='Z!DGSE!N(R!DE!N)', title=title
 
-p1 = scatterplot3d([x1[0], x1[0]], [x1[1], x1[1]], [x1[2], x1[2]], /over, /sym_filled, $
-                   sym_object=orb(), sym_color='black', name='C1')
-p2 = scatterplot3d([x2[0], x2[0]], [x2[1], x2[1]], [x2[2], x2[2]], /over, /sym_filled, $
-                   sym_object=orb(), sym_color='blue', name='C2')
-p3 = scatterplot3d([x3[0], x3[0]], [x3[1], x3[1]], [x3[2], x3[2]], /over, /sym_filled, $
-                   sym_object=orb(), sym_color='red', name='C3')
-p4 = scatterplot3d([x4[0], x4[0]], [x4[1], x4[1]], [x4[2], x4[2]], /over, /sym_filled, $
-                   sym_object=orb(), sym_color='green', name='C4')
-
+;p1 = scatterplot3d([x1[0], x1[0]], [x1[1], x1[1]], [x1[2], x1[2]], /over, /sym_filled, $
+;                   sym_object=orb(), sym_color='black', name='C1')
+;p2 = scatterplot3d([x2[0], x2[0]], [x2[1], x2[1]], [x2[2], x2[2]], /over, /sym_filled, $
+;                   sym_object=orb(), sym_color='blue', name='C2')
+;p3 = scatterplot3d([x3[0], x3[0]], [x3[1], x3[1]], [x3[2], x3[2]], /over, /sym_filled, $
+;                   sym_object=orb(), sym_color='red', name='C3')
+;p4 = scatterplot3d([x4[0], x4[0]], [x4[1], x4[1]], [x4[2], x4[2]], /over, /sym_filled, $
+;                   sym_object=orb(), sym_color='green', name='C4')
+;
 pl1 = plot3d([x1[0], x2[0]], [x1[1], x2[1]], [x1[2], x2[2]], /over)
 pl2 = plot3d([x2[0], x3[0]], [x2[1], x3[1]], [x2[2], x3[2]], /over)
 pl3 = plot3d([x3[0], x4[0]], [x3[1], x4[1]], [x3[2], x4[2]], /over)

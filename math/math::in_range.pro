@@ -21,7 +21,7 @@ FUNCTION math::in_range, x, range
 ;    H.Koike 
 ;===========================================================+
 ;
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 nx = N_ELEMENTS(x)
 ;

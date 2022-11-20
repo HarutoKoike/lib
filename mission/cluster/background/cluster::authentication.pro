@@ -97,6 +97,9 @@ user_agent = 'IDL' + !VERSION.RELEASE
 ourl = OBJ_NEW('IDLnetUrl')
 ourl->SetProperty, /VERBOSE
 ourl->SetProperty, AUTHENTICATION=3
+ourl->SetProperty, SSL_VERSION=0
+IF FLOAT(!VERSION.RELEASE) LE 8.4 THEN $
+    ourl->SetProperty, SSL_VERIFY_PEER=0
 ourl->SetProperty, URL_SCHEME = 'https'
 ourl->SetProperty, URL_HOST  = url_host
 ourl->SetProperty, URL_PATH  = url_path

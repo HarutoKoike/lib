@@ -47,7 +47,13 @@ cdf2tplot, files, /all
 ;
 ;*---------- var label ----------*
 ;
-re = !const.r_earth * 1.e-3
+IF FLOAT(!VERSION.RELEASE) LE 8.3 THEN BEGIN
+    re = 6378.1369029452326
+ENDIF ELSE BEGIN 
+    re = !const.r_earth * 1.e-3
+ENDELSE
+;
+;
 get_data, 'sc_r_xyz_gse__CL_SP_AUX', data = r0
 sc0 = sc
 ;

@@ -13,6 +13,10 @@ COMPILE_OPT IDL2
 ;
 PRINT, '% CLUSTER object has been created'
 ;
+self->setprop, password='@_2CLDBBmjpbrss', username='hkoike'
+;
+
+;
 RETURN, 1
 END
 
@@ -41,6 +45,7 @@ END
 PRO cluster::SetProp, st=st, et=et, sc=sc, username=username,$
                       password=password, _EXTRA=e
 COMPILE_OPT IDL2
+;
 IF KEYWORD_SET(st) THEN self.st = st
 IF KEYWORD_SET(et) THEN self.et = et
 IF KEYWORD_SET(sc) THEN self.sc = STRING(sc, FORMAT='(I1)')
@@ -87,13 +92,20 @@ END
 ;-------------------------------------------------+
 PRO cluster__define
 COMPILE_OPT IDL2
+;
+IF FLOAT(!VERSION.RELEASE) LT 8.3 THEN BEGIN
+    @cluster::const.pro
+    print, const
+    DEFSYSV, '!CONST', const, 1
+ENDIF 
+;
 void = {                                 $
         cluster,                         $
         st       : '',                   $
         et       : '',                   $
         sc       : '',                   $
-        username : 'hkoike'             ,$
-        password : '@_2CLDBBmjpbrss'    ,$
+        username : ''                   ,$
+        password : ''                   ,$
         INHERITS IDL_OBJECT              $
         }
 END

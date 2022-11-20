@@ -58,7 +58,7 @@ PRO idlplotlib::field_line3d, funcname, xrange, yrange, $
 ;  H.Koike 
 ;===========================================================+
 ;
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 
 
@@ -122,6 +122,8 @@ max_mag = 30.
 ;
 ;
 ; forward
+;
+math = OBJ_NEW('math')
 ;
 FOR i = 0, nseed - 1 DO BEGIN
     ;
@@ -227,12 +229,15 @@ FOR i = 0, nseed - 1 DO BEGIN
 ENDFOR   
 
 cb = COLORBAR(ORIENTATION=1, $
-              POSITION=[0.90,0.1,0.93,0.75], $
-              RANGE=[0, max_mag], title='|B| (nT)', RGB_TABLE=rgb_table)
+              TARGET=p, $
+              ;POSITION=[0.90,0.1,0.93,0.75], $
+               title='|B| (nT)', RGB_TABLE=rgb_table $
+               ;RANGE=[0, max_mag]$
+               )
 
 END
 
-
+;
 seed = fltarr(3, 2)
 seed[0, 0] = 0
 seed[1, 0] = 30
@@ -241,6 +246,7 @@ seed[0, 0] = 0
 seed[1, 0] = 10
 seed[2, 0] = -50
 
+idlplotlib=obj_new('idlplotlib')
 idlplotlib->field_line3d, 'coulomb', [-40, 40], [-40, 40], [-40, 40], nseed=50
-
+;
 end

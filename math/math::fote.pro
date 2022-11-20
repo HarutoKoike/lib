@@ -38,7 +38,7 @@ FUNCTION math::fote, x1, x2, x3, x4, b1, b2, b3, b4, xref=xref, save=save, $
 ;    2022/10/01 H.Koike
 ;===========================================================+
 ;
-COMPILE_OPT IDL2, STATIC
+COMPILE_OPT IDL2
 ;
 ptr   = OBJ_NEW('PTR')
 ;

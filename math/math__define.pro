@@ -1,7 +1,7 @@
 @math::in_range.pro
 @math::fote.pro
-@math::dht_frame.pro
-@math::walen_test.pro
+;@math::dht_frame.pro
+;@math::walen_test.pro
 
 FUNCTION math::init
 COMPILE_OPT IDL2

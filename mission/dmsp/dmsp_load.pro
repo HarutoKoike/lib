@@ -23,6 +23,7 @@ FUNCTION dmsp_load, f, yr, mon, dy, tvar = tvar, reload=reload
 ;     H.Koike 2020/05/10
 ;
 ;===========================================================+
+FORWARD_FUNCTION aacgm_v2_setdatetime, convcoord_v2, MLTconvert_v2
 
 compile_aacgm
 ;-------------------------------------------------+

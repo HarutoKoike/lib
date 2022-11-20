@@ -48,6 +48,8 @@ PRINT, date
 ;-------------------------------------------------+
 ourl = OBJ_NEW('IDLnetURL')
 ;user = 'IDL' + !VERSION.RELEASE
+IF FLOAT(!VERSION.RELEASE) LE 8.4 THEN $
+    ourl->SETPROPERTY, SSL_VERIFY_PEER=0
 ;
 IF KEYWORD_SET(ssj) THEN BEGIN
 	remote_file = self->fileurl(/ssj)
@@ -59,6 +61,10 @@ IF KEYWORD_SET(ssm) THEN BEGIN
 ENDIF
 ;
 
+print, 'aaaaaaaaaaaa'
+print, 'aaaaaaaaaaaa'
+print, 'aaaaaaaaaaaa'
+print, remote_file
 dum = ourl->Get(URL=remote_file, FILENAME=local_file)
 ;
 success = 1

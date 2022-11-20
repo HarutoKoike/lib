@@ -27,7 +27,12 @@ IF ~success THEN RETURN, 0
 ;
 ;*---------- gunzip file  ----------*
 ;
-FILE_GUNZIP, fn, /DELETE
+IF FLOAT(!VERSION.RELEASE) LE 8.4 THEN BEGIN
+    SPAWN, 'gunzip ' + fn
+ENDIF ELSE BEGIN
+    FILE_GUNZIP, fn, /DELETE
+ENDELSE
+;
 fn = STRMID(fn, 0, STRPOS(fn, '.gz') ) 
 
 

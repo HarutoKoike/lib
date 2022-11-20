@@ -105,21 +105,21 @@ query = query[0]
 ;
 ;*---------- Error handle  ----------*
 ;
-CATCH, error_status
-IF error_status NE 0 THEN BEGIN
-    CATCH, /CANCEL
-    MESSAGE, !ERROR_STATE.MSG, /CONTINUE
-    ;
-    ourl->GetProperty, RESPONSE_CODE=rc, RESPONSE_HEADER=rh, $
-            	      	 RESPONSE_FILENAME=rf
-    ;
-    PRINT, '% Response Code = ' + rc
-    PRINT, '% Response Header = ' + rh
-    PRINT, '% Response Filename = ' + rf
-    PRINT, '% Request stoped'
-    OBJ_DESTROY, ourl
-    RETURN
-ENDIF
+;CATCH, error_status
+;IF error_status NE 0 THEN BEGIN
+;    CATCH, /CANCEL
+;    MESSAGE, !ERROR_STATE.MSG, /CONTINUE
+;    ;
+;    ourl->GetProperty, RESPONSE_CODE=rc, RESPONSE_HEADER=rh, $
+;            	      	 RESPONSE_FILENAME=rf
+;    ;
+;    PRINT, '% Response Code = ' + rc
+;    PRINT, '% Response Header = ' + rh
+;    PRINT, '% Response Filename = ' + rf
+;    PRINT, '% Request stoped'
+;    OBJ_DESTROY, ourl
+;    RETURN
+;ENDIF
 ; 
 
 
@@ -132,6 +132,9 @@ user_agent = 'IDL' + !VERSION.RELEASE
 ;
 ourl = OBJ_NEW('IDLnetUrl')
 ourl->SetProperty, /VERBOSE
+ourl->SetProperty, SSL_VERSION=0
+IF FLOAT(!VERSION.RELEASE) LE 8.4 THEN $
+    ourl->SetProperty, SSL_VERIFY_PEER=0
 ourl->SetProperty, URL_SCHEME = 'https'
 ourl->SetProperty, URL_HOST  = url_host
 ourl->SetProperty, URL_PATH  = url_path
@@ -153,7 +156,12 @@ OBJ_DESTROY, ourl
 ;
 ;*---------- uncompress gzip file  ----------*
 ;
-FILE_GUNZIP, filename, /DELETE
+IF FLOAT(!VERSION.RELEASE) LT 8.3 THEN BEGIN 
+    SPAWN, 'gunzip ' + filename
+    ;FILE_DELETE, filename
+ENDIF ELSE BEGIN
+    FILE_GUNZIP, filename, /DELETE
+ENDELSE
 ;
 ;
 ;*---------- rename .tar.gz file  ----------*
