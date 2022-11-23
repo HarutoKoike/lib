@@ -105,22 +105,22 @@ query = query[0]
 ;
 ;*---------- Error handle  ----------*
 ;
-;CATCH, error_status
-;IF error_status NE 0 THEN BEGIN
-;    CATCH, /CANCEL
-;    MESSAGE, !ERROR_STATE.MSG, /CONTINUE
-;    ;
-;    ourl->GetProperty, RESPONSE_CODE=rc, RESPONSE_HEADER=rh, $
-;            	      	 RESPONSE_FILENAME=rf
-;    ;
-;    PRINT, '% Response Code = ' + rc
-;    PRINT, '% Response Header = ' + rh
-;    PRINT, '% Response Filename = ' + rf
-;    PRINT, '% Request stoped'
-;    OBJ_DESTROY, ourl
-;    RETURN
-;ENDIF
-; 
+CATCH, error_status
+IF error_status NE 0 THEN BEGIN
+    CATCH, /CANCEL
+    MESSAGE, !ERROR_STATE.MSG, /CONTINUE
+    ;
+    ourl->GetProperty, RESPONSE_CODE=rc, RESPONSE_HEADER=rh, $
+            	      	 RESPONSE_FILENAME=rf
+    ;
+    PRINT, '% Response Code = ' + rc
+    PRINT, '% Response Header = ' + rh
+    PRINT, '% Response Filename = ' + rf
+    PRINT, '% Request stoped'
+    OBJ_DESTROY, ourl
+    RETURN
+ENDIF
+ 
 
 
 ;

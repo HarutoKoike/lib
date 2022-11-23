@@ -1,14 +1,7 @@
-PRO cl_load, sc0, yr, mon, dy, hr, min, sec, _EXTRA=e, $
+PRO cl_load, sc0, $
              cis=cis, fgm=fgm, aux=aux, peace=peace, $
-             edi=edi, efw=efw, staff=staff, walen_test=walen_test, $
-             fote=fote
+             edi=edi, efw=efw, staff=staff, walen_test=walen_test
 
-
-
-IF ISA(yr) AND ISA(mon) AND ISA(dy) THEN BEGIN
-    myspedas->timespan, yr, mon, dy, hr, min, sec, _EXTRA=e
-ENDIF
-;
 
 
 FOR i = 0, N_ELEMENTS(sc0) - 1 DO BEGIN
@@ -67,9 +60,6 @@ FOR i = 0, N_ELEMENTS(sc0) - 1 DO BEGIN
         cluster->walen_test, sc
     ENDIF
     ;
-    IF KEYWORD_SET(fote) THEN BEGIN
-        cluster->fote
-    ENDIF
 
 ENDFOR
 

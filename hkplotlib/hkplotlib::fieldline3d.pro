@@ -1,14 +1,3 @@
-;function func1, r
-;
-;idx = [2, 0, 1]
-;x = r[1]
-;y = - r[0]
-;z = 10
-;return, [x, y, z]
-;end
-;
-;
-;
 function coulomb, r
 c  = [1, -1]
 xc = [20, -5, 10]
@@ -35,9 +24,10 @@ end
 
 ;===========================================================+
 ; ++ NAME ++
-PRO idlplotlib::field_line3d, funcname, xrange, yrange, $
-                              zrange, seed=seed, nseed=nseed, $
-                              max_mag=max_mag, _EXTRA=ex
+FUNCTION hkplotlib::field_line3d, funcname, xrange, yrange,$
+                             zrange, seed=seed, nseed=nseed,$
+                             _EXTRA=ex, range=range, $
+                             log_color=log_color
 ;
 ; ++ PURPOSE ++
 ;  --> plot field line in 3-D using 4th Runge-Kutta 
@@ -52,7 +42,7 @@ PRO idlplotlib::field_line3d, funcname, xrange, yrange, $
 ; -->  seed:
 ;
 ; ++ CALLING SEQUENCE ++
-;  --> idlplotlib->field_line3d, 'Coulomb', [-100, 100], [100, 150], [100, 120]
+;  --> hkplotlib->field_line3d, 'Coulomb', [-100, 100], [100, 150], [100, 120]
 ;
 ; ++ HISTORY ++
 ;  H.Koike 
@@ -60,26 +50,15 @@ PRO idlplotlib::field_line3d, funcname, xrange, yrange, $
 ;
 COMPILE_OPT IDL2
 ;
-
-
-;xrange = [-50, 50]
-;yrange = xrange
-;zrange = xrange
-
-
 ;
 ;*---------- make frame  ----------*
 ;
-;PLOT_3DBOX, xrange, yrange, zrange, /NODATA
-; Create some data.
  
 rgb_table = 33
 ;
 p = PLOT3D(xrange, yrange, zrange, /NODATA, $
            AXIS_STYLE=1, $
            _EXTRA=ex, RGB_TABLE=rgb_table)
-
-
 
 
 
@@ -91,7 +70,6 @@ h        = 1.5*SQRT( (xrange[1] - xrange[0])^2 +$
                      (yrange[1] - yrange[0])^2 +$
                      (zrange[1] - zrange[0])^2 ) / $
             FLOAT(max_loop)
-;h = 0.1
 
 ;
 
@@ -101,11 +79,8 @@ IF ~KEYWORD_SET(seed) THEN BEGIN
     ;
     seed = FINDGEN(3, ns)
     ;
-    ;seed[0, *] = (FINDGEN(ns) / (ns - 1) - 0.5) * (xrange[1] - xrange[0]) + MEAN(xrange)
-    ;seed[1, *] = (FINDGEN(ns) / (ns - 1) - 0.5) * (yrange[1] - yrange[0]) + MEAN(yrange)
-    ;seed[2, *] = (FINDGEN(ns) / (ns - 1) - 0.5) * (zrange[1] - zrange[0]) + MEAN(zrange)
-    seed[0, *] = (RANDOMU(2411452, ns) - 0.5) * (xrange[1] - xrange[0]) + MEAN(xrange)
-    seed[1, *] = (RANDOMU(31120, ns) - 0.5) * (yrange[1] - yrange[0]) + MEAN(yrange)
+    seed[0, *] = (RANDOMU(2411452321, ns) - 0.5) * (xrange[1] - xrange[0]) + MEAN(xrange)
+    seed[1, *] = (RANDOMU(3112000000, ns) - 0.5) * (yrange[1] - yrange[0]) + MEAN(yrange)
     seed[2, *] = (RANDOMU(3144421888, ns) - 0.5) * (zrange[1] - zrange[0]) + MEAN(zrange)
 ENDIF
 
@@ -115,20 +90,23 @@ seed_size = SIZE(seed, /DIMENSION)
 nseed     = seed_size[1]
 
 
-max_mag = 30.
+;max_mag = 30.
 
 ;
 ;*---------- Runge-Kutta ----------*
 ;
+math = OBJ_NEW('math')
+posx_all = []
+posy_all = []
+posz_all = []
+mag_all  = []
+sepidx   = []
 ;
 ; forward
 ;
-math = OBJ_NEW('math')
 ;
 FOR i = 0, nseed - 1 DO BEGIN
     ;
-    ; color
-    vert_colors = []
     ;
     ; start point
     p = REFORM(seed[*, i])
@@ -171,8 +149,11 @@ FOR i = 0, nseed - 1 DO BEGIN
     ;
     IF count LE 1 THEN CONTINUE
     ;
-    vert_color = mag/max_mag*255. < 255.
-    p = PLOT3D(posx, posy, posz, vert_color=vert_color, rgb_table=rgb_table, /OVERPLOT, _EXTRA=ex);, 'o', /sym_filled)
+    posx_all = [posx_all, posx]
+    posy_all = [posy_all, posy]
+    posz_all = [posz_all, posz]
+    mag_all  = [mag_all, mag]
+    sepidx   = [sepidx, count + 1]
 ENDFOR
 ;
 ; backward
@@ -180,8 +161,6 @@ ENDFOR
 h = -h
 FOR i = 0, nseed - 1 DO BEGIN
     ;
-    ; color
-    vert_colors = []
     ;
     ; start point
     p = REFORM(seed[*, i])
@@ -224,29 +203,38 @@ FOR i = 0, nseed - 1 DO BEGIN
     ;
     IF count LE 1 THEN CONTINUE
     ;
-    vert_color = mag/max_mag*255. < 255.
-    p = PLOT3D(posx, posy, posz, vert_color=vert_color, RGB_TABLE=rgb_table, /OVERPLOT, _EXTRA=ex);, 'o', /sym_filled)
+    posx_all = [posx_all, posx]
+    posy_all = [posy_all, posy]
+    posz_all = [posz_all, posz]
+    mag_all  = [mag_all, mag]
+    sepidx   = [sepidx, count+1]
 ENDFOR   
 
-cb = COLORBAR(ORIENTATION=1, $
-              TARGET=p, $
-              ;POSITION=[0.90,0.1,0.93,0.75], $
-               title='|B| (nT)', RGB_TABLE=rgb_table $
-               ;RANGE=[0, max_mag]$
-               )
+
+
+;
+;*----------   ----------*
+;
+min = MIN(mag_all, /NAN)
+max = MAX(mag_all, /NAN)
+IF ARG_PRESENT(range) THEN range = [min, max]
+;
+IF KEYWORD_SET(log_color) THEN BEGIN
+    vert_color = BYTSCL(ALOG10(mag_all))
+ENDIF ELSE BEGIN
+    vert_color = BYTSCL(mag_all)
+ENDELSE
+
+
+istart = 0
+FOR i = 0, N_ELEMENTS(sepidx) - 1 DO BEGIN
+    iend = istart + sepidx[i] - 1
+    p = PLOT3D(posx_all[istart:iend], posy_all[istart:iend], posz_all[istart:iend], VERT_COLOR=vert_color[istart:iend], $
+                RGB_TABLE=rgb_table, /OVERPLOT, $
+                _EXTRA=ex)
+    istart = iend + 1
+ENDFOR
+
+RETURN, p
 
 END
-
-;
-seed = fltarr(3, 2)
-seed[0, 0] = 0
-seed[1, 0] = 30
-seed[2, 0] = -50
-seed[0, 0] = 0
-seed[1, 0] = 10
-seed[2, 0] = -50
-
-idlplotlib=obj_new('idlplotlib')
-idlplotlib->field_line3d, 'coulomb', [-40, 40], [-40, 40], [-40, 40], nseed=50
-;
-end

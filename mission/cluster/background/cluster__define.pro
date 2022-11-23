@@ -2,20 +2,21 @@
 @cluster::input.pro
 @cluster::file_search.pro
 @cluster::download.pro
-;@cluster::tplot_names.pro
-;@cluster::plot_basic_var.pro
-;@cluster::walen_test.pro
-;@cluster::curlometer.pro
-;@cluster::fote.pro
+@cluster::plot_fieldline3d.pro
 
 FUNCTION cluster::init
 COMPILE_OPT IDL2
 ;
 PRINT, '% CLUSTER object has been created'
 ;
-self->setprop, password='@_2CLDBBmjpbrss', username='hkoike'
+csa = FILE_WHICH('csa_info.csv') 
+IF STRLEN(csa) EQ 0 THEN $
+    MESSAGE, 'No file for CSA user information'
 ;
-
+csa      = READ_CSV(csa)
+username = csa.field1
+password = csa.field2
+self->setprop, password=password, username=username
 ;
 RETURN, 1
 END
@@ -24,7 +25,7 @@ END
 
 ;-------------------------------------------------+
 ; 
-;-------------------------------------------------+
+;-----------------------------------------------+
 PRO cluster::GetProp, st=st, et=et, sc=sc, username=username, $
                       password=password
 COMPILE_OPT IDL2
@@ -95,7 +96,6 @@ COMPILE_OPT IDL2
 ;
 IF FLOAT(!VERSION.RELEASE) LT 8.3 THEN BEGIN
     @cluster::const.pro
-    print, const
     DEFSYSV, '!CONST', const, 1
 ENDIF 
 ;
