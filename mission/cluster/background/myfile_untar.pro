@@ -9,7 +9,7 @@ IF ~KEYWORD_SET(root_dir) THEN $
 ;
 ;*-redirect file names in the archive to the buffer file
 ;
-SPAWN, 'echo | tar -tf ' + tar_archive + ' |  > tar-buff.txt'
+SPAWN, 'tar -tf ' + tar_archive + ' > tar-buff.txt'
 ;
 ;*---------- read buffer file  ----------*
 ;
