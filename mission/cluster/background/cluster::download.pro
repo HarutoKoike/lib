@@ -105,21 +105,21 @@ query = query[0]
 ;
 ;*---------- Error handle  ----------*
 ;
-CATCH, error_status
-IF error_status NE 0 THEN BEGIN
-    CATCH, /CANCEL
-    MESSAGE, !ERROR_STATE.MSG, /CONTINUE
-    ;
-    ourl->GetProperty, RESPONSE_CODE=rc, RESPONSE_HEADER=rh, $
-            	      	 RESPONSE_FILENAME=rf
-    ;
-    PRINT, '% Response Code = ' + rc
-    PRINT, '% Response Header = ' + rh
-    PRINT, '% Response Filename = ' + rf
-    PRINT, '% Request stoped'
-    OBJ_DESTROY, ourl
-    RETURN
-ENDIF
+;CATCH, error_status
+;IF error_status NE 0 THEN BEGIN
+;    CATCH, /CANCEL
+;    MESSAGE, !ERROR_STATE.MSG, /CONTINUE
+;    ;
+;    ourl->GetProperty, RESPONSE_CODE=rc, RESPONSE_HEADER=rh, $
+;            	      	 RESPONSE_FILENAME=rf
+;    ;
+;    PRINT, '% Response Code = ' + rc
+;    PRINT, '% Response Header = ' + rh
+;    PRINT, '% Response Filename = ' + rf
+;    PRINT, '% Request stoped'
+;    OBJ_DESTROY, ourl
+;    RETURN
+;ENDIF
  
 
 
@@ -140,9 +140,11 @@ ourl->SetProperty, URL_HOST  = url_host
 ourl->SetProperty, URL_PATH  = url_path
 ourl->SetProperty, URL_QUERY = query
 ourl->SetProperty, HEADERS   = 'User-Agent:<' + user_agent + '>'
+ourl->GetProperty, URL_PATH=up
 ;
-buff_file = STRCOMPRESS(SYSTIME()+'buffer.tar.gz', /REMOVE_ALL)
-filename = ourl->GET( filename=FILEPATH(buff_file, root=self->data_rootdir() ) )
+timestamp = STRJOIN( STRSPLIT(SYSTIME(), ':', /EXTRACT) )
+buff_file = STRCOMPRESS(timestamp + 'buffer.tar.gz', /REMOVE_ALL)
+filename  = ourl->GET( filename=FILEPATH(buff_file, root=self->data_rootdir() ) )
 ourl->GetProperty, RESPONSE_HEADER=rh
 OBJ_DESTROY, ourl
 
@@ -158,7 +160,6 @@ OBJ_DESTROY, ourl
 ;
 IF FLOAT(!VERSION.RELEASE) LT 8.3 THEN BEGIN 
     SPAWN, 'gunzip ' + filename
-    ;FILE_DELETE, filename
 ENDIF ELSE BEGIN
     FILE_GUNZIP, filename, /DELETE
 ENDELSE
