@@ -24,7 +24,7 @@ end
 
 ;===========================================================+
 ; ++ NAME ++
-FUNCTION hkplotlib::field_line3d, funcname, xrange, yrange,$
+FUNCTION hkplotlib::fieldline3d, funcname, xrange, yrange,$
                              zrange, seed=seed, nseed=nseed,$
                              _EXTRA=ex, range=range, $
                              log_color=log_color

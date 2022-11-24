@@ -82,8 +82,55 @@ yrange = [-0.1, 0.1]*yodds + center[1]
 zrange = [-0.1, 0.1]*zodds + center[2]
 
 
-p = hpl->field_line3d('fote_polynominal', xrange, yrange, zrange, nseed=10, range=range, $
-                       xtitle='X!DGSE!N(R!DE!N)', ytitle='Y!DGSE!N(R!DE!N)', $
-                       ztitle='Z!DGSE!N(R!DE!N)', title=title, _EXTRA=ex)
+p = hpl->fieldline3d('fote_polynominal', xrange, yrange, zrange, nseed=10, range=range, $
+                      xtitle='X!DGSE!N(R!DE!N)', ytitle='Y!DGSE!N(R!DE!N)', $
+                      ztitle='Z!DGSE!N(R!DE!N)', title=title, _EXTRA=ex)
+
+
+;
+;*---------- plot SC constellation  ----------*
+;
+dum = PLOT3D([x1[0], x2[0]], [x1[1], x2[1]], [x1[2], x2[2]], /OVERPLOT)
+dum = PLOT3D([x2[0], x3[0]], [x2[1], x3[1]], [x2[2], x3[2]], /OVERPLOT)
+dum = PLOT3D([x3[0], x4[0]], [x3[1], x4[1]], [x3[2], x4[2]], /OVERPLOT)
+dum = PLOT3D([x4[0], x1[0]], [x4[1], x1[1]], [x4[2], x1[2]], /OVERPLOT)
+dum = PLOT3D([x1[0], x3[0]], [x1[1], x3[1]], [x1[2], x3[2]], /OVERPLOT)
+dum = PLOT3D([x2[0], x4[0]], [x2[1], x4[1]], [x2[2], x4[2]], /OVERPLOT)
+ 
+IF FLOAT(!VERSION.RELEASE) GE 8.3 THEN BEGIN
+    pos1 = SCATTERPLOT3D(x1[0], x1[1], x1[2], /SYM_FILLED, SYM_OBJECT=ORB(), $
+                        /OVERPLOT, SYM_COLOR='Black', NAME='C1')
+    pos2 = SCATTERPLOT3D(x2[0], x2[1], x2[2], /SYM_FILLED, SYM_OBJECT=ORB(), $
+                        /OVERPLOT, SYM_COLOR='Blue', NAME='C2')
+    pos3 = SCATTERPLOT3D(x3[0], x3[1], x3[2], /SYM_FILLED, SYM_OBJECT=ORB(), $
+                        /OVERPLOT, SYM_COLOR='Red', NAME='C3')
+    pos4 = SCATTERPLOT3D(x4[0], x4[1], x4[2], /SYM_FILLED, SYM_OBJECT=ORB(), $
+                        /OVERPLOT, SYM_COLOR='Green', NAME='C4')
+    leg = LEGEND(TARGET=[pos1, pos2, pos3, pos4], /AUTO_TEXT_COLOR)
+ENDIF ELSE BEGIN
+    orb1 = OBJ_NEW('ORB', COLOR=[0, 0, 0])
+    pos1 = PLOT3D([x1[0]], [x1[1]], [x1[2]], SYM_OBJECT=orb1, $
+                 /OVERPLOT, NAME='C1', COLOR='Black')
+    ;
+    orb2 = OBJ_NEW('ORB', COLOR=[0, 0, 255])
+    pos2 = PLOT3D([x2[0]], [x2[1]], [x2[2]], SYM_OBJECT=orb2, $
+                 /OVERPLOT, NAME='C2', COLOR='BLUE')
+    ;
+    orb3 = OBJ_NEW('ORB', COLOR=[255, 0, 0])
+    pos3 = PLOT3D([x3[0]], [x3[1]], [x3[2]], SYM_OBJECT=orb3, $
+                  /OVERPLOT, NAME='C3', COLOR='Red')
+    ;
+    orb4 = OBJ_NEW('ORB', COLOR=[0, 255, 0])
+    pos4 = PLOT3D([x4[0]], [x4[1]], [x4[2]], SYM_OBJECT=orb4, $
+                  /OVERPLOT, NAME='C4', COLOR=[0, 255, 0])
+    ;
+    leg = LEGEND(TARGET=[pos1, pos2, pos3, pos4], /AUTO_TEXT_COLOR)
+ENDELSE
+
+
+
 RETURN, p
 END
+
+
+

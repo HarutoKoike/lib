@@ -1,8 +1,9 @@
 ;===========================================================+
 ; ++ NAME ++
-PRO cis::plot_psd, _EXTRA=e, proton=proton, ion=ion, hs=hs, ls=ls, rpa=rpa,      $
-                   mag=mag, sw=sw, pef=pef, pf=pf, cs=cs, psd=psd, time=time ,   $
-                   dim=dim, trange=trange, ignore_load=ignore_load
+PRO cis::plot_psd, _EXTRA=ex, proton=proton, ion=ion, hs=hs, ls=ls, rpa=rpa, $
+                   mag=mag, sw=sw, pef=pef, pf=pf, cs=cs, psd=psd, time=time,$
+                   dim=dim, trange=trange, ignore_load=ignore_load, $
+                   rotation=rotation
 ;
 ; ++ PURPOSE ++
 ;  -->
@@ -26,8 +27,6 @@ PRO cis::plot_psd, _EXTRA=e, proton=proton, ion=ion, hs=hs, ls=ls, rpa=rpa,     
 ;
 COMPILE_OPT IDL2
 ;
-;IF KEYWORD_SET(sc) THEN sc = 3
-;sc = STRING(sc, FORMAT='(I1)')
 self->getprop, sc=sc
 ;
 get_timespan, ts
@@ -165,9 +164,12 @@ struct = {$
 
 
 ;
-;*---------- get H+ distribution  ----------*
+;*---------- get ion distribution  ----------*
 ;
 get_data, '3d_ions__' + id, data=distr
+IF ISA(distr, 'INT') THEN $
+    MESSAGE, 'No velocity distribution data is loaded'
+;
 n_time      = N_ELEMENTS(distr.x)
 dist_struct = REPLICATE(struct, n_time) 
 dist_struct.data   = TRANSPOSE(distr.y, [1, 2, 3, 0]) 
@@ -255,14 +257,15 @@ ENDIF
 ;-------------------------------------------------+
 dist_ptr = PTR_NEW(dist_struct, /no_copy)
 ;
+IF KEYWORD_SET(trange) AND ~KEYWORD_SET(time) THEN $
+    time = time_double(trange[0])
+IF ~KEYWORD_SET(rotation) THEN $ 
+    rotation = 'BV'
+;
 slice = spd_slice2d(dist_ptr, time=time, trange=trange, mag_data=mag_data, $
-                    rotation='BE',vel_data=vel_data, /perp_subtract_bulk, $
-                    _extra=e)
+                    rotation=rotation,vel_data=vel_data , _EXTRA=ex $
+                    )
 
-IF KEYWORD_SET(trange) AND ISA(slice, 'BYTE') THEN $
-  slice = spd_slice2d(dist_ptr, time=trange[0], mag_data=mag_data, rotation='BE',$
-                      vel_data=vel_data, /perp_subtract_bulk, $
-                      _extra=e)
 
 
 ;
@@ -273,8 +276,7 @@ IF ~KEYWORD_SET(dim) THEN dim = 2
 ; 2-D cut
 ;
 IF dim EQ 2 THEN BEGIN
-    spd_slice2d_plot, slice, xrange=xrange, yrange=yrange, $
-                      background_color_index=0,  _extra=e, $
+    spd_slice2d_plot, slice, background_color_index=0, _extra=ex, $
                       xtitle='V!Dpara!N(km/s)', ytitle='V!Dperp!N(km/s)'
 ENDIF ELSE BEGIN
 ; 1-D cut ( pitch angle 0 )
@@ -284,7 +286,7 @@ ENDIF ELSE BEGIN
     
     yval = [slice.ygrid[0], slice.ygrid[-1]]
     yval = 0 
-    spd_slice1d_plot, slice, 'x', yval, xrange=xrange, _extra=e, $
+    spd_slice1d_plot, slice, 'x', yval, xrange=xrange, _extra=ex, $
                       yrange=yrange, /ylog, xtitle='V!Dpara!N(km/s)'
     OPLOT, [0, 0], yrange, linestyle=2
 ENDELSE

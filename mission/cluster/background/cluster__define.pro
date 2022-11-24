@@ -9,8 +9,9 @@ COMPILE_OPT IDL2
 ;
 PRINT, '% CLUSTER object has been created'
 ;
-csa = FILE_WHICH('csa_info.csv') 
-IF STRLEN(csa) EQ 0 THEN $
+csa = FILEPATH('csa_info.csv', ROOT=GETENV('HOME'))
+IF ~FILE_TEST(csa) THEN csa = FILE_WHICH('csa_info.csv') 
+IF STRLEN(csa) EQ 0 THEN $      
     MESSAGE, 'No file for CSA user information'
 ;
 csa      = READ_CSV(csa)
