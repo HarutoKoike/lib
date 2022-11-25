@@ -1,7 +1,6 @@
+pro cl_fote_plot, t_cut
 
-
-
-mytimespan, 2004, 3, 10, 12, dhr=1
+;mytimespan, 2004, 3, 10, 12, dhr=1
 cl = OBJ_NEW('cluster')
 t_cut = '2004-03-10/12:28:00'
 title = 'Magnetic Field Line Topology (' + t_cut + ')'
