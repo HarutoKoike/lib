@@ -2,7 +2,8 @@
 
 
 ## requirements
-* Spedas>4.0
+* IDL8.0
+* Spedas3.0
 
 ## CIS(HIA/CODIF)
 ```
