@@ -1,18 +1,19 @@
 ;===========================================================+
 ; ++ NAME ++
-FUNCTION cluster::plot_fieldline3d, t_cut, xodds, yodds, zodds, range=range, _EXTRA=ex
+FUNCTION cluster::plot_fieldline3d, t_cut, xrange=xrange, yrange=yrange, $
+                                    zrange=zrange, vrange=vrange, _EXTRA=ex
 ;
 ; ++ PURPOSE ++
-;  -->
+;  --> vizualize magnetic field line topology around the four Cluster spacecrafts
 ;
 ; ++ POSITIONAL ARGUMENTS ++
 ;  --> t_cut(STRING): time string of the moment to be plotedfield line
 ;
 ; ++ KEYWORDS ++
-; -->
+; -->  [X, Y, X]range: range of plotting area
 ;
 ; ++ CALLING SEQUENCE ++
-;  -->
+;  --> p = cluster->plot_filedline3d('2004-01-01/12:00:00', xrange=[10, 12])
 ;
 ; ++ HISTORY ++
 ;  H.Koike 
@@ -71,18 +72,25 @@ hpl  = OBJ_NEW('hkplotlib')
 m = math->fote(x1, x2, x3, x4, b1, b2, b3, b4, /save)
 
 
-
-IF ~ISA(xodds) THEN xodds = 3.
-IF ~ISA(yodds) THEN yodds = 3.
-IF ~ISA(zodds) THEN zodds = 3.
+d1 = TOTAL( SQRT((x1 - x2)^2) )
+d2 = TOTAL( SQRT((x1 - x3)^2) )
+d3 = TOTAL( SQRT((x1 - x4)^2) )
+d4 = TOTAL( SQRT((x2 - x3)^2) )
+d5 = TOTAL( SQRT((x2 - x4)^2) )
+d6 = TOTAL( SQRT((x3 - x4)^2) )
 ;
-!p.position = [0.07, 0.07, 0.92, 0.95]
-xrange = [-0.1, 0.1]*xodds + center[0]
-yrange = [-0.1, 0.1]*yodds + center[1]
-zrange = [-0.1, 0.1]*zodds + center[2]
+dmax = MAX([d1, d2, d3, d4, d5, d6], /NAN)
 
+IF ~KEYWORD_SET(xrange) THEN $
+    xrange = [-dmax, dmax] + center[0]
+IF ~KEYWORD_SET(yrange) THEN $
+    yrange = [-dmax, dmax] + center[1]
+IF ~KEYWORD_SET(zrange) THEN $
+    zrange = [-dmax, dmax] + center[2]
 
-p = hpl->fieldline3d('fote_polynominal', xrange, yrange, zrange, nseed=10, range=range, $
+;
+
+p = hpl->fieldline3d('fote_polynominal', xrange, yrange, zrange, range=vrange, $
                       xtitle='X!DGSE!N(R!DE!N)', ytitle='Y!DGSE!N(R!DE!N)', $
                       ztitle='Z!DGSE!N(R!DE!N)', title=title, _EXTRA=ex)
 
@@ -131,6 +139,3 @@ ENDELSE
 
 RETURN, p
 END
-
-
-
