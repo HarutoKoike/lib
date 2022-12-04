@@ -1,7 +1,8 @@
 ;===========================================================+
 ; ++ NAME ++
 FUNCTION cluster::plot_fieldline3d, t_cut, xrange=xrange, yrange=yrange, $
-                                    zrange=zrange, vrange=vrange, _EXTRA=ex
+                                    zrange=zrange, vrange=vrange, _EXTRA=ex, $
+                                    null=null
 ;
 ; ++ PURPOSE ++
 ;  --> vizualize magnetic field line topology around the four Cluster spacecrafts
@@ -69,7 +70,7 @@ center = (x1 + x2 + x3 +x4) / 4.
 math = OBJ_NEW('math')
 hpl  = OBJ_NEW('hkplotlib')
 ;
-m = math->fote(x1, x2, x3, x4, b1, b2, b3, b4, /save)
+m = math->fote(x1, x2, x3, x4, b1, b2, b3, b4, /save, null=np)
 
 
 d1 = TOTAL( SQRT((x1 - x2)^2) )
@@ -114,7 +115,6 @@ IF FLOAT(!VERSION.RELEASE) GE 8.3 THEN BEGIN
                         /OVERPLOT, SYM_COLOR='Red', NAME='C3')
     pos4 = SCATTERPLOT3D(x4[0], x4[1], x4[2], /SYM_FILLED, SYM_OBJECT=ORB(), $
                         /OVERPLOT, SYM_COLOR='Green', NAME='C4')
-    leg = LEGEND(TARGET=[pos1, pos2, pos3, pos4], /AUTO_TEXT_COLOR)
 ENDIF ELSE BEGIN
     orb1 = OBJ_NEW('ORB', COLOR=[0, 0, 0])
     pos1 = PLOT3D([x1[0]], [x1[1]], [x1[2]], SYM_OBJECT=orb1, $
@@ -132,9 +132,18 @@ ENDIF ELSE BEGIN
     pos4 = PLOT3D([x4[0]], [x4[1]], [x4[2]], SYM_OBJECT=orb4, $
                   /OVERPLOT, NAME='C4', COLOR=[0, 255, 0])
     ;
-    leg = LEGEND(TARGET=[pos1, pos2, pos3, pos4], /AUTO_TEXT_COLOR)
 ENDELSE
 
+
+IF ~KEYWORD_SET(null) THEN $
+    leg = LEGEND(TARGET=[pos1, pos2, pos3, pos4], /AUTO_TEXT_COLOR)
+
+IF KEYWORD_SET(null) THEN BEGIN
+    orb_null = OBJ_NEW('ORB')
+    np = PLOT3D([np[0]], [np[1]], [np[2]], SYM_OBJECT=orb_null, /OVERPLOT, $
+                NAME='Null point', COLOR=[255, 199, 46], SYM_SIZE=1.5)
+    leg = LEGEND(TARGET=[pos1, pos2, pos3, pos4, np], /AUTO_TEXT_COLOR)
+ENDIF
 
 
 RETURN, p

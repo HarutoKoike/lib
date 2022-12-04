@@ -43,11 +43,14 @@ FOREACH fn, files DO  $
 ;
 ;*---------- parallel electron  ----------*
 ;
-get_data, tname, data=d
-get_data, 'Sweep_Energy__C' + sc +'_CP_PEA_PITCH_SPIN_DEFlux', data=e
-str_element, dlim, 'spec', 1, /add
+tname = 'Sweep_Energy__C' + sc +'_CP_PEA_PITCH_SPIN_DEFlux'
+get_data, tname, data=e
+;
+tname = 'Data__C' + sc + '_CP_PEA_PITCH_SPIN_DEFlux'
+get_data, tname, data=d, dlim=dlim
 IF ISA(d, 'INT') THEN RETURN
 ;
+str_element, dlim, 'spec', 1, /add
 tname =  'Parallel_electron__C'+sc
 store_data, tname, data={x:d.x, y:REFORM(d.y[*, *, 0]), v:REFORM(e.y[0, *])},$
             dlim=dlim
