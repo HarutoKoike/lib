@@ -102,8 +102,8 @@ p4  = [ [p4x], [p4y], [p4x] ]
 
 
 n     = N_ELEMENTS(t)
-null  = FLTARR(3, n)
-coeff = FLTARR(12, n)
+null  = FLTARR(n, 3)
+coeff = FLTARR(n, 12)
 ;
 dp1 = FLTARR(n)
 dp2 = FLTARR(n)
@@ -120,6 +120,7 @@ current_mag  = FLTARR(n)
 current_para = FLTARR(n)
 current_perp = FLTARR(n)
 
+math = OBJ_NEW('math')
 FOR i = 0, N_ELEMENTS(t) - 1 DO BEGIN
     ;
     m = math->fote(REFORM(p1[i, *]), REFORM(p2[i, *]), REFORM(p3[i,*]), $
@@ -127,13 +128,13 @@ FOR i = 0, N_ELEMENTS(t) - 1 DO BEGIN
                    REFORM(b1[i, *]), REFORM(b2[i, *]), REFORM(b3[i,*]), $
                    REFORM(b4[i, *]), null=np)
     ;
-    dp1[i] = SQRT(TOTAL( (p1[i, *] - np)^2 ))
-    dp2[i] = SQRT(TOTAL( (p2[i, *] - np)^2 ))
-    dp3[i] = SQRT(TOTAL( (p3[i, *] - np)^2 ))
-    dp4[i] = SQRT(TOTAL( (p4[i, *] - np)^2 ))
+    dp1[i] = SQRT(TOTAL( (REFORM(p1[i, *]) - np)^2 ))
+    dp2[i] = SQRT(TOTAL( (REFORM(p2[i, *]) - np)^2 ))
+    dp3[i] = SQRT(TOTAL( (REFORM(p3[i, *]) - np)^2 ))
+    dp4[i] = SQRT(TOTAL( (REFORM(p4[i, *]) - np)^2 ))
     ;
-    null[*, i]  = np
-    coeff[*, i] = m[0:11]  
+    null[i, *]  = np
+    coeff[i, *] = m[0:11]  
     ;
     op2 = REFORM(p2[i, *] - p1[i, *])
     op3 = REFORM(p3[i, *] - p1[i, *])

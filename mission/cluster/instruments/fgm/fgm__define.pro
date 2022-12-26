@@ -1,4 +1,6 @@
 @fgm::load.pro
+@fgm::fote.pro
+@fgm::curlometer.pro
 
 FUNCTION fgm::init, _EXTRA=e
 ;
