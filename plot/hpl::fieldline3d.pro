@@ -24,7 +24,7 @@ end
 
 ;===========================================================+
 ; ++ NAME ++
-FUNCTION hkplotlib::fieldline3d, funcname, xrange, yrange,$
+FUNCTION hpl::fieldline3d, funcname, xrange, yrange,$
                              zrange, seed=seed, nseed=nseed,$
                              _EXTRA=ex, range=range, $
                              log_color=log_color
@@ -42,7 +42,7 @@ FUNCTION hkplotlib::fieldline3d, funcname, xrange, yrange,$
 ; -->  seed:
 ;
 ; ++ CALLING SEQUENCE ++
-;  --> hkplotlib->field_line3d, 'Coulomb', [-100, 100], [100, 150], [100, 120]
+;  --> hpl->field_line3d, 'Coulomb', [-100, 100], [100, 150], [100, 120]
 ;
 ; ++ HISTORY ++
 ;  H.Koike 

@@ -36,7 +36,7 @@ COMPILE_OPT IDL2
 self->getprop, username=username, password=password
 ;
 root = self->lib_rootdir()
-log  = FILEPATH('.csa_log', ROOT=root)
+log  = FILEPATH('.csa_log', ROOT=GETENV('HOME'))
 
 ;
 last_login = 0d
@@ -112,7 +112,7 @@ filename = ourl->GET(filename=datadir)
 OBJ_DESTROY, ourl
 last_login = SYSTIME(/JUL)
 ;
-FILE_DELETE, filename;, /VERBOSE
+FILE_DELETE, filename
 
 ;
 ;*---------- renew login history  ----------*

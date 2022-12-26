@@ -6,6 +6,7 @@ if ~keyword_set(xrange) then xrange=[-1500, 1500]
 if ~keyword_set(yrange) then yrange=[-1500, 1500]
 
 cis = obj_new('cis', sc=sc) 
+print, t_cut
 cis->plot_psd, /ion, /mag,  time=t_cut, $
                xrange=xrange, yrange=yrange, $
                rotation=rotation, plotbulk=plotbulk, _EXTRA=EX

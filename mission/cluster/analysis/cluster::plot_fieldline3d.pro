@@ -68,7 +68,7 @@ center = (x1 + x2 + x3 +x4) / 4.
 ;*---------- FOTE  ----------*
 ;
 math = OBJ_NEW('math')
-hpl  = OBJ_NEW('hkplotlib')
+hpl  = OBJ_NEW('hpl')
 ;
 m = math->fote(x1, x2, x3, x4, b1, b2, b3, b4, /save, null=np)
 

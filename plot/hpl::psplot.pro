@@ -1,6 +1,6 @@
-PRO idlplotlib::psplot, open=open, close=close, $
-                        filename=filename, $
-                        _EXTRA=ex
+PRO hpl::psplot, open=open, close=close, $
+                 filename=filename, $
+                 _EXTRA=ex
 ;
 COMPILE_OPT IDL2, STATIC
 
@@ -39,4 +39,3 @@ IF KEYWORD_SET(close) THEN BEGIN
 ENDIF
 
 END
-
