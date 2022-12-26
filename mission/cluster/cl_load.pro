@@ -1,6 +1,7 @@
 PRO cl_load, sc0, $
              cis=cis, fgm=fgm, aux=aux, peace=peace, $
-             edi=edi, efw=efw, staff=staff, walen_test=walen_test
+             edi=edi, efw=efw, staff=staff, $
+             walen_test=walen_test, fote=fote
 
 
 
