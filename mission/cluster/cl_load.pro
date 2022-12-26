@@ -60,6 +60,11 @@ FOR i = 0, N_ELEMENTS(sc0) - 1 DO BEGIN
         cluster->walen_test, sc
     ENDIF
     ;
+    IF KEYWORD_SET(fote) THEN BEGIN
+        fgm = OBJ_NEW('fgm')
+        fgm->fote
+        OBJ_DESTROY, fgm
+    ENDIF
 
 ENDFOR
 
