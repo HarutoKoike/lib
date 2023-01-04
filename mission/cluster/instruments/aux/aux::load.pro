@@ -22,7 +22,7 @@ COMPILE_OPT IDL2
 ;
 ;*---------- settings ----------*
 ;
-self->GetProp, st=st, et=et, sc=sc 
+self->GetProperty, st=st, et=et, sc=sc 
 IF ~ISA(sc, 'STRING') THEN sc = STRING(sc, FORMAT='(I1)')
 id = 'CL_SP_AUX'
 

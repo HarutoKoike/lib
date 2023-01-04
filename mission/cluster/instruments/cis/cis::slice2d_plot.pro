@@ -26,7 +26,7 @@ PRO cis::slice2d_plot, _EXTRA=e, proton=proton, ion=ion, hs=hs, ls=ls, rpa=rpa, 
 COMPILE_OPT IDL2
 
 ;time = '2004-03-10/12:26:38'
-self->cluster::GetProp, st=st, et=et, sc=sc
+self->cluster::GetProperty, st=st, et=et, sc=sc
 ;
 ; proton 3-D phase space density (default)
 id = 'C' + sc + '_CP_CIS-CODIF_HS_H1_PSD'

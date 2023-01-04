@@ -4,7 +4,7 @@ COMPILE_OPT IDL2
 ;
 ;*---------- setting  ----------*
 ;
-self->cluster::GetProp, st=st, et=et, sc=sc
+self->cluster::GetProperty, st=st, et=et, sc=sc
 
 ;
 ;*---------- dataset id  ----------*

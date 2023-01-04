@@ -27,7 +27,7 @@ PRO cis::plot_psd, _EXTRA=ex, proton=proton, ion=ion, hs=hs, ls=ls, rpa=rpa, $
 ;
 COMPILE_OPT IDL2
 ;
-self->getprop, sc=sc
+self->GetProperty, sc=sc
 ;
 get_timespan, ts
 date = OBJ_NEW('date')

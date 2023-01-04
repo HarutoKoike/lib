@@ -4,7 +4,7 @@ COMPILE_OPT IDL2
 ;
 ;*---------- dataset id  ----------*
 ;
-self->GetProp, st=st, et=et, sc=sc
+self->GetProperty, st=st, et=et, sc=sc
 id = 'C' + sc + '_CP_EFW_L3_E'
 
 

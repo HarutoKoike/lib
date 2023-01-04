@@ -1,5 +1,6 @@
 @math::in_range.pro
 @math::fote.pro
+@math::remove_outlier.pro
 ;@math::dht_frame.pro
 ;@math::walen_test.pro
 

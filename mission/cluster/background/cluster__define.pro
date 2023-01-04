@@ -17,7 +17,7 @@ IF STRLEN(csa) EQ 0 THEN $
 csa      = READ_CSV(csa)
 username = csa.field1
 password = csa.field2
-self->setprop, password=password, username=username
+self->setproperty, password=password, username=username
 ;
 RETURN, 1
 END
@@ -27,8 +27,8 @@ END
 ;-------------------------------------------------+
 ; 
 ;-----------------------------------------------+
-PRO cluster::GetProp, st=st, et=et, sc=sc, username=username, $
-                      password=password
+PRO cluster::GetProperty, st=st, et=et, sc=sc, username=username, $
+                          password=password
 COMPILE_OPT IDL2
 IF ARG_PRESENT(st) THEN st = self.st
 IF ARG_PRESENT(et) THEN et = self.et
@@ -44,8 +44,8 @@ END
 ;-------------------------------------------------+
 ; 
 ;-------------------------------------------------+
-PRO cluster::SetProp, st=st, et=et, sc=sc, username=username,$
-                      password=password, _EXTRA=e
+PRO cluster::SetProperty, st=st, et=et, sc=sc, username=username,$
+                          password=password, _EXTRA=e
 COMPILE_OPT IDL2
 ;
 IF KEYWORD_SET(st) THEN self.st = st

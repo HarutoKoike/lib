@@ -4,7 +4,7 @@ COMPILE_OPT IDL2
 ;
 ;*---------- dattaset id  ----------*
 ;
-self->getprop, st=st, et=et, sc=sc
+self->GetProperty, st=st, et=et, sc=sc
 id = 'C' + sc + '_PP_EDI'
 
 

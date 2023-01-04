@@ -33,7 +33,7 @@ PRO cluster::authentication, renew =renew
 ;
 COMPILE_OPT IDL2
 ;
-self->getprop, username=username, password=password
+self->GetProperty, username=username, password=password
 ;
 root = self->lib_rootdir()
 log  = FILEPATH('.csa_log', ROOT=GETENV('HOME'))

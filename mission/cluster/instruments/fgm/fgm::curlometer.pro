@@ -20,12 +20,12 @@ PRO fgm::curlometer
 ;
 COMPILE_OPT IDL2, STATIC
 ;
-self->getprop, sc=sc
+self->GetProperty, sc=sc
 FOR i = 1, 4 DO BEGIN
-    self->setprop, sc=i
+    self->SetProperty, sc=i
     self->load
 ENDFOR
-self->setprop, sc=sc 
+self->SetProperty, sc=sc 
 ;
 
 ;

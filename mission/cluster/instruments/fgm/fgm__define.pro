@@ -6,7 +6,7 @@ FUNCTION fgm::init, _EXTRA=e
 ;
 COMPILE_OPT IDL2
 ;
-self->cluster::setprop, _EXTRA=self->cluster::input(_EXTRA=e)
+self->cluster::SetProperty, _EXTRA=self->cluster::input(_EXTRA=e)
 ;
 RETURN, 1
 END
