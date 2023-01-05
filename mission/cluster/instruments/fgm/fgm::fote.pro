@@ -176,8 +176,9 @@ ENDFOR
 ;
 ;*----------   ----------*
 ;
-current = current / !CONST.MU0 / !CONST.R_EARTH * 1.e6 * 1.e-9
-divb    = ABS(divb / current_mag) * 100.  ; divB/|curlB|
+divb        = ABS(divb / current_mag)     ; divB/|curlB|
+current     = current / !CONST.MU0 / !CONST.R_EARTH * 1.e6 * 1.e-9
+current_mag = current_mag / !CONST.MU0 / !CONST.R_EARTH * 1.e6 * 1.e-9
 ;
 current_para = current_para / !CONST.MU0 / !CONST.R_EARTH * 1.e6 * 1.e-9
 current_perp = current_perp / !CONST.MU0 / !CONST.R_EARTH * 1.e6 * 1.e-9
@@ -201,10 +202,11 @@ store_data, 'FOTE_null_in_tetra', data={x:t, y:in_null}
 ;
 store_data, 'FOTE_null_coeff_norm', data={x:t, y:coeff_norm}
 store_data, 'FOTE_curl_current', data={x:t, y:current}
+store_data, 'FOTE_curl_current_mag', data={x:t, y:current_mag}
 store_data, 'FOTE_curl_current_para', data={x:t, y:current_para}
 store_data, 'FOTE_curl_current_perp', data={x:t, y:current_perp}
+store_data, 'FOTE_curl_current_para_perp', data={x:t, y:[ [current_para], [current_perp] ]}
 store_data, 'FOTE_curl_current_ratio', data={x:t, y:ABS(current_para/current_perp)}
-store_data, 'FOTE_curl_current_mag', data={x:t, y:[ [current_para], [current_perp] ]}
 store_data, 'FOTE_divB', data={x:t, y:divb}
 ;
 
@@ -235,10 +237,10 @@ options, 'FOTE_divB', 'ytitle', 'FOTE_divB(%)'
 ;
 options, 'FOTE_curl_current_ratio', 'ytitle', '|J_para/J_parp|'
 ;
-options, 'FOTE_curl_current_mag', 'colors', [50, 220]
-options, 'FOTE_curl_current_mag', 'labels', ['para', 'perp']
-options, 'FOTE_curl_current_mag', 'databar', {yval:0, linestyle:2}
-options, 'FOTE_curl_current_mag', 'ysubtitle', '[10!U-6!NA]'
+options, 'FOTE_curl_current_para_perp', 'colors', [50, 220]
+options, 'FOTE_curl_current_para_perp', 'labels', ['para', 'perp']
+options, 'FOTE_curl_current_para_perp', 'databar', {yval:0, linestyle:2}
+options, 'FOTE_curl_current_para_perp', 'ysubtitle', '[10!U-6!NA]'
 ;
 options, 'FOTE_null_distance', 'colors', [0, 230, 150, 50] 
 options, 'FOTE_null_distance', 'labels', ['C1', 'C2', 'C3', 'C4']

@@ -6,6 +6,7 @@ COMPILE_OPT IDL2
 ;
 self->GetProperty, st=st, et=et, sc=sc
 id = 'C' + sc + '_CP_EFW_L3_E'
+;id = 'C' + sc + '_CP_EFW_L3_E3D_GSE'
 
 
 ;
@@ -20,40 +21,63 @@ IF ~suc THEN RETURN
 ;
 ;*---------- read cdf  ----------*
 ;
-files = self->filesearch(id, st, et)
+files = self->file_search(id, st, et)
 ;
 cdf2tplot, files, /all
 
 
 
 ;
-;*---------- 3D (E*B=0 assumption)  ----------*
+;*----------   ----------*
 ;
 tname = 'E_Vec_xy_ISR2__C' + sc + '_CP_EFW_L3_E'
 get_data, tname, data=e
 ;
-fgm = cl_fgm(sc=sc)
+;
+fgm = fgm(sc=self.sc, st=self.st, et=self.et)
 fgm->load
-;
+OBJ_DESTROY, fgm
 tname_mag = 'B_xyz_gse__C' + sc + '_PP_FGM'
-suffix = '_interp_efw'
-tinterpol, tname_mag, tname, newname=tname_mag+suffix
-;
-get_data, tname_mag + suffix, data=b
-;
-ez  = -TOTAL(b.y[*, 0:1] * e.y[*, 0:1], 2) / REFORM(b.y[*,2]) 
-e3d = FLTARR(N_ELEMENTS(e.x), 3)
-e3d[*, 0:1] = e.y
-e3d[*, 2]   = ez
-;
-tname = 'E_xyz_GSE__C' + sc + '_EFW'
-store_data, tname, data={x:e.x, y:e3d} 
-;
-options, tname, 'colors', [0, 50, 230]
+get_data, tname_mag, data=b
 
-;tname_gsm = 'E_xyz_GSM__C' + sc + '_EFW'
+
 ;
-;cotrans, tname, tname_gsm, /gse2gsm
-;options, tname_gsm, 'colors', [0, 50, 230]
+;
+;*---------- calc Z component of E  ----------*
+;
+;  E is in ISR2 coordinate (almost same direction in X-Y of GSE)
+;  Ez is calculated under the assumption that E*B = 0 (parallel E field is 0)
+;
+ex_gse = e.Y[*, 0]
+ey_gse = e.Y[*, 1]
+bx_gse = interp(b.Y[*, 0], b.X, e.X)
+by_gse = interp(b.Y[*, 1], b.X, e.X)
+bz_gse = interp(b.Y[*, 2], b.X, e.X)
+;
+ez_gse = -(ex_gse * bx_gse + ey_gse * by_gse) / bz_gse
+
+
+;
+;*---------- GSE to GSM  ----------*
+;
+aux = aux(sc=self.sc, st=self.st, et=self.et)
+aux->load
+OBJ_DESTROY, aux
+;
+get_data, 'gse_gsm__CL_SP_AUX', data=ang
+ang = ang.Y * !DTOR
+ang = INTERPOL(ang, N_ELEMENTS(e.X)) 
+ 
+ 
+ex_gsm = ex_gse 
+ey_gsm = ey_gse * COS(ang) - ez_gse * SIN(ang)
+ez_gsm = ey_gse * SIN(ang) + ez_gse * COS(ang)
+;
+tname = 'E_xyz_GSM__C' + sc + '_EFW'
+store_data, tname, data={x:e.x, y:[ [ex_gsm], [ey_gsm], [ez_gsm] ]} 
+options, tname, 'colors', [230, 140, 50]
+options, tname, 'ysubtitle', '[mV/m]'
+
+
 
 END

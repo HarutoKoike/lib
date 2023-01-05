@@ -1,6 +1,6 @@
 ;===========================================================+
 ; ++ NAME ++
-PRO fgm::curlometer 
+PRO fgm::curlometer, full=full 
 ;
 ; ++ PURPOSE ++
 ;  -->
@@ -23,20 +23,30 @@ COMPILE_OPT IDL2, STATIC
 self->GetProperty, sc=sc
 FOR i = 1, 4 DO BEGIN
     self->SetProperty, sc=i
-    self->load
+    self->load, full=full
 ENDFOR
 self->SetProperty, sc=sc 
 ;
+
+;
+IF ~KEYWORD_SET(full) THEN BEGIN
+    tname_suffix = 'B_xyz_gse__C'
+    tname_prefix = '_PP_FGM'
+ENDIF ELSE BEGIN
+    tname_suffix = 'B_vec_xyz_gse__C'
+    tname_prefix = '_CP_FGM_FULL'
+ENDELSE 
+
 
 ;
 ;*---------- magnetic field  ----------*
 ;
 tname_mag = STRARR(4)
 ;
-tname_mag[0] = 'B_xyz_gse__C1_PP_FGM'
-tname_mag[1] = 'B_xyz_gse__C2_PP_FGM'
-tname_mag[2] = 'B_xyz_gse__C3_PP_FGM'
-tname_mag[3] = 'B_xyz_gse__C4_PP_FGM'
+tname_mag[0] = tname_suffix + '1' + tname_prefix
+tname_mag[1] = tname_suffix + '1' + tname_prefix
+tname_mag[2] = tname_suffix + '1' + tname_prefix
+tname_mag[3] = tname_suffix + '1' + tname_prefix
 
 ;
 ;*---------- positions  ----------*

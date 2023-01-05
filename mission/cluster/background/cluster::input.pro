@@ -27,6 +27,6 @@ END
 PRO cluster::reload_timerange
 ;
 COMPILE_OPT IDL2
-self->SetProperty sc=sc
+self->SetProperty, sc=sc
 self->SetProperty, _EXTRA=self->input(sc=sc)
 END

@@ -1,6 +1,39 @@
+PRO cis::load_onboard_moment
+COMPILE_OPT IDL2
+;
+;*---------- settings ----------*
+;
+self->cluster::GetProperty, st=st, et=et, sc=sc
+;
+;
+;*---------- dataset id  ----------*
+;                              
+id = 'C' + sc + '_CP_CIS-HIA_ONBOARD_MOMENTS'
+
+;
+;*---------- download  ----------*
+;
+suc = 1
+IF ~self->cluster::filetest(id, st, et) THEN $
+  self->cluster::download, id, st, et, suc
+IF ~suc THEN RETURN
+
+
+;
+;*---------- read cdf  ----------*
+;
+files = self->cluster::file_search(id, st, et)
+;
+foreach fn, files do $
+    cdf2tplot, fn, /all
+
+ 
+END
+
+
 ;===========================================================+
 ; ++ NAME ++
-PRO cis::load, only_pp=only_pp  
+PRO cis::load, only_pp=only_pp, full_moment=full_moment  
 ;
 ; ++ PURPOSE ++
 ;  -->
@@ -44,7 +77,7 @@ id  = [id, dum]
 IF KEYWORD_SET(only_pp) THEN $
   id = 'C' + sc + '_PP_CIS'
 
-;
+
 
 ;
 ;*---------- download  ----------*
@@ -53,6 +86,7 @@ suc = 1
 IF ~self->cluster::filetest(id, st, et) THEN $
   self->cluster::download, id, st, et, suc
 IF ~suc THEN RETURN
+
 
 
 ;
@@ -230,20 +264,20 @@ jump:
 ;
 ;*---------- -V x B electric field  ----------*
 ;
-tcrossp, 'B_xyz_gse__C'+sc+'_PP_FGM', 'V_HIA_xyz_gse__C'+sc+'_PP_CIS', $
-         /diff_tsize_ok, newname='E_gse_VxB__C' + sc
-
-
-; mV/m  
-calc, '"E_gse_VxB__C' + sc + '" *= 1.e-3'
-;
-;cotrans, 'E_gse_VxB__C' + sc, 'E_gsm_VxB__C' + sc, /gse2gsm
+;tcrossp, 'B_xyz_gse__C'+sc+'_PP_FGM', 'V_HIA_xyz_gse__C'+sc+'_PP_CIS', $
+;         /diff_tsize_ok, newname='E_gse_VxB__C' + sc
 ;
 ;
-options, 'E_gse_VxB__C' + sc, 'ytitle', 'E_field(GSE)'
-options, 'E_gse_VxB__C' + sc, 'ysubtitle', 'mV/m'
-;options, 'E_gsm_VxB__C' + sc, 'ytitle', 'E_field(GSM)'
-;loptions, 'E_gsm_VxB__C' + sc, 'ysubtitle', 'mV/m'
+;; mV/m  
+;calc, '"E_gse_VxB__C' + sc + '" *= 1.e-3'
+;;
+;;cotrans, 'E_gse_VxB__C' + sc, 'E_gsm_VxB__C' + sc, /gse2gsm
+;;
+;;
+;options, 'E_gse_VxB__C' + sc, 'ytitle', 'E_field(GSE)'
+;options, 'E_gse_VxB__C' + sc, 'ysubtitle', 'mV/m'
+;;options, 'E_gsm_VxB__C' + sc, 'ytitle', 'E_field(GSM)'
+;;loptions, 'E_gsm_VxB__C' + sc, 'ysubtitle', 'mV/m'
 
 
 END
