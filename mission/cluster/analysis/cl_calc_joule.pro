@@ -1,6 +1,6 @@
 ;pro cl_calc_joule
 ;
-cl_load, [1, 3, 4], /fote, /full, /cis, /efw, /only
+;cl_load, [1, 3, 4], /fote, /full, /cis, /efw, /only
 
 
 get_data, 'FOTE_curl_current', data=j
@@ -36,9 +36,6 @@ b4 = interp(b4.y, b4.x, j.x)
 e = mean( [ [[e1]], [[e3]], [[e4]] ], dim=3, /nan )
 v = mean( [ [[v1]], [[v3]], [[v4]] ], dim=3, /nan )
 b = mean( [ [[b1]], [[b3]], [[b4]] ], dim=3, /nan )
-;e = e3 
-;v = v3
-;b = b3
 t = j.x
 j = j.y * 1.e-6
 ;
