@@ -5,8 +5,12 @@ COMPILE_OPT IDL2
 ;*---------- dataset id  ----------*
 ;
 self->GetProperty, st=st, et=et, sc=sc
-id = 'C' + sc + '_CP_EFW_L3_E'
+;id = 'C' + sc + '_CP_EFW_L3_E'
 ;id = 'C' + sc + '_CP_EFW_L3_E3D_GSE'
+;id = 'C' + sc + '_CP_EFW_L2_E3D_GSE'
+id = 'C' + sc + '_CP_EFW_L2_E'
+;id = 'C' + sc + '_CP_EFW_L2_V3D_GSE'
+;id = 'C' + sc + '_CP_EFW_L2_PB'
 
 
 ;
@@ -30,14 +34,15 @@ cdf2tplot, files, /all
 ;
 ;*----------   ----------*
 ;
-tname = 'E_Vec_xy_ISR2__C' + sc + '_CP_EFW_L3_E'
+tname = 'E_Vec_xy_ISR2__C' + sc + '_CP_EFW_L2_E'
 get_data, tname, data=e
 ;
 ;
 fgm = fgm(sc=self.sc, st=self.st, et=self.et)
-fgm->load
+fgm->load, /full
 OBJ_DESTROY, fgm
-tname_mag = 'B_xyz_gse__C' + sc + '_PP_FGM'
+tname_mag = 'B_xyz_gse__C' + sc + '_PP_FGM_'
+tname_mag = 'B_vec_xyz_gse__C' + sc + '_CP_FGM_FULL'
 get_data, tname_mag, data=b
 
 
@@ -53,6 +58,9 @@ ey_gse = e.Y[*, 1]
 bx_gse = interp(b.Y[*, 0], b.X, e.X)
 by_gse = interp(b.Y[*, 1], b.X, e.X)
 bz_gse = interp(b.Y[*, 2], b.X, e.X)
+;
+idx_nan = WHERE(bz_gse LT 1., /NULL)
+bz_gse[idx_nan] = !VALUES.F_NAN
 ;
 ez_gse = -(ex_gse * bx_gse + ey_gse * by_gse) / bz_gse
 

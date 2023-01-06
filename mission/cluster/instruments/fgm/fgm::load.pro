@@ -49,7 +49,7 @@ cdf2tplot,files, /all
 
 
 ;-------------------------------------------------+
-; PP_FGM
+; 
 ;-------------------------------------------------+
 ;
 ;*---------- tplot ----------*
@@ -59,12 +59,11 @@ IF KEYWORD_SET(full) THEN $
     tname = 'B_vec_xyz_gse__C' + sc + '_CP_FGM_FULL'
 
 ;
-get_data, tname, data=mag
-b = mag
+get_data, tname, data=b
 ;
-IF SIZE(mag, /TYPE) EQ 2 THEN RETURN
+IF SIZE(b, /TYPE) EQ 2 THEN RETURN
 ;
-options, tname, 'colors', [0, 50, 220]
+options, tname, 'colors', [220, 140, 50]
 options, tname, 'labels', ['Bx', 'By', 'Bz']
 
 
@@ -84,12 +83,13 @@ bx_gsm = b.Y[*, 0]
 by_gsm = b.Y[*, 1] * COS(ang) - b.Y[*, 2] * SIN(ang)
 bz_gsm = b.Y[*, 1] * SIN(ang) + b.Y[*, 2] * COS(ang)
 ;                                         
+; tname for GSM
 tname = 'B_xyz_gsm__C'+sc+'_PP_FGM'
 IF KEYWORD_SET(full) THEN $
     tname = 'B_vec_xyz_gsm__C' + sc + '_CP_FGM_FULL'
 ;
 store_data, tname, data={X:b.x, Y:[[bx_gsm], [by_gsm], [bz_gsm]]}
-options, tname, 'colors', [220, 150, 50] 
+options, tname, 'colors', [220, 140, 50] 
 options, tname, 'labels', ['B!DX!N', 'B!DY!N', 'B!DZ!N']
 options, tname, 'databar', {yval:0, linestyle:2} 
 options, tname, 'ytitle', 'B(GSM)'
@@ -127,7 +127,7 @@ IF KEYWORD_SET(full) THEN BEGIN
 ENDIF
 ;
 store_data, tname, data={x:b.x, Y:[[bx_gsm], [by_gsm], [bz_gsm], [mag]]} 
-options, tname, 'colors', [220, 150, 50, 0]
+options, tname, 'colors', [220, 140, 50, 0]
 options, tname, 'labels', ['B!DX!N', 'B!DY!N', 'B!DZ!N', '|B|']
 options, tname, 'databar', {yval:0, linestyle:2} 
 options, tname, 'ytitle', 'B(GSM)'
