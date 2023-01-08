@@ -110,6 +110,8 @@ tname = 'N_HIA__C'+sc+'_PP_CIS'
 ylim, tname, 0, 0, /log
 options, tname, ytitle='N!Di!N'
 options, tname, ysubtitle='[cm!U-3!N]'
+
+
 ;
 ;*---------- ion velocity ----------*
 ;
@@ -167,7 +169,6 @@ options, 'V_para_perp__C'+sc, 'ytitle', 'V!Di!N'
 ;
 aux = aux(sc=sc, st=st, et=et)
 aux->load
-OBJ_DESTROY, aux
 ;
 get_data, 'gse_gsm__CL_SP_AUX', data=ang
 IF SIZE(ang, /TYPE) EQ 2 THEN RETURN
@@ -257,6 +258,30 @@ FOR i = 0, N_ELEMENTS(d.v2) - 1 DO BEGIN
     options, tname_e, 'ysubtitle', ''
 
 ENDFOR
+
+
+
+
+;
+;*---------- plasma frequency inertial length  ----------*
+;
+get_data, 'N_HIA__C'+sc+'_PP_CIS', data=n
+np = n.Y * 1.e6
+;
+;
+tname   = 'Proton_plasma_frequancy__C' + sc  
+omega_p = SQRT( !CONST.E^2 * np / (!CONST.EPS0 * !CONST.MP) ) 
+store_data, tname, data={x:n.X, y:omega_p/!PI/2.}
+options, tname, 'ytitle', 'f!Dpi!N'
+options, tname, 'ysubtitle', '[Hz]'
+;
+;
+tname = 'Proton_inertial_length__C' + sc
+intl  = !CONST.C / omega_p * 1.e-3
+store_data, tname, data={x:n.X, y:intl}
+options, tname, 'ytitle', 'Inertial Length(C' + sc + ')'
+options, tname, 'ysubtitle', '[km]'
+
 
 
 

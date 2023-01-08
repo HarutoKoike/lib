@@ -101,16 +101,14 @@ FOR i = 1, 4 DO BEGIN
   store_data, 'sc_v_z_gse_c' + sc, data = {x:v.x, y:v.y[*, 2]}
 ENDFOR
 
-calc, '"pos_x_gsm_barycentre"=("pos_x_gsm_c1" + '  + $
-      '"pos_x_gsm_c2" + "pos_x_gsm_c3"+"pos_x_gsm_c4")/4.'
-calc, '"pos_y_gsm_barycentre"=("pos_y_gsm_c1" + '  + $
-      '"pos_y_gsm_c2" + "pos_y_gsm_c3"+"pos_y_gsm_c4")/4.'
-calc, '"pos_z_gsm_barycentre"=("pos_z_gsm_c1" + '  + $
-      '"pos_z_gsm_c2" + "pos_z_gsm_c3"+"pos_z_gsm_c4")/4.'
-
+;calc, '"pos_x_gsm_barycentre"=("pos_x_gsm_c1" + '  + $
+;      '"pos_x_gsm_c2" + "pos_x_gsm_c3"+"pos_x_gsm_c4")/4.'
+;calc, '"pos_y_gsm_barycentre"=("pos_y_gsm_c1" + '  + $
+;      '"pos_y_gsm_c2" + "pos_y_gsm_c3"+"pos_y_gsm_c4")/4.'
+;calc, '"pos_z_gsm_barycentre"=("pos_z_gsm_c1" + '  + $
+;      '"pos_z_gsm_c2" + "pos_z_gsm_c3"+"pos_z_gsm_c4")/4.'
 
 
 tplot_options, 'var_label', ['pos_z_gsm_c' + sc0 , 'pos_y_gsm_c' + sc0, $
                              'pos_x_gsm_c'+sc]
-
 END

@@ -59,7 +59,7 @@ bx_gse = interp(b.Y[*, 0], b.X, e.X)
 by_gse = interp(b.Y[*, 1], b.X, e.X)
 bz_gse = interp(b.Y[*, 2], b.X, e.X)
 ;
-idx_nan = WHERE(bz_gse LT 1., /NULL)
+idx_nan = WHERE(ABS(bz_gse) LT 1., /NULL)
 bz_gse[idx_nan] = !VALUES.F_NAN
 ;
 ez_gse = -(ex_gse * bx_gse + ey_gse * by_gse) / bz_gse
@@ -85,7 +85,7 @@ tname = 'E_xyz_GSM__C' + sc + '_EFW'
 store_data, tname, data={x:e.x, y:[ [ex_gsm], [ey_gsm], [ez_gsm] ]} 
 options, tname, 'colors', [230, 140, 50]
 options, tname, 'ysubtitle', '[mV/m]'
-
+options, tname, 'databar', {yval:0, linestyle:2}
 
 
 END

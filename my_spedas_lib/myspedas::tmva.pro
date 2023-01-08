@@ -142,8 +142,15 @@ tmvab_eigenvec, tname_mag, trange, kl, km, kn
 ;
 IF ~KEYWORD_SET(newname) THEN newname = tname + '_LMN'
 ;
-FOR i = 0, N_ELEMENTS(tname) - 1 DO $
-  myspedas->trotate, kl, km, kn, tname[i], newname[i], coord=coord
+FOR i = 0, N_ELEMENTS(tname) - 1 DO BEGIN
+    dum = WHERE(STRMATCH(tn, tname[i]), count)
+    IF count EQ 0 THEN CONTINUE
+    ;
+    myspedas->trotate, kl, km, kn, tname[i], newname[i], coord=coord
+    options, newname[i], 'labels', ['L', 'M', 'N']
+    options, newname[i], 'colors', [230, 150, 50]
+    options, newname[i], 'databar', {yval:0, linestyle:2}
+ENDFOR
 
 
 END

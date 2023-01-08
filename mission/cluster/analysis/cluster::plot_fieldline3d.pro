@@ -2,7 +2,7 @@
 ; ++ NAME ++
 FUNCTION cluster::plot_fieldline3d, t_cut, xrange=xrange, yrange=yrange, $
                                     zrange=zrange, vrange=vrange, _EXTRA=ex, $
-                                    null=null
+                                    null=null, full=full, skipload=skipload
 ;
 ; ++ PURPOSE ++
 ;  --> vizualize magnetic field line topology around the four Cluster spacecrafts
@@ -24,17 +24,27 @@ COMPILE_OPT IDL2
 ;
 ;*---------- load FGM data  ----------*
 ;
-cl_load, [1, 2, 3, 4], /fgm
- 
-get_data, 'B_xyz_gsm__C1_PP_FGM', data=b1 
-get_data, 'B_xyz_gsm__C2_PP_FGM', data=b2 
-get_data, 'B_xyz_gsm__C3_PP_FGM', data=b3 
-get_data, 'B_xyz_gsm__C4_PP_FGM', data=b4 
+IF ~KEYWORD_SET(skipload) THEN $
+    cl_load, [1, 2, 3, 4], /fgm, full=full, _EXTRA=ex
 ;
-idx1 = nn('B_xyz_gsm__C1_PP_FGM', t_cut)
-idx2 = nn('B_xyz_gsm__C2_PP_FGM', t_cut)
-idx3 = nn('B_xyz_gsm__C3_PP_FGM', t_cut)
-idx4 = nn('B_xyz_gsm__C4_PP_FGM', t_cut)
+IF KEYWORD_SET(full) THEN BEGIN
+    tname_pre = 'B_vec_xyz_gse__C'
+    tname_suf = '_CP_FGM_FULL'  
+ENDIF ELSE BEGIN
+    tname_pre = 'B_xyz_gsm__C'
+    tname_suf = '_PP_FGM'
+ENDELSE
+
+
+get_data, tname_pre + '1' + tname_suf, data=b1 
+get_data, tname_pre + '2' + tname_suf, data=b2 
+get_data, tname_pre + '3' + tname_suf, data=b3 
+get_data, tname_pre + '4' + tname_suf, data=b4 
+;
+idx1 = nn(tname_pre + '1' + tname_suf, t_cut)
+idx2 = nn(tname_pre + '2' + tname_suf, t_cut)
+idx3 = nn(tname_pre + '3' + tname_suf, t_cut)
+idx4 = nn(tname_pre + '4' + tname_suf, t_cut)
 
 b1 = reform(b1.Y[idx1, *])
 b2 = reform(b2.Y[idx1, *])
