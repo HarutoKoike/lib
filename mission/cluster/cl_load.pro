@@ -1,7 +1,7 @@
 PRO cl_load, sc0, $
              cis=cis, fgm=fgm, aux=aux, peace=peace, $
              edi=edi, efw=efw, staff=staff, $
-             walen_test=walen_test, fote=fote, $
+             walen_test=walen_test, fote=fote, joule=joule, $
              _EXTRA=ex
 
 
@@ -72,6 +72,7 @@ IF KEYWORD_SET(fote) THEN BEGIN
     OBJ_DESTROY, fgm
 ENDIF
  
-
+IF KEYWORD_SET(joule) THEN $
+    cl_calc_joule, _EXTRA=ex
 
 END

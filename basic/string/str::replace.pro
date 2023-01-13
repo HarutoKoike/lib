@@ -13,7 +13,8 @@ END
 
 ;===========================================================+
 ; ++ NAME ++
-FUNCTION str::replace, source, pre, post, complete=complete 
+FUNCTION str::replace, source, pre, post, complete=complete, $
+                       _EXTRA=ex
 ;
 ; ++ PURPOSE ++
 ;  --> replace words into other words
@@ -46,7 +47,7 @@ str_arr = source
 ;
 IF KEYWORD_SET(complete) THEN BEGIN
     FOR i = 0, N_ELEMENTS(str_arr) - 1 DO BEGIN
-        IF STRMATCH(str_arr[i], pre) THEN $
+        IF STRMATCH(str_arr[i], pre, _EXTRA=ex) THEN $
             str_arr[i] = post
     ENDFOR
     RETURN, str_arr

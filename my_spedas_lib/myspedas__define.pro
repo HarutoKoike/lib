@@ -6,6 +6,7 @@
 @myspedas::twalen_test.pro
 @myspedas::tmean.pro
 @myspedas::tmax.pro
+@myspedas::sh_method.pro
 
 FUNCTION myspedas::init
 COMPILE_OPT IDL2, STATIC

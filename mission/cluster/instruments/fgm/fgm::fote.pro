@@ -114,6 +114,8 @@ dp2 = FLTARR(n)
 dp3 = FLTARR(n)
 dp4 = FLTARR(n)
 ;
+dp_bary = FLTARR(n, 3)
+;
 in_null = BYTARR(n)
 ;
 coeff_norm = FLTARR(n)
@@ -137,12 +139,16 @@ FOR i = 0, N_ELEMENTS(t) - 1 DO BEGIN
     p3 = [p3x[i], p3y[i], p3z[i]]
     p4 = [p4x[i], p4y[i], p4z[i]]
     ;
+    p_bary = (p1 + p2 + p3 + p4) / 4.
+    ;
     m = math->fote(p1, p2, p3, p4, b1, b2, b3, b4, null=np)
     ;
     dp1[i] = SQRT(TOTAL( (p1 - np)^2 )) 
     dp2[i] = SQRT(TOTAL( (p2 - np)^2 )) 
     dp3[i] = SQRT(TOTAL( (p3 - np)^2 )) 
     dp4[i] = SQRT(TOTAL( (p4 - np)^2 )) 
+    ;
+    dp_bary[i, *] = np - p_bary
     ;
     null[i, *]  = np
     coeff[i, *] = m[0:11]  
@@ -192,10 +198,13 @@ dp1 *= !CONST.R_EARTH * 1.e-3
 dp2 *= !CONST.R_EARTH * 1.e-3
 dp3 *= !CONST.R_EARTH * 1.e-3
 dp4 *= !CONST.R_EARTH * 1.e-3
+dp_bary *= !CONST.R_EARTH * 1.e-3
+;
 store_data, 'FOTE_null_distance_C1', data={x:t, y:dp1}
 store_data, 'FOTE_null_distance_C2', data={x:t, y:dp2}
 store_data, 'FOTE_null_distance_C3', data={x:t, y:dp3}
 store_data, 'FOTE_null_distance_C4', data={x:t, y:dp4}
+store_data, 'FOTE_null_distance_bary', data={x:t, y:dp_bary}
 store_data, 'FOTE_null_distance', data={x:t, y:[[dp1], [dp2], [dp3], [dp4]]}
 ;
 store_data, 'FOTE_null_in_tetra', data={x:t, y:in_null}
@@ -217,9 +226,10 @@ ylim, 'FOTE_null_distance_C2', 0, 1000
 ylim, 'FOTE_null_distance_C3', 0, 1000 
 ylim, 'FOTE_null_distance_C4', 0, 1000 
 ylim, 'FOTE_null_distance', -100, 1000 
+ylim, 'FOTE_null_distance_bary', -1000, 1000, 0
 ylim, 'FOTE_null_in_tetra', -1, 2
 ylim, 'FOTE_null_coeff_norm', 0, 1
-ylim, 'FOTE_divB', 0, 100
+ylim, 'FOTE_divB', 0.01, 10, 1
 ;
 ;
 options, 'FOTE_null_point', 'ytitle', 'Null point (GSM)'
@@ -227,22 +237,29 @@ options, 'FOTE_null_point', 'ysubtitle', '[R!DE!N]'
 options, 'FOTE_null_point', 'labels', ['X', 'Y', 'Z']
 options, 'FOTE_null_point', 'colors', [230, 150, 50]
 ;
+options, 'FOTE_null_distance_bary', 'colors', [230, 150, 50]
+options, 'FOTE_null_distance_bary', 'labels', ['X', 'Y', 'Z']
+;
 options, 'FOTE_curl_current', 'colors', [230, 150, 50]
 options, 'FOTE_curl_current', 'ytitle', 'FOTE_current(GSM)'
 options, 'FOTE_curl_current', 'ysubtitle', '[10!U-6!NA]'
 options, 'FOTE_curl_current', 'labels', ['jx', 'jy', 'jz']
 options, 'FOTE_curl_current', 'databar', {yval:0, linestyle:2} 
 ;
-options, 'FOTE_divB', 'ytitle', 'FOTE_divB(%)'
+options, 'FOTE_divB', 'ytitle', '|divB/curlB|'
+options, 'FOTE_divB', 'databar', {yval:0.5, linestyle:2}
 ;
 options, 'FOTE_curl_current_ratio', 'ytitle', '|J_para/J_parp|'
+;
+options, 'FOTE_curl_current_mag', 'ytitle', '|J|'
+options, 'FOTE_curl_current_mag', 'ysubtitle', '[10!U-6!N A/m!U2!N]'
 ;
 options, 'FOTE_curl_current_para_perp', 'colors', [50, 220]
 options, 'FOTE_curl_current_para_perp', 'labels', ['para', 'perp']
 options, 'FOTE_curl_current_para_perp', 'databar', {yval:0, linestyle:2}
 options, 'FOTE_curl_current_para_perp', 'ysubtitle', '[10!U-6!NA]'
 ;
-options, 'FOTE_null_distance', 'colors', [0, 230, 150, 50] 
+options, 'FOTE_null_distance', 'colors', [0, 50, 230, 150] 
 options, 'FOTE_null_distance', 'labels', ['C1', 'C2', 'C3', 'C4']
 options, 'FOTE_null_distance', 'ytitle', 'Null distance'
 options, 'FOTE_null_distance', 'ysubtitle', '[km]'

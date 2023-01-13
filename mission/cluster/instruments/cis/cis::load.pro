@@ -215,9 +215,6 @@ options, tname, ysubtitle='[10!U6!NK]'
 
 
 
-IF KEYWORD_SET(only_pp) THEN GOTO, jump
-
-
 ;
 ;*---------- ion omni directional ion flux  ----------*
 ;
@@ -229,11 +226,14 @@ store_data, tname, dlim=dlim
 ylim, tname, 5, 32.e3, /log
 zlim, tname, 0, 0, 1
 ;
-options, tname, 'ytitle', 'omni flux'
+options, tname, 'ytitle', 'Ion(C' + sc + ')' 
 options, tname, ysubtitle='[eV]'
-options, tname, 'eV/eV cm!U2!N s sr]'
+options, tname, '[eV/eV cm!U2!N s sr]'
 
 
+
+
+IF KEYWORD_SET(only_pp) THEN GOTO, jump
 
 ;
 ;*---------- ion pitch angle distribution  ----------*
@@ -262,6 +262,7 @@ ENDFOR
 
 
 
+jump:
 ;
 ;*---------- plasma frequency inertial length  ----------*
 ;
@@ -285,7 +286,6 @@ options, tname, 'ysubtitle', '[km]'
 
 
 
-jump:
 ;
 ;*---------- -V x B electric field  ----------*
 ;

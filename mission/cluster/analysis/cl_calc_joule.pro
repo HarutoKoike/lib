@@ -4,7 +4,7 @@ pro cl_calc_joule, load=load
 if keyword_set(load) then begin
     sc = [1, 3, 4]
     cl_load, sc, /fote, /full, /cis, /efw, /only
-    cl_load, 2, /efw
+    cl_load, 2, /efw, /fgm
 endif
 
 
@@ -27,6 +27,7 @@ get_data, 'B_vec_xyz_gsm__C2_CP_FGM_FULL', data=b2
 get_data, 'B_vec_xyz_gsm__C3_CP_FGM_FULL', data=b3
 get_data, 'B_vec_xyz_gsm__C4_CP_FGM_FULL', data=b4
 
+
 e1 = interp(e1.y, e1.x, j.x)
 e2 = interp(e2.y, e2.x, j.x)
 e3 = interp(e3.y, e3.x, j.x)
@@ -41,9 +42,9 @@ b3 = interp(b3.y, b3.x, j.x)
 b4 = interp(b4.y, b4.x, j.x)
 ;
 ;
-e = mean( [ [[e2]],  [[e4]] ], dim=3, /nan )
+e = mean( [ [[e1]], [[e2]], [[e3]], [[e4]] ], dim=3, /nan )
 v = mean( [ [[v1]], [[v3]], [[v4]] ], dim=3, /nan )
-b = mean( [ [[b1]],[[b2]], [[b3]], [[b4]] ], dim=3, /nan )
+b = mean( [ [[b1]], [[b2]], [[b3]], [[b4]] ], dim=3, /nan )
 t = j.x
 j = j.y * 1.e-6
 ;
@@ -61,7 +62,7 @@ for i = 0, n_elements(t) - 1 do begin
 endfor
 
 store_data, "EJ", data={x:t, y:joule*1.e12} 
-options, "EJ", databar={yval:0, linestyle:0}
+options, "EJ", databar={yval:0, linestyle:2}
 options, "EJ", ysubtitle='[pW/m!U3!N]'
 store_data, 'vxB', data={x:t, y:e_conv} 
 store_data, 'E+vxB', data = {x:t, y:e+e_conv}

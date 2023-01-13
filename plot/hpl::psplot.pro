@@ -24,7 +24,7 @@ IF KEYWORD_SET(open) THEN BEGIN
         filename = now->string(format='%Y%m%d_%H%M%S') + '.eps'
     ENDIF
     ;
-	DEVICE, FILENAME=filename,  _EXTRA=ex
+	DEVICE, FILENAME=filename, _EXTRA=ex
 ENDIF
 
 

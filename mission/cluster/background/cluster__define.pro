@@ -3,6 +3,7 @@
 @cluster::file_search.pro
 @cluster::download.pro
 @cluster::plot_fieldline3d.pro
+@cluster::combine_multi.pro
 
 FUNCTION cluster::init
 COMPILE_OPT IDL2
