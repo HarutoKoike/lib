@@ -52,7 +52,7 @@ peace = [      $
 ;
 ;*----------   ----------*
 ;
-quick = [cis_hia[[4, 2, 0]], fgm[0], peace[[0, 1]]]
+quick = [cis_hia[[4, 2, 0]], fgm[1], peace[[0, 1]]]
 
 
 

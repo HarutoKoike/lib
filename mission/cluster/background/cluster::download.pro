@@ -151,7 +151,6 @@ OBJ_DESTROY, ourl
 
 
 
-
 ;-------------------------------------------------+
 ; save file
 ;-------------------------------------------------+
@@ -167,7 +166,7 @@ ENDELSE
 ;
 ;*---------- rename .tar.gz file  ----------*
 ;
-pos1 = STRPOS(filename, '.gz')
+pos1     = STRPOS(filename, '.gz')
 filename = STRMID(filename, 0, pos1)
 ;
 ;
@@ -176,7 +175,8 @@ filename = STRMID(filename, 0, pos1)
 ;             [use myfile_untar.pro because native
 ;              file_untar.pro doesn't work well]
 ;
-myfile_untar, filename, untar_files, /verbose
+myfile_untar, filename, untar_files, root_dir=self->data_rootdir(), /verbose, $
+              save_dir=self->data_rootdir()
 ;
 ;
 ;*---------- save files  ----------*
@@ -218,10 +218,10 @@ suc = 1
 ;
 ;*----------  delete original data directory ----------*
 ;
-CD, current=current
 pos0 = STRPOS(untar_files[0], 'CSA_Download_')
 odir = STRMID(untar_files[0], pos0, STRLEN(untar_files[0]) - pos0)
 odir = (STRSPLIT(odir, separator, /EXTRACT))[0]
-FILE_DELETE, odir, /RECURSIVE
+;
+FILE_DELETE, FILEPATH(odir, ROOT=self->data_rootdir() ), /RECURSIVE
 ;
 END
