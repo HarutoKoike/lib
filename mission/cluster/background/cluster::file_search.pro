@@ -149,6 +149,10 @@ FUNCTION cluster::file_search, id, start_date, end_date, daily=daily
 ;===========================================================+
 COMPILE_OPT IDL2
 ;
+;*---------- delete buffer  ----------*
+;
+self->delete_buffer
+;
 ;*---------- file name format ----------*
 ;
 RETURN, FILE_SEARCH(self->cluster::filename(id, start_date, end_date, /full, daily=daily))

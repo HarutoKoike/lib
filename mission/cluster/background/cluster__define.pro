@@ -15,6 +15,7 @@ IF ~FILE_TEST(csa) THEN csa = FILE_WHICH('csa_info.csv')
 IF STRLEN(csa) EQ 0 THEN $      
     MESSAGE, 'No file for CSA user information'
 ;
+
 csa      = READ_CSV(csa)
 username = csa.field1
 password = csa.field2
@@ -85,16 +86,28 @@ IF STRLEN(root) EQ 0 THEN CD, CURRENT=root
 root = FILEPATH('Cluster', root=root)
 ;
 IF ~FILE_TEST(root) THEN FILE_MKDIR, root
+
+RETURN, root 
+END
+
+
+
+
+;-------------------------------------------------+
+; 
+;-------------------------------------------------+
+PRO cluster::delete_buffer
+COMPILE_OPT IDL2
 ;
-;*---------- delete buffer file  ----------*
-;
-buffer = FILEPATH('*buffer.tar.gz', SUBDIR='Cluster', ROOT=root)
+root   = self->data_rootdir()
+buffer = FILEPATH('*buffer.tar.gz', ROOT=root)
 buffer = FILE_SEARCH(buffer, COUNT=c)
 ;
 IF c NE 0 THEN FILE_DELETE, buffer
-;
-RETURN, root 
+;                                
 END
+
+
 
 
 ;-------------------------------------------------+
