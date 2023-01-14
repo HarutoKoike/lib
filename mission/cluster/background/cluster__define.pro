@@ -86,6 +86,13 @@ root = FILEPATH('Cluster', root=root)
 ;
 IF ~FILE_TEST(root) THEN FILE_MKDIR, root
 ;
+;*---------- delete buffer file  ----------*
+;
+buffer = FILEPATH('*buffer.tar.gz', SUBDIR='Cluster', ROOT=root)
+buffer = FILE_SEARCH(buffer, COUNT=c)
+;
+IF c NE 0 THEN FILE_DELETE, buffer
+;
 RETURN, root 
 END
 
