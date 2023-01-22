@@ -6,10 +6,10 @@ FUNCTION myspedas::twalen_test, trange, v_name, b_name, va_name, e_name
 ;  -->
 ;
 ; ++ POSITIONAL ARGUMENTS ++
-;  --> v_name(string): tplot name of velocity vector (3xN)
-;  --> b_name(string): tplot name of magnetic field vector (3xN)
-;  --> va_name(string): tplot name of Alfven velocity vector (3xN)
-;  --> e_name(string): tplot name of electric field vector (3xN) (V x B)
+;  --> v_name(string): tplot name of velocity vector 
+;  --> b_name(string): tplot name of magnetic field vector 
+;  --> va_name(string): tplot name of Alfven velocity vector
+;  --> e_name(string): tplot name of electric field vector 
 ;
 ; ++ KEYWORDS ++
 ; -->
@@ -34,11 +34,11 @@ get_data, b_name, data=b
 get_data, va_name, data=va
 get_data, e_name, data=e
 ;
-
 t  = b.x[idx2[0]:idx2[1]]
 bx = b.y[idx2[0]:idx2[1], 0]
 by = b.y[idx2[0]:idx2[1], 1]
 bz = b.y[idx2[0]:idx2[1], 2]
+
 ;
 vt = v.x[idx1[0]:idx1[1]]
 vx = interp(v.y[idx1[0]:idx1[1], 0], vt, t)
@@ -55,6 +55,7 @@ vax = interp(va.y[idx3[0]:idx3[1], 0], vat, t)
 vay = interp(va.y[idx3[0]:idx3[1], 1], vat, t)
 vaz = interp(va.y[idx3[0]:idx3[1], 2], vat, t)
 
+math = OBJ_NEW('math')
 math->walen_test, vx, vy, vz, vax, vay, vaz, ex, ey, ez, bx, by, bz, correlation
 ;
 RETURN, correlation

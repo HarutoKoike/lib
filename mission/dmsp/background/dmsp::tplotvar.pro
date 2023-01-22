@@ -28,27 +28,34 @@ tplot_options, var_label=var_label_str
 ;
 ; bx 
 store_data, 'Bx', data = {x:t, y:d.bx} 
-options, 'Bx', ytitle = 'Bx(nT)' 
+options, 'Bx', ytitle = 'B!DX!N'
+options, 'Bx', ysubtitle = '[nT]' 
 
 ; by 
 store_data, 'By', data = {x:t, y:d.by} 
-options, 'By', ytitle = 'By[nT]' 
+options, 'By', ytitle = 'B!DY!N'
+options, 'By', ysubtitle = '[nT]' 
 
 ; bz 
 store_data, 'Bz', data = {x:t, y:d.bz} 
-options, 'Bz', ytitle = 'Bz[nT]' 
+options, 'Bz', ytitle = 'B!DZ!N'
+options, 'Bz', ysubtitle = '[nT]' 
 
 ; delta bz ( bz - IGRF bz)
 store_data, 'deltaBz', data = {x:t, y:d.dbz} 
-options, 'deltaBz', ytitle = 'Bz - IGRF_Bz [nT]' 
+options, 'deltaBz', ytitle = 'Bz - IGRF Bz' 
+options, 'deltaBz', ysubtitle = '[nT]' 
 
 ; delta by ( by - IGRF by)
 store_data, 'deltaBy', data = {x:t, y:d.dby} 
-options, 'deltaBy', ytitle = 'By - IGRF_By [nT]' 
+options, 'deltaBy', ytitle = 'By - IGRF By' 
+options, 'deltaBy', ysubtitle = '[nT]' 
 
 ; delta bx ( bx - IGRF bx)
 store_data, 'deltaBx', data = {x:t, y:d.dbx} 
-options, 'deltaBx', ytitle = 'Bx - IGRF_Bx [nT]' 
+options, 'deltaBx', ytitle = 'Bx - IGRF Bx' 
+options, 'deltaBx', ysubtitle = '[nT]' 
+
 
 ;----------------------------------------------------------------+
 ;	SSJ partiacle data 
@@ -127,7 +134,7 @@ str_element,dlim,'spec',1,/add
 store_data, 'ION'  , data = {x:t, y:jei, v:d.ebin}, dlim=dlim
 ylim, 'ION', 30., 3.e4, 1
 zlim, 'ION', ion_lim_low, ion_lim_up
-options, 'ION', ysubtitle = '(eV)'
+options, 'ION', ysubtitle = '[eV]'
 ;options, 'ION', 'ztitle', $
 ;				 'LOG ENERGY FLUX !C [eV/eV cm!U2 !N s sr]'
 
@@ -139,7 +146,7 @@ jee[ where(jee le electron_lim_low) ] = 0
 store_data, 'ELECTRON', data = {x:t, y:jee, v:d.ebin}, dlim=dlim
 ylim, 'ELECTRON', 30, 3.e4,  1
 zlim, 'ELECTRON', electron_lim_low, electron_lim_up
-options, 'ELECTRON', ysubtitle = '(eV)'
+options, 'ELECTRON', ysubtitle = '[eV]'
 options, 'ELECTRON', 'ztitle', $
 				 'LOG ENERGY FLUX !C (eV/eV cm!U2 !N s sr)'
 				 

@@ -33,7 +33,7 @@ END
 
 ;===========================================================+
 ; ++ NAME ++
-PRO cis::load, only_pp=only_pp, full_moment=full_moment  
+PRO cis::load, only_pp=only_pp, full_moment=full_moment, success=success
 ;
 ; ++ PURPOSE ++
 ;  -->
@@ -51,6 +51,8 @@ PRO cis::load, only_pp=only_pp, full_moment=full_moment
 ;  H.Koike 1/9,2021
 ;===========================================================+
 COMPILE_OPT IDL2
+;
+success=0
 ;
 ;*---------- settings ----------*
 ;
@@ -73,7 +75,8 @@ id  = [id, dum]
 ; O+ pitch angle distribution
 dum = 'C' + sc + '_CP_CIS-CODIF_PAD_HS_O1_PF'
 id  = [id, dum]
-
+;
+;
 IF KEYWORD_SET(only_pp) THEN $
   id = 'C' + sc + '_PP_CIS'
 
@@ -132,14 +135,13 @@ vy = v.Y[*, 1]
 vz = v.Y[*, 2]
 vmag  = SQRT(vx^2 + vy^2 + vz^2) 
 ;
-dum = WHERE( STRMATCH(tnames(), 'B_xyz_gse__C'+sc+'_PP_FGM'), count)
-IF count EQ 0 THEN BEGIN
-    fgm = fgm(sc=sc, st=st, et=et)
-    fgm->load
-ENDIF
+;
+; load FGM data
+fgm = fgm(sc=sc, st=st, et=et)
+fgm->load
 ;
 get_data, 'B_xyz_gse__C'+sc+'_PP_FGM', data=b
-IF SIZE(b, /TYPE) EQ 2 THEN RETURN
+IF SIZE(b, /TYPE) EQ 2 THEN GOTO, no_mag
 ;
 bx = b.Y[*, 0]
 by = b.Y[*, 1]
@@ -163,6 +165,7 @@ options, 'V_para_perp__C'+sc, 'databar', {yval:0, linestyle:2}
 options, 'V_para_perp__C'+sc, 'ytitle', 'V!Di!N'
 
 
+no_mag:
 
 ;
 ;*---------- ion velocity GSE to GSM  ----------*
@@ -197,12 +200,10 @@ options, tname, 'ysubtitle', '[km/s]'
 ;
 ;*---------- ion temperature  ----------*
 ;
-options, 'T_HIA_par__C' + sc + '_PP_CIS', 'ytitle', 'Ti_para'
-options, 'T_HIA_perp__C' + sc + '_PP_CIS', 'ytitle', 'Ti_perp'
-options, 'T_HIA_par__C' + sc + '_PP_CIS', 'ysubtitle', 'MK'
-options, 'T_HIA_perp__C' + sc + '_PP_CIS', 'ysubtitle', 'MK'
-options, 'T_HIA_par__C' + sc + '_PP_CIS', 'labels', 'para'
-options, 'T_HIA_perp__C' + sc + '_PP_CIS', 'labels', 'perp'
+options, 'T_HIA_par__C' + sc + '_PP_CIS', 'ytitle', 'Ti!Dpara!N'
+options, 'T_HIA_perp__C' + sc + '_PP_CIS', 'ytitle', 'Ti!Dperp!N'
+options, 'T_HIA_par__C' + sc + '_PP_CIS', 'ysubtitle', '[MK]'
+options, 'T_HIA_perp__C' + sc + '_PP_CIS', 'ysubtitle', '[MK]'
 ;
 tname = 'T_HIA__C' + sc + '_PP_CIS'
 store_data, tname, data = ['T_HIA_par__C'+sc+'_PP_CIS', $
@@ -211,6 +212,7 @@ options, tname, 'colors', [50, 220]
 ylim, tname, 1., 100, /log
 options, tname, ytitle='T!Di!N'
 options, tname, ysubtitle='[10!U6!NK]'
+options, tname, labels=['para', 'perp']
 
 
 
@@ -261,10 +263,41 @@ ENDFOR
 
 
 
+;
+;*---------- ion pitch angle distribution (energy integrated)  ----------*
+;
+tname = 'Differential_Particle_Flux__C' + sc + '_CP_CIS-HIA_PAD_HS_MAG_IONS_PF'
+get_data, tname, data=d
+;
+de       = FLTARR(N_ELEMENTS(d.v2)) 
+de[0]    = d.v2[0] - d.v2[1]
+de[-1]   = d.v2[-2] - d.v2[-1]
+de[1:-2] = 0.5 * (d.v2[0:-3] - d.v2[2:-1])
+;
+flux = FLTARR(N_ELEMENTS(d.x), N_ELEMENTS(d.v1))
+FOR i = 0, N_ELEMENTS(de) - 1 DO BEGIN
+    flux += d.Y[*, i, *] * de[i] * 1.e-3 ; eV -> keV
+ENDFOR
+;
+tname = 'Total_Number_Flux_PAD__C' + sc + '_CP_CIS-HIA_HS_MAG_IONS_PF'
+store_data, tname, data={x:d.x, y:flux, v:d.v1}
+;
+ylim, tname, 0, 180
+zlim, tname, 0, 0, 1
+get_data, tname, dlim=dlim
+str_element, dlim, 'spec', 1, /add
+store_data, tname, dlim=dlim
+;
+options, tname, 'ytitle', 'Ion PAD (C' + sc + ')'
+options, tname, 'ysubtitle', '[deg]'
+options, tname, 'ztitle', 'cm!U-2!N s!U-1!N st!U-1!N'
+;
+
+
 
 jump:
 ;
-;*---------- plasma frequency inertial length  ----------*
+;*---------- plasma frequency & inertial length  ----------*
 ;
 get_data, 'N_HIA__C'+sc+'_PP_CIS', data=n
 np = n.Y * 1.e6
@@ -287,22 +320,109 @@ options, tname, 'ysubtitle', '[km]'
 
 
 ;
+;*---------- ion beta  ----------*
+;
+;
+bmag   = SQRT(b.Y[*, 0]^2 + b.Y[*, 1]^2 + b.Y[*, 2]^2) * 1.e-9
+tmag   = b.X
+b_pres = bmag^2  / 2. / !CONST.MU0  ; magnetic pressure
+;
+get_data, 'T_HIA_par__C' + sc + '_PP_CIS', data=t_para 
+get_data, 'T_HIA_perp__C' + sc + '_PP_CIS', data=t_perp 
+get_data, 'N_HIA__C'+sc+'_PP_CIS', data=n
+;
+np     = interp(n.Y, n.X, tmag) * 1.e6
+t_para = interp(t_para.Y, t_para.X, tmag) * 1.e6 
+t_perp = interp(t_perp.Y, t_perp.X, tmag) * 1.e6 
+;
+beta_para = np * !CONST.K * t_para / b_pres 
+beta_perp = np * !CONST.K * t_perp / b_pres 
+tname_para = 'Beta_para__C' + sc
+tname_perp = 'Beta_perp__C' + sc
+store_data, tname_para, data={X:tmag, Y:beta_para} 
+store_data, tname_perp, data={X:tmag, Y:beta_perp} 
+;
+ylim, tname_para, 0, 0, 1
+ylim, tname_perp, 0, 0, 1
+;
+tname_beta = 'Ion_Beta__C' + sc
+store_data, tname_beta, data=[tname_para, tname_perp]
+options, tname_beta, 'colors', [50, 230]
+options, tname_beta, 'labels', ['para', 'perp']
+options, tname_beta, 'databar', {yval:1., linestyle:2}
+ylim, tname_beta, 0.0001, 100, 1
+
+
+
+;
+;*---------- Frequency ratio (F_pi / F_ci)  ----------*
+;
+tname = 'Frequency_ratio_ion__C' + sc
+ratio = SQRT( !CONST.MP * np / !CONST.EPS0 / bmag^2)
+store_data, tname, data={x:tmag, y:ratio}
+options, tname, 'databar', {yval:1, linestyle:2}
+options, tname, 'ytitle', 'f!Dpi!N/f!Dci!N (C' + sc + ')'
+ylim, tname, 0, 0, /log
+;
+;
+tname = 'Frequency_ratio_electron__C' + sc
+ratio = ratio * SQRT(!CONST.ME / !CONST.MP)
+store_data, tname, data={x:tmag, y:ratio}
+options, tname, 'databar', {yval:1, linestyle:2}
+options, tname, 'ytitle', 'f!Dpe!N/f!Dce!N (C' + sc + ')'
+ylim, tname, 0, 0, /log
+
+
+;
+;*---------- anisotropy  ----------*
+;
+get_data, 'T_HIA_par__C' + sc + '_PP_CIS', data=t
+;
+tname_aniso = 'Ion_Anisotropy__C' + sc 
+store_data, tname_aniso, data={X:t.X, Y:t_para/t_perp}
+options, tname_aniso, 'ytitle', 'T!Dpara!N/T!Dperp!N (C' + sc + ')'
+options, tname_aniso, 'databar', {yval:1., linestyle:2}
+ylim, tname_aniso, 0, 0, 1
+
+
+
+;
 ;*---------- -V x B electric field  ----------*
 ;
-;tcrossp, 'B_xyz_gse__C'+sc+'_PP_FGM', 'V_HIA_xyz_gse__C'+sc+'_PP_CIS', $
-;         /diff_tsize_ok, newname='E_gse_VxB__C' + sc
+tcrossp, 'B_xyz_gsm__C'+sc+'_PP_FGM', 'V_HIA_xyz_gsm__C'+sc+'_PP_CIS', $
+         /diff_tsize_ok, newname='E_gsm_VxB__C' + sc
+
+; mV/m  
+calc, '"E_gsm_VxB__C' + sc + '" *= 1.e-3'
+options, 'E_gsm_VxB__C' + sc, 'ytitle', 'E_field(GSM, C' + sc + ')'
+options, 'E_gsm_VxB__C' + sc, 'ysubtitle', 'mV/m'
+
+
+
+
 ;
+;*---------- Alfven Velocity ----------*
 ;
-;; mV/m  
-;calc, '"E_gse_VxB__C' + sc + '" *= 1.e-3'
-;;
-;;cotrans, 'E_gse_VxB__C' + sc, 'E_gsm_VxB__C' + sc, /gse2gsm
-;;
-;;
-;options, 'E_gse_VxB__C' + sc, 'ytitle', 'E_field(GSE)'
-;options, 'E_gse_VxB__C' + sc, 'ysubtitle', 'mV/m'
-;;options, 'E_gsm_VxB__C' + sc, 'ytitle', 'E_field(GSM)'
-;;loptions, 'E_gsm_VxB__C' + sc, 'ysubtitle', 'mV/m'
+get_data, 'B_xyz_gsm__C'+sc+'_PP_FGM', data=b
+get_data, 'N_HIA__C'+sc+'_PP_CIS', data=n
+;
+np = interp(n.Y, n.X, b.X) * 1.e6
+t  = b.X
+b  = b.Y * 1.e-9
+;
+va = FLTARR(N_ELEMENTS(t), 3)
+va[*, 0] = b[*, 0] / SQRT( !CONST.MU0 * np * !CONST.MP ) * 1.e-3
+va[*, 1] = b[*, 1] / SQRT( !CONST.MU0 * np * !CONST.MP ) * 1.e-3
+va[*, 2] = b[*, 2] / SQRT( !CONST.MU0 * np * !CONST.MP ) * 1.e-3
+;
+tname = 'Alfven_Velocity__C' + sc
+store_data, tname, data = {X:t, Y:va}
+;
+options, tname, 'ytitle', 'V!DA!N (C' + sc + ')'
+options, tname, 'ysubtitle', '[km/s]'
+options, tname, 'colors', [230, 150, 50]
+options, tname, 'labels', ['x', 'y', 'z']
 
 
 END
+

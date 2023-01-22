@@ -22,7 +22,6 @@ PRO math::walen_test, vx, vy, vz, va_x, va_y, va_z, $
 ;
 COMPILE_OPT IDL2, STATIC
 ;
-idlplotlib->psym, size=1.2
 ;
 v_ht = math->dht_frame(ex, ey, ez, bx, by, bz, quality)
 
@@ -40,6 +39,8 @@ y    = lfit[0] + lfit[1]*xrange
 ;     
 
 IF KEYWORD_SET(plot) THEN BEGIN
+    hpl = OBJ_NEW('hpl')
+    hpl->psym, size=1.2
     ; frame
     PLOT, va_x, vx - v_ht[0], psym=8, /NODATA, $
                 xstyle=1, ystyle=1, xrange=xrange, yrange=yrange

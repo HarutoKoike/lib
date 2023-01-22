@@ -47,7 +47,7 @@ FOR i = 0, N_ELEMENTS(sc0) - 1 DO BEGIN
     IF KEYWORD_SET(efw) THEN BEGIN
         efw = OBJ_NEW('efw')
         efw->SetProperty, sc=sc
-        efw->load
+        efw->load, _EXTRA=ex
         OBJ_DESTROY, efw
     ENDIF  
     ;

@@ -258,6 +258,7 @@ options, 'FOTE_curl_current_para_perp', 'colors', [50, 220]
 options, 'FOTE_curl_current_para_perp', 'labels', ['para', 'perp']
 options, 'FOTE_curl_current_para_perp', 'databar', {yval:0, linestyle:2}
 options, 'FOTE_curl_current_para_perp', 'ysubtitle', '[10!U-6!NA]'
+options, 'FOTE_curl_current_para_perp', 'ytitle', 'J'
 ;
 options, 'FOTE_null_distance', 'colors', [0, 50, 230, 150] 
 options, 'FOTE_null_distance', 'labels', ['C1', 'C2', 'C3', 'C4']

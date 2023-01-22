@@ -28,6 +28,13 @@ get_data, 'B_vec_xyz_gsm__C3_CP_FGM_FULL', data=b3
 get_data, 'B_vec_xyz_gsm__C4_CP_FGM_FULL', data=b4
 
 
+
+if isa(j, 'int') or isa(e1, 'int') or isa(e2, 'int') or $
+   isa(e3, 'int') or isa(e4, 'int') or isa(v1, 'int') or $
+   isa(v3, 'int') or isa(v4, 'int') or isa(b1, 'int') or $
+   isa(b2, 'int') or isa(b3, 'int') or isa(b4, 'int') then $
+   return
+
 e1 = interp(e1.y, e1.x, j.x)
 e2 = interp(e2.y, e2.x, j.x)
 e3 = interp(e3.y, e3.x, j.x)

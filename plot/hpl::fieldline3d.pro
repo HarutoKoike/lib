@@ -25,9 +25,9 @@ end
 ;===========================================================+
 ; ++ NAME ++
 FUNCTION hpl::fieldline3d, funcname, xrange, yrange,$
-                             zrange, seed=seed, nseed=nseed,$
-                             _EXTRA=ex, range=range, $
-                             log_color=log_color
+                            zrange, seed=seed, nseed=nseed,$
+                            _EXTRA=ex, range=range, $
+                            log_color=log_color
 ;
 ; ++ PURPOSE ++
 ;  --> plot field line in 3-D using 4th Runge-Kutta 

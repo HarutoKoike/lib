@@ -1,3 +1,4 @@
+@aacgmidl_v2.pro
 @genmag.pro      
 @igrflib_v2.pro  
 @aacgmlib_v2.pro

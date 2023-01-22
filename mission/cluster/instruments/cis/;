@@ -148,8 +148,6 @@ b_mag = SQRT(bx_gsm^2 + by_gsm^2 + bz_gsm^2) * 1.e-9 ; nT
 f_ce  = !CONST.E * b_mag / !CONST.ME / 2. / !PI
 ;
 store_data, tname, data={x:b.X, y:f_ce}
-options, tname, 'ytitle', 'f!Dce!N'
-options, tname, 'ysubtitle', '[Hz]'
 ylim, tname, 0, 0, /log
 
 
@@ -161,8 +159,6 @@ tname = 'Ion_cyclotoron_frequency__C' + sc + suffix
 f_ci  = !CONST.E * b_mag / !CONST.MP / 2. / !PI
 ;
 store_data, tname, data={x:b.X, y:f_ci}
-options, tname, 'ytitle', 'f!Dci!N'
-options, tname, 'ysubtitle', '[Hz]'
 ylim, tname, 0, 0, /log
 
 
@@ -174,8 +170,6 @@ tname = 'Lower_hybrid_frequency__C' + sc + suffix
 f_lh = SQRT(f_ce * f_ci)
 ;
 store_data, tname, data={x:b.x, y:f_lh}
-options, tname, 'ytitle', 'f!Dlh!N'
-options, tname, 'ysubtitle', '[Hz]'
 ylim, tname, 0, 0, /log
 
 
