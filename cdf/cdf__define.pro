@@ -1,8 +1,13 @@
+@cdf::info.pro
+
+
+
 ;
 ;*----------   ----------*
 ;
 FUNCTION cdf::init
 COMPILE_OPT IDL2
+;
 RETURN, 1
 END
 
@@ -11,18 +16,22 @@ END
 ;
 ;*----------   ----------*
 ;
-PRO cdf::SetProperty, filename=filename
+PRO cdf::SetProperty, filename=filename, info=info
 ;
 COMPILE_OPT IDL2
 ;
 IF KEYWORD_SET(filename) THEN BEGIN
     self.filename = filename
     ;
+    ; initial process
     IF FILE_TEST(filename) THEN BEGIN
         self.id = CDF_OPEN(filename) 
+        self->info
         self.is_connected = 1
     ENDIF
 ENDIF
+;
+IF KEYWORD_SET(info) THEN self.info = info
 ;
 END
 
@@ -31,12 +40,13 @@ END
 ;
 ;*----------   ----------*
 ;
-PRO cdf::GetProperty, filename=filename, id=id, is_connected=is_connected
+PRO cdf::GetProperty, filename=filename, id=id, is_connected=is_connected, info=info
 COMPILE_OPT IDL2
 ;
 IF ARG_PRESENT(filename)  THEN filename = self.filename
 IF ARG_PRESENT(id)        THEN id = self.id
 IF ARG_PRESENT(connected) THEN is_connected = self.is_connected
+IF ARG_PRESENT(info)      THEN info = self.info
 ;
 END
 
@@ -72,14 +82,12 @@ PRO cdf__define
 ; ++ HISTORY ++
 ;===========================================================+
 COMPILE_OPT IDL2
-void = {cdf,                    $
-        filename     : ''  ,    $
-        is_connected : 0   ,    $
-        id           : 0L  ,    $
-        INHERITS IDL_OBJECT     $
+void = {cdf,                      $
+        filename     : ''  ,      $
+        is_connected : 0   ,      $
+        id           : 0L  ,      $
+        info         : PTR_NEW(), $
+        INHERITS IDL_OBJECT       $
        }
 
 END
-
-
-
