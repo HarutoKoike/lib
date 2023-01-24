@@ -1,4 +1,6 @@
 @cdf::info.pro
+@cdf::varinfo.pro
+@cdf::get.pro
 
 
 
@@ -53,11 +55,11 @@ END
 
 
 ;
-;*----------   ----------*
+;*---------- close connection and destory self ----------*
 ;
-PRO cdf::delete
+PRO cdf::close
 COMPILE_OPT IDL2
-IF self.id NE 0 THEN CDF_CLOSE, id
+IF self.id NE 0 THEN CDF_CLOSE, self.id
 OBJ_DESTROY, self
 END
 

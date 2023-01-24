@@ -1,6 +1,6 @@
 ;===========================================================+
 ; ++ NAME ++
-PRO cdf::info, test 
+PRO cdf::info
 ;
 ; ++ PURPOSE ++
 ;  -->
@@ -39,13 +39,27 @@ ENDFOR
 
 
 ;
-;*---------- create struct for variable info  ----------*
+;*---------- create variable info structure ----------*
 ;
 variables = PTRARR(inq.nzvars, /ALLOCATE)
 ;
-FOR i = 0, inq.nzvars - 1 DO $
-    *(variables[i]) = {name : varnames[i]}
+FOR i = 0, inq.nzvars - 1 DO BEGIN
+    vinq = CDF_VARINQ(id, i, /ZVAR)
+    tn   = TAG_NAMES(vinq)
+    ;
+    ; varinq
+    FOR j = 0, N_TAGS(vinq) - 1 DO $
+        *(variables[i]) = CREATE_STRUCT( *(variables[i]), tn[j], vinq.(j) ) 
+    ;
+    ; var info
+    CDF_CONTROL, id, GET_VAR_INFO=vi, VARIABLE=varnames[j]
+    tn = TAG_NAMES(vi)
+    FOR j = 0, N_TAGS(vi) - 1 DO $
+        *(variables[i]) = CREATE_STRUCT( *(variables[i]), tn[j], vi.(j) ) 
+    ;
+ENDFOR
     
+
 
 
 ;
@@ -58,12 +72,14 @@ FOR i = i0, i1 DO BEGIN
     CDF_ATTINQ, id, i, attname, scope, maxentry, maxzentry
     ; 
     FOR j = 0, inq.nzvars - 1 DO BEGIN
-        CDF_ATTGET, id, i, varnames[j], att, CDF_TYPE=ct
+        CDF_CONTROL, id, ATTRIBUTE=attname, GET_ATTR_INFO=x
+        CDF_ATTGET, id, attname, varnames[j], att, CDF_TYPE=ct
         ;
         dum = *(variables[j])
         *(variables[j]) = CREATE_STRUCT(dum, attname, att) 
     ENDFOR
 ENDFOR
+
 
 
 
@@ -95,12 +111,3 @@ info = { $
 
 self.info = PTR_NEW(info)
 END
-
-
-
-fn = '~/idl/project/swarm/SW_OPER_MAGA_LR_1B_20131208T000000_20131208T235959_0503_MDR_MAG_LR.cdf'
-c = obj_new('cdf')
-c.filename=fn
-c->info, v
-
-end
