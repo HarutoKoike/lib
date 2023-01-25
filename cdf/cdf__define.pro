@@ -1,6 +1,7 @@
-@cdf::info.pro
+@cdf::get_info.pro
 @cdf::varinfo.pro
 @cdf::get.pro
+@cdf::print_gatts.pro
 
 
 
@@ -28,7 +29,7 @@ IF KEYWORD_SET(filename) THEN BEGIN
     ; initial process
     IF FILE_TEST(filename) THEN BEGIN
         self.id = CDF_OPEN(filename) 
-        self->info
+        self->get_info
         self.is_connected = 1
     ENDIF
 ENDIF

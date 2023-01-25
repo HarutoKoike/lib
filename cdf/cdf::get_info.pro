@@ -1,6 +1,6 @@
 ;===========================================================+
 ; ++ NAME ++
-PRO cdf::info
+PRO cdf::get_info
 ;
 ; ++ PURPOSE ++
 ;  -->
@@ -70,10 +70,14 @@ i1   = i0 + natts[1] - 1
 ;
 FOR i = i0, i1 DO BEGIN  
     CDF_ATTINQ, id, i, attname, scope, maxentry, maxzentry
-    ; 
+
+    ;IF maxzentry EQ 0 THEN CONTINUE
+    ;
     FOR j = 0, inq.nzvars - 1 DO BEGIN
-        CDF_CONTROL, id, ATTRIBUTE=attname, GET_ATTR_INFO=x
-        CDF_ATTGET, id, attname, varnames[j], att, CDF_TYPE=ct
+        ;
+        att = ''
+        IF CDF_ATTEXISTS(id, attname, varnames[j]) THEN $
+            CDF_ATTGET, id, attname, j, att, CDF_TYPE=ct, /ZVAR
         ;
         dum = *(variables[j])
         *(variables[j]) = CREATE_STRUCT(dum, attname, att) 

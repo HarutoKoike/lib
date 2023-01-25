@@ -27,13 +27,10 @@ nvars    = N_ELEMENTS(varnames)
 ;
 IF ~ISA(varname) THEN GOTO, SKIP
 ;
-IF ISA(varname, 'INT') AND varname EQ 0 THEN $
-    varname = varnames[0]
-
-vn = varname
-IF ISA(varname, 'INT') THEN vn = varnames[varname] 
 ;
-idx      = WHERE(STRMATCH(varnames, vn)) 
+IF ISA(varname, 'INT') THEN varname = varnames[varname]
+;
+idx      = WHERE(STRMATCH(varnames, varname)) 
 IF idx EQ -1 THEN RETURN
 ;
 info_out = ((*(self.info)).variables)[idx] 
