@@ -51,7 +51,8 @@ h = 0.1
 ;
 sx = -45
 sy = -20
-idlplotlib->psym, size=3
+hpl = obj_new('hpl')
+hpl->psym, size=3
 oplot, [sx, sx], [sy, sy], psym=8, color=200
 ;
 lx = [sx]
