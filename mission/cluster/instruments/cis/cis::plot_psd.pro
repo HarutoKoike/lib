@@ -279,15 +279,14 @@ IF dim EQ 2 THEN BEGIN
     spd_slice2d_plot, slice, background_color_index=0, _extra=ex, $
                       xtitle='V!Dpara!N(km/s)', ytitle='V!Dperp!N(km/s)'
 ENDIF ELSE BEGIN
-; 1-D cut ( pitch angle 0 )
+    ; 1-D cut ( pitch angle 0 )
     fmax = MAX(slice.data, /NAN)
     pow  = CEIL(ALOG10(fmax)) 
     yrange = [10^(pow-4), 10^pow] 
     
     yval = [slice.ygrid[0], slice.ygrid[-1]]
     yval = 0 
-    spd_slice1d_plot, slice, 'x', yval, xrange=xrange, _extra=ex, $
-                      yrange=yrange, /ylog, xtitle='V!Dpara!N(km/s)'
+    spd_slice1d_plot, slice, 'y', yval, _extra=ex, /ylog
     OPLOT, [0, 0], yrange, linestyle=2
 ENDELSE
 

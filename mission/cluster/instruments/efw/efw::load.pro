@@ -67,6 +67,17 @@ idx_nan = WHERE(ABS(bz_gse) LT 1., /NULL)
 bz_gse[idx_nan] = !VALUES.F_NAN
 ;
 ez_gse = -(ex_gse * bx_gse + ey_gse * by_gse) / bz_gse
+;
+;
+tname = 'E_xyz_GSE__C' + sc + '_EFW'
+store_data, tname, data={x:e.x, y:[ [ex_gse], [ey_gse], [ez_gse] ]} 
+options, tname, 'colors', [230, 140, 50]
+options, tname, 'ytitle', 'E(GSE, C' + sc + ')'
+options, tname, 'ysubtitle', '[mV/m]'
+options, tname, 'databar', {yval:0, linestyle:2}
+ 
+
+
 
 
 ;

@@ -33,7 +33,7 @@ END
 
 ;===========================================================+
 ; ++ NAME ++
-PRO cis::load, only_pp=only_pp, full_moment=full_moment, success=success
+PRO cis::load, only_pp=only_pp, full_moment=full_moment, success=success, advanced=advanced
 ;
 ; ++ PURPOSE ++
 ;  -->
@@ -162,7 +162,8 @@ options, 'V_mag__C'+ sc, 'labels', '|V|'
 store_data, 'V_para_perp__C'+sc, data=['V_para__C'+sc, 'V_perp__C'+sc, 'V_mag__C'+sc]
 options, 'V_para_perp__C'+ sc, 'colors', [50, 220, 0]
 options, 'V_para_perp__C'+sc, 'databar', {yval:0, linestyle:2}
-options, 'V_para_perp__C'+sc, 'ytitle', 'V!Di!N'
+options, 'V_para_perp__C'+sc, 'ytitle', 'V!Dpara!N/V!Dperp!N'
+options, 'V_para_perp__C'+sc, 'ysubtitle', '[km/s]'
 
 
 no_mag:
@@ -370,7 +371,7 @@ ratio = ratio * SQRT(!CONST.ME / !CONST.MP)
 store_data, tname, data={x:tmag, y:ratio}
 options, tname, 'databar', {yval:1, linestyle:2}
 options, tname, 'ytitle', 'f!Dpe!N/f!Dce!N (C' + sc + ')'
-ylim, tname, 0, 0, /log
+ylim, tname, 0, 0, /log     
 
 
 ;
@@ -401,7 +402,7 @@ options, 'E_gsm_VxB__C' + sc, 'ysubtitle', 'mV/m'
 
 
 ;
-;*---------- Alfven Velocity ----------*
+;*---------- Alfven Velocity (proton) ----------*
 ;
 get_data, 'B_xyz_gsm__C'+sc+'_PP_FGM', data=b
 get_data, 'N_HIA__C'+sc+'_PP_CIS', data=n
@@ -424,5 +425,92 @@ options, tname, 'colors', [230, 150, 50]
 options, tname, 'labels', ['x', 'y', 'z']
 
 
-END
+IF ~KEYWORD_SET(advanced) THEN RETURN
 
+
+;-------------------------------------------------+
+; advanced parameters
+;-------------------------------------------------+
+get_data, 'flux__C' + sc + '_CP_CIS-HIA_HS_1D_PEF', data=f
+;
+e       = f.v
+e_max   = FLTARR( N_ELEMENTS(f.x) )  ; energy at maximum flux
+e_lower = FLTARR( N_ELEMENTS(f.x) )  ; lower energy at maximum flux /10. 
+e_upper = FLTARR( N_ELEMENTS(f.x) )  ; 
+kurt    = FLTARR( N_ELEMENTS(f.x) )  ; kurtosis
+skew    = FLTARR( N_ELEMENTS(f.x) )  ; skewness
+;
+;
+r = exp(-1) ; 
+;
+FOR i = 0, N_ELEMENTS(f.x) - 1 DO BEGIN
+    fmax = MAX( f.y[i, *], mi, /NAN )
+    e_max[i] = e[mi]  
+    ;
+    idx     = WHERE( f.y[i, *] ge fmax * r)
+    ;
+    e_lower[i] = e[ idx[-1] ]
+    e_upper[i] = e[ idx[0]  ]
+    ;
+    rv = dist2randomvar(reform(f.y[i, *]))
+    IF N_ELEMENTS(rv) EQ 1 THEN BEGIN
+        kurt[i] = !VALUES.F_NAN
+        skew[i] = !VALUES.F_NAN
+    ENDIF
+    kurt[i] = KURTOSIS(rv, /nan)
+    skew[i] = SKEWNESS(rv, /nan)
+ENDFOR
+
+
+
+
+;
+;*----------   ----------*
+;
+tn = 'erange__C' + sc
+store_data, tn, data={x:f.x, y:[ [e_max], [e_lower], [e_upper] ]}
+ylim, tn, e[-1], e[0], 1
+options, tn, 'ysubtitle', '[eV]'
+;
+tn_new = tn+'_smoothed'
+tsmooth_in_time, tn, 20., newname=tn_new
+options, tn_new, 'colors', [0, 50, 230]
+ylim, tn_new, e[-1], e[0], 1
+
+deriv_data, tn
+deriv_data, tn_new
+
+
+tn = 'delta_e__C' + sc
+de  = 1 - ALOG10(e_lower)/ALOG10(e_upper)
+store_data, tn, data={x:f.x, y:de}
+ylim, tn, 0, 0, 1
+options, tn, 'databar', {yval:1, linestyle:2}
+;
+de_ave = MEAN(de, /NAN)
+de_std = STDDEV(de, /NAN)
+options, tn, 'databar', {yval:[de_ave, de_ave-de_std], linestyle:2}
+
+
+;
+;
+tn_new = tn + '_sm'
+tsmooth_in_time, tn, 20., newname=tn_new
+
+
+;
+; kurtosis
+tn = 'kurtosis__C' + sc
+store_data, tn, data={x:f.x, y:kurt}
+options, tn, 'databar', {yval:0, linestyle:2}
+
+
+;
+; skewness
+tn = 'skewness__C' + sc
+store_data, tn, data={x:f.x, y:skew}
+options, tn, 'databar', {yval:0, linestyle:2}
+
+
+
+END

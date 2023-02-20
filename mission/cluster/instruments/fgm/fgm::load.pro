@@ -180,4 +180,31 @@ ylim, tname, 0, 0, /log
 
 
 
+
+;
+;*---------- Lower Hybrid frequency (Using Freq. ratio)  ----------*
+;
+tname     = 'Lower_hybrid_frequency__C' + sc + suffix + '_accurate'
+tname_fpi = 'Proton_plasma_frequancy__C' + sc
+;
+dum = WHERE(STRMATCH(tnames(), tname_fpi), count)  
+IF count NE 1 THEN GOTO, skip_lh
+;
+get_data, tname_fpi, data=fpi 
+t_fpi = fpi.x
+f_pe   = fpi.y * SQRT(!CONST.MP/!CONST.ME)
+;
+f_pe   = interp(f_pe, t_fpi, b.x)
+ratio  = f_pe / f_ce
+f_lh   = !CONST.ME/!CONST.MP * f_ce^2 / (1. + ratio^(-2))
+f_lh   = SQRT(f_lh)
+;
+store_data, tname, data={x:b.x, y:f_lh}
+options, tnems, 'ytitle', 'f!Dlh!N'
+options, tname, 'ysubtitle', '[Hz]'
+ylim, tname, 0, 0, /log
+
+
+skip_lh:
 END
+

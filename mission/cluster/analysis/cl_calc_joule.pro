@@ -2,9 +2,10 @@ pro cl_calc_joule, load=load
 
 
 if keyword_set(load) then begin
-    sc = [1, 3, 4]
-    cl_load, sc, /fote, /full, /cis, /efw, /only
-    cl_load, 2, /efw, /fgm
+    sc = [1, 2, 3, 4]
+    cl_load, /fote, /full
+    cl_load, sc, /efw
+    cl_load, sc, /cis, /only
 endif
 
 
@@ -12,20 +13,20 @@ endif
 
 get_data, 'FOTE_curl_current', data=j
 ;
-get_data, 'E_xyz_GSM__C1_EFW', data=e1
-get_data, 'E_xyz_GSM__C2_EFW', data=e2
-get_data, 'E_xyz_GSM__C3_EFW', data=e3
-get_data, 'E_xyz_GSM__C4_EFW', data=e4
+get_data, 'E_xyz_GSE__C1_EFW', data=e1
+get_data, 'E_xyz_GSE__C2_EFW', data=e2
+get_data, 'E_xyz_GSE__C3_EFW', data=e3
+get_data, 'E_xyz_GSE__C4_EFW', data=e4
 ;
-get_data, 'V_HIA_xyz_gsm__C1_PP_CIS', data=v1
+get_data, 'V_HIA_xyz_gse__C1_PP_CIS', data=v1
 ;get_data, 'V_HIA_xyz_gsm__C2_PP_CIS', data=v2
-get_data, 'V_HIA_xyz_gsm__C3_PP_CIS', data=v3
-get_data, 'V_HIA_xyz_gsm__C4_PP_CIS', data=v4
+get_data, 'V_HIA_xyz_gse__C3_PP_CIS', data=v3
+get_data, 'V_HIA_xyz_gse__C4_PP_CIS', data=v4
 ;
-get_data, 'B_vec_xyz_gsm__C1_CP_FGM_FULL', data=b1
-get_data, 'B_vec_xyz_gsm__C2_CP_FGM_FULL', data=b2
-get_data, 'B_vec_xyz_gsm__C3_CP_FGM_FULL', data=b3
-get_data, 'B_vec_xyz_gsm__C4_CP_FGM_FULL', data=b4
+get_data, 'B_vec_xyz_gse__C1_CP_FGM_FULL', data=b1
+get_data, 'B_vec_xyz_gse__C2_CP_FGM_FULL', data=b2
+get_data, 'B_vec_xyz_gse__C3_CP_FGM_FULL', data=b3
+get_data, 'B_vec_xyz_gse__C4_CP_FGM_FULL', data=b4
 
 
 
@@ -53,25 +54,43 @@ e = mean( [ [[e1]], [[e2]], [[e3]], [[e4]] ], dim=3, /nan )
 v = mean( [ [[v1]], [[v3]], [[v4]] ], dim=3, /nan )
 b = mean( [ [[b1]], [[b2]], [[b3]], [[b4]] ], dim=3, /nan )
 t = j.x
-j = j.y * 1.e-6
+j = j.y * 1.e-9
 ;
-e *= 1.e-3
 b *= 1.e-9
 v *= 1.e3
 ;
-joule  =fltarr(n_elements(t))
-e_conv =fltarr(n_elements(t), 3)
+joule   = fltarr(n_elements(t))
+joule1  = fltarr(n_elements(t))
+e_conv  = fltarr(n_elements(t), 3)
+;
 for i = 0, n_elements(t) - 1 do begin
-    e_conv[i, *] = crossp(v[i, *], b[i, *]) * 1.e-3
+    e_conv[i, *] = crossp(v[i, *], b[i, *]) * 1.e3  ; mV/m
     ;
     ef = e[i, *] + e_conv[i, *]
-    joule[i] = total( ef * j[i, *] )
+    ef *= 1.e-3  ; V/m
+    joule[i]  = total( ef * j[i, *] ) * 1.e12 ;pW/m^3
+    joule1[i] = total( e[i, *]*1.e-3 * j[i, *] ) * 1.e12 ;pW/m^3
 endfor
 
-store_data, "EJ", data={x:t, y:joule*1.e12} 
+;
+; joule
+store_data, "EJ", data={x:t, y:joule} 
 options, "EJ", databar={yval:0, linestyle:2}
 options, "EJ", ysubtitle='[pW/m!U3!N]'
-store_data, 'vxB', data={x:t, y:e_conv} 
-store_data, 'E+vxB', data = {x:t, y:e+e_conv}
+;
+store_data, "EJ1", data={x:t, y:joule1} 
+options, "EJ1", databar={yval:0, linestyle:2}
+options, "EJ1", ysubtitle='[pW/m!U3!N]'
+;
+; convection
+tn = 'vxB'
+store_data, tn, data={x:t, y:e_conv} 
+options, tn, 'ysubtitle', '[mV/m]'
+;
+; electric field in ion frame
+tname = 'E+vxB'
+store_data, tname, data = {x:t, y:e+e_conv}
+options, tname, 'ysubtitle', '[mV/m]'
+
 
 end

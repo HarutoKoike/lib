@@ -12,5 +12,5 @@ END
 
 PRO str__define
 COMPILE_OPT IDL2
-void = {str, name:'str'}
+void = {str, name:'str', INHERITS IDL_OBJECT}
 END

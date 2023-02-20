@@ -1,6 +1,6 @@
 ;===========================================================+
 ; ++ NAME ++
-PRO fgm::fote, full=full
+PRO fgm::fote, full=full, skip_load=skip_load
 ;
 ; ++ PURPOSE ++
 ;  --> calculate magnetic field by FOTE (Fu et al., 2015)
@@ -14,11 +14,12 @@ PRO fgm::fote, full=full
 ; ++ CALLING SEQUENCE ++
 ;  -->
 ;
-; ++ HISTORY ++
-;    2022/06/01 H.Koike 
+; ++ HISTORY ++ ;    2022/06/01 H.Koike 
 ;===========================================================+
 COMPILE_OPT IDL2
 ; 
+IF KEYWORD_SET(skip_load) THEN GOTO, jump1
+;
 self->GetProperty, sc=sc
 FOR i = 1, 4 DO BEGIN
     self->SetProperty, sc=i
@@ -26,85 +27,128 @@ FOR i = 1, 4 DO BEGIN
 ENDFOR
 self->SetProperty, sc=sc
 ;
+
+
+
+jump1:
+;
+;*----------tname ----------*
+;
 IF ~KEYWORD_SET(full) THEN BEGIN
-    tname_suffix = 'B_xyz_gsm__C'
+    tname_suffix = 'B_xyz_gse__C'
     tname_prefix = '_PP_FGM'
 ENDIF ELSE BEGIN
-    tname_suffix = 'B_vec_xyz_gsm__C'
+    tname_suffix = 'B_vec_xyz_gse__C'
     tname_prefix = '_CP_FGM_FULL'
 ENDELSE
+;
+
+
+
+
+
+;
+;*---------- magnetic field  ----------*
 ;
 get_data, tname_suffix + '1' + tname_prefix, data=b1
 get_data, tname_suffix + '2' + tname_prefix, data=b2
 get_data, tname_suffix + '3' + tname_prefix, data=b3
 get_data, tname_suffix + '4' + tname_prefix, data=b4
+
 ;
-get_data, 'pos_x_gsm_c1', data=p1x
-get_data, 'pos_x_gsm_c2', data=p2x
-get_data, 'pos_x_gsm_c3', data=p3x
-get_data, 'pos_x_gsm_c4', data=p4x
-get_data, 'pos_y_gsm_c1', data=p1y
-get_data, 'pos_y_gsm_c2', data=p2y
-get_data, 'pos_y_gsm_c3', data=p3y
-get_data, 'pos_y_gsm_c4', data=p4y
-get_data, 'pos_z_gsm_c1', data=p1z
-get_data, 'pos_z_gsm_c2', data=p2z
-get_data, 'pos_z_gsm_c3', data=p3z
-get_data, 'pos_z_gsm_c4', data=p4z
-
-
 disc = ~ISA(b1, 'STRUCT')  OR ~ISA(b2, 'STRUCT')  OR ~ISA(b3, 'STRUCT') OR $
-       ~ISA(b4, 'STRUCT')  OR ~ISA(p1x, 'STRUCT') OR ~ISA(p2x, 'STRUCT') OR $
-       ~ISA(p3x, 'STRUCT') OR ~ISA(p4x, 'STRUCT') OR ~ISA(p1y, 'STRUCT') OR $  
-       ~ISA(p2y, 'STRUCT') OR ~ISA(p3y, 'STRUCT') OR ~ISA(p4y, 'STRUCT') OR $  
-       ~ISA(p1z, 'STRUCT') OR ~ISA(p2z, 'STRUCT') OR ~ISA(p3z, 'STRUCT') OR $  
-       ~ISA(p4z, 'STRUCT') 
-
+       ~ISA(b4, 'STRUCT')  
+;
 IF disc THEN RETURN
 
 ;
-;*---------- interpolate  ----------*
-;
-;
-; magnetic field
-;
+; interpolate
 t   = b3.x
+b1x = interp(b1.y[*, 0], b1.x, t) * 1.e-9
+b1y = interp(b1.y[*, 1], b1.x, t) * 1.e-9
+b1z = interp(b1.y[*, 2], b1.x, t) * 1.e-9
 ;
-b1x = interp(b1.y[*, 0], b1.x, t)
-b1y = interp(b1.y[*, 1], b1.x, t)
-b1z = interp(b1.y[*, 2], b1.x, t)
+b2x = interp(b2.y[*, 0], b2.x, t) * 1.e-9
+b2y = interp(b2.y[*, 1], b2.x, t) * 1.e-9
+b2z = interp(b2.y[*, 2], b2.x, t) * 1.e-9
 ;
-b2x = interp(b2.y[*, 0], b2.x, t)
-b2y = interp(b2.y[*, 1], b2.x, t)
-b2z = interp(b2.y[*, 2], b2.x, t)
+b3x = REFORM(b3.y[*, 0]) * 1.e-9
+b3y = REFORM(b3.y[*, 1]) * 1.e-9
+b3z = REFORM(b3.y[*, 2]) * 1.e-9
 ;
-b3x = REFORM(b3.y[*, 0])
-b3y = REFORM(b3.y[*, 1])
-b3z = REFORM(b3.y[*, 2])
-;
-b4x = interp(b4.y[*, 0], b4.x, t)
-b4y = interp(b4.y[*, 1], b4.x, t)
-b4z = interp(b4.y[*, 2], b4.x, t)
-;
-; position
-p1x = interp(p1x.y, p1x.x, t)
-p1y = interp(p1y.y, p1y.x, t)
-p1z = interp(p1z.y, p1z.x, t)
-;
-p2x = interp(p2x.y, p2x.x, t)
-p2y = interp(p2y.y, p2y.x, t)
-p2z = interp(p2z.y, p2z.x, t)
-;
-p3x = interp(p3x.y, p3x.x, t)
-p3y = interp(p3y.y, p3y.x, t)
-p3z = interp(p3z.y, p3z.x, t)
-;
-p4x = interp(p4x.y, p4x.x, t)
-p4y = interp(p4y.y, p4y.x, t)
-p4z = interp(p4z.y, p4z.x, t)
+b4x = interp(b4.y[*, 0], b4.x, t) * 1.e-9
+b4y = interp(b4.y[*, 1], b4.x, t) * 1.e-9
+b4z = interp(b4.y[*, 2], b4.x, t) * 1.e-9   
 
 
 
+
+
+
+;
+;*---------- position  ----------*
+;
+IF KEYWORD_SET(full) THEN BEGIN
+    tp1 = 'sc_pos_xyz_gse__C1_CP_FGM_FULL'
+    tp2 = 'sc_pos_xyz_gse__C2_CP_FGM_FULL'
+    tp3 = 'sc_pos_xyz_gse__C3_CP_FGM_FULL'
+    tp4 = 'sc_pos_xyz_gse__C4_CP_FGM_FULL'
+ENDIF ELSE BEGIN
+    tp1 = 'pos_gse_c1'
+    tp2 = 'pos_gse_c2'
+    tp3 = 'pos_gse_c3'
+    tp4 = 'pos_gse_c4'
+ENDELSE
+;
+;
+get_data, tp1, data=p1
+get_data, tp2, data=p2
+get_data, tp3, data=p3
+get_data, tp4, data=p4
+;
+disc = ~ISA(p1, 'STRUCT') OR ~ISA(p2, 'STRUCT') OR $
+       ~ISA(p3, 'STRUCT') OR ~ISA(p4, 'STRUCT') 
+;
+IF disc THEN RETURN             
+
+
+;
+; interpolate
+;
+IF KEYWORD_SET(full) THEN BEGIN
+    p1 = interp(p1.y, p1.x, t) * 1.e3
+    p2 = interp(p2.y, p2.x, t) * 1.e3
+    p3 = interp(p3.y, p3.x, t) * 1.e3
+    p4 = interp(p4.y, p4.x, t) * 1.e3
+ENDIF ELSE BEGIN
+    p1 = interp(p1.y, p1.x, t) * !CONST.R_EARTH 
+    p2 = interp(p2.y, p2.x, t) * !CONST.R_EARTH  
+    p3 = interp(p3.y, p3.x, t) * !CONST.R_EARTH  
+    p4 = interp(p4.y, p4.x, t) * !CONST.R_EARTH  
+ENDELSE
+;
+p1x = p1[*, 0]
+p1y = p1[*, 1]
+p1z = p1[*, 2]
+;
+p2x = p2[*, 0]
+p2y = p2[*, 1]
+p2z = p2[*, 2]
+;
+p3x = p3[*, 0]
+p3y = p3[*, 1]
+p3z = p3[*, 2]
+;
+p4x = p4[*, 0]
+p4y = p4[*, 1]
+p4z = p4[*, 2]
+
+
+
+
+;-------------------------------------------------+
+; 
+;-------------------------------------------------+
 n     = N_ELEMENTS(t)
 null  = FLTARR(n, 3)
 coeff = FLTARR(n, 12)
@@ -167,38 +211,34 @@ FOR i = 0, N_ELEMENTS(t) - 1 DO BEGIN
                  (alpha[1] LE 1) AND (alpha[2] GE 0) AND (alpha[2] LE 1)
     ;
     ; current
-    divb[i] = m[1] + m[6] + m[11]
-    current[i, 0] = m[10] - m[7]
-    current[i, 1] = m[3] - m[9]
-    current[i, 2] = m[5] - m[2]
-    ;
+    current[i, 0]  = (m[10] - m[7]) / !CONST.MU0
+    current[i, 1]  = (m[3] - m[9] ) / !CONST.MU0
+    current[i, 2]  = (m[5] - m[2] ) / !CONST.MU0
     current_mag[i] = NORM(current[i, *])
+    ;
     ;
     b_ave = (b1 + b2 + b3 + b4) / 4.
     current_para[i] = TOTAL(REFORM(current[i, *] * b_ave) / NORM(b_ave) )
     current_perp[i] = SQRT(current_mag[i]^2 - current_para[i]^2)
 ENDFOR
 
-;
-;*----------   ----------*
-;
-divb        = ABS(divb / current_mag)     ; divB/|curlB|
-current     = current / !CONST.MU0 / !CONST.R_EARTH * 1.e6 * 1.e-9
-current_mag = current_mag / !CONST.MU0 / !CONST.R_EARTH * 1.e6 * 1.e-9
-;
-current_para = current_para / !CONST.MU0 / !CONST.R_EARTH * 1.e6 * 1.e-9
-current_perp = current_perp / !CONST.MU0 / !CONST.R_EARTH * 1.e6 * 1.e-9
+
+divb          = ABS(divb / current_mag * !CONST.MU0)     ; divB/|curlB|
+current      *= 1.e9  ; A/m^2 -> nA/m^2
+current_mag  *= 1.e9
+current_para *= 1.e9
+current_perp *= 1.e9
 
 
 store_data, 'FOTE_coefficients', data={x:t, y:coeff}
 ;
 store_data, 'FOTE_null_point', data={x:t, y:null}
 ;
-dp1 *= !CONST.R_EARTH * 1.e-3
-dp2 *= !CONST.R_EARTH * 1.e-3
-dp3 *= !CONST.R_EARTH * 1.e-3
-dp4 *= !CONST.R_EARTH * 1.e-3
-dp_bary *= !CONST.R_EARTH * 1.e-3
+dp1 *=  1.e-3  ; m -> km
+dp2 *=  1.e-3  ; m -> km 
+dp3 *=  1.e-3  ; m -> km 
+dp4 *=  1.e-3  ; m -> km 
+dp_bary *=  1.e-3
 ;
 store_data, 'FOTE_null_distance_C1', data={x:t, y:dp1}
 store_data, 'FOTE_null_distance_C2', data={x:t, y:dp2}
@@ -232,7 +272,7 @@ ylim, 'FOTE_null_coeff_norm', 0, 1
 ylim, 'FOTE_divB', 0.01, 10, 1
 ;
 ;
-options, 'FOTE_null_point', 'ytitle', 'Null point (GSM)'
+options, 'FOTE_null_point', 'ytitle', 'Null point (GSE)'
 options, 'FOTE_null_point', 'ysubtitle', '[R!DE!N]'
 options, 'FOTE_null_point', 'labels', ['X', 'Y', 'Z']
 options, 'FOTE_null_point', 'colors', [230, 150, 50]
@@ -241,8 +281,8 @@ options, 'FOTE_null_distance_bary', 'colors', [230, 150, 50]
 options, 'FOTE_null_distance_bary', 'labels', ['X', 'Y', 'Z']
 ;
 options, 'FOTE_curl_current', 'colors', [230, 150, 50]
-options, 'FOTE_curl_current', 'ytitle', 'FOTE_current(GSM)'
-options, 'FOTE_curl_current', 'ysubtitle', '[10!U-6!NA]'
+options, 'FOTE_curl_current', 'ytitle', 'FOTE_current(GSE)'
+options, 'FOTE_curl_current', 'ysubtitle', '[nA/m!U2!N]'
 options, 'FOTE_curl_current', 'labels', ['jx', 'jy', 'jz']
 options, 'FOTE_curl_current', 'databar', {yval:0, linestyle:2} 
 ;
@@ -252,12 +292,12 @@ options, 'FOTE_divB', 'databar', {yval:0.5, linestyle:2}
 options, 'FOTE_curl_current_ratio', 'ytitle', '|J_para/J_parp|'
 ;
 options, 'FOTE_curl_current_mag', 'ytitle', '|J|'
-options, 'FOTE_curl_current_mag', 'ysubtitle', '[10!U-6!N A/m!U2!N]'
+options, 'FOTE_curl_current_mag', 'ysubtitle', '[nA/m!U2!N]'
 ;
 options, 'FOTE_curl_current_para_perp', 'colors', [50, 220]
 options, 'FOTE_curl_current_para_perp', 'labels', ['para', 'perp']
 options, 'FOTE_curl_current_para_perp', 'databar', {yval:0, linestyle:2}
-options, 'FOTE_curl_current_para_perp', 'ysubtitle', '[10!U-6!NA]'
+options, 'FOTE_curl_current_para_perp', 'ysubtitle', '[nA/m!U2!N]'
 options, 'FOTE_curl_current_para_perp', 'ytitle', 'J'
 ;
 options, 'FOTE_null_distance', 'colors', [0, 50, 230, 150] 

@@ -1,13 +1,12 @@
 @date::string.pro
-@date::format_list.pro
 @date::convert.pro
 
 
 FUNCTION date::init, _EXTRA=e
 COMPILE_OPT IDL2
 ;
-self->setprop, _EXTRA=e
-self->getprop, julday=julday, year=yr
+self->SetProperty, _EXTRA=e
+self->GetProperty, julday=julday, year=yr
 ;
 ;
 ;*---------- if keyword julday is set ----------*
@@ -15,8 +14,8 @@ self->getprop, julday=julday, year=yr
 IF julday NE 0D THEN BEGIN
   CALDAT, julday, month, day, year, $
           hour, minute, second
-  self->setprop, year=year, month=month, day=day, $
-                 hour=hour, minute=minute, second=second
+  self->SetProperty, year=year, month=month, day=day, $
+                     hour=hour, minute=minute, second=second
 ENDIF
 ;
 RETURN, 1
@@ -28,9 +27,9 @@ END
 ;-------------------------------------------------+
 ; set property
 ;-------------------------------------------------+
-PRO date::setprop, julday=julday, year=year, month=month, $
-                   day=day, hour=hour, minute=minute,     $
-                   second=second, format=format
+PRO date::SetProperty, julday=julday, year=year, month=month, $
+                       day=day, hour=hour, minute=minute,     $
+                       second=second, format=format
 ;
 COMPILE_OPT IDL2
 ;
@@ -61,9 +60,9 @@ END
 ;-------------------------------------------------+
 ; get property
 ;-------------------------------------------------+
-PRO date::getprop, julday=julday, year=year, month=month, $
-                   day=day, hour=hour, minute=minute,     $
-                   second=second, format=format
+PRO date::GetProperty, julday=julday, year=year, month=month, $
+                       day=day, hour=hour, minute=minute,     $
+                       second=second, format=format
 ;
 COMPILE_OPT IDL2
 ;
@@ -78,6 +77,17 @@ IF ARG_PRESENT(format) THEN format = self.format
 END
 
 
+
+
+;-------------------------------------------------+
+; 
+;-------------------------------------------------+
+FUNCTION date::format_list
+COMPILE_OPT IDL2
+;
+list = ['%Y', '%y', '%m', '%d', '%H', '%M', '%S']
+RETURN, list
+END   
 
 ;-------------------------------------------------+
 ; 

@@ -1,4 +1,3 @@
-@hpl::psplot.pro
 @hpl::fieldline3d.pro
 
 

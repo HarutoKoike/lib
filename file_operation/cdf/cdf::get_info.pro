@@ -71,13 +71,13 @@ i1   = i0 + natts[1] - 1
 FOR i = i0, i1 DO BEGIN  
     CDF_ATTINQ, id, i, attname, scope, maxentry, maxzentry
 
-    ;IF maxzentry EQ 0 THEN CONTINUE
+    att = ' '
+    IF maxzentry EQ 0 THEN CONTINUE
     ;
     FOR j = 0, inq.nzvars - 1 DO BEGIN
         ;
-        att = ''
         IF CDF_ATTEXISTS(id, attname, varnames[j]) THEN $
-            CDF_ATTGET, id, attname, j, att, CDF_TYPE=ct, /ZVAR
+            CDF_ATTGET, id, attname, varnames[j], att, CDF_TYPE=ct, /ZVAR
         ;
         dum = *(variables[j])
         *(variables[j]) = CREATE_STRUCT(dum, attname, att) 
@@ -95,8 +95,13 @@ gatts = HASH()
 FOR i = 0, natts[0] - 1 DO BEGIN
     CDF_ATTINQ, id, i, attname, scope, maxentry, maxzentry
     CDF_CONTROL, id, ATTRIBUTE=attname, GET_ATTR_INFO=x
-    CDF_ATTGET, id, attname, x.maxgentry, gatt
-    gatts[attname] = gatt 
+    IF x.maxgentry NE -1 THEN BEGIN
+        CDF_ATTGET, id, attname, x.maxgentry, gatt
+        gatts[attname] = gatt 
+    ENDIF ELSE BEGIN
+        gatts[attname] = ''
+    ENDELSE
+
 ENDFOR
 
 
