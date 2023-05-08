@@ -4,6 +4,7 @@
 @cluster::download.pro
 @cluster::plot_fieldline3d.pro
 @cluster::combine_multi.pro
+@cluster::walen_relation.pro
 
 FUNCTION cluster::init
 COMPILE_OPT IDL2

@@ -321,7 +321,7 @@ options, tname, 'ysubtitle', '[km]'
 
 
 ;
-;*---------- ion beta  ----------*
+;*---------- ion beta & pressure anisotropy ----------*
 ;
 ;
 bmag   = SQRT(b.Y[*, 0]^2 + b.Y[*, 1]^2 + b.Y[*, 2]^2) * 1.e-9
@@ -338,10 +338,14 @@ t_perp = interp(t_perp.Y, t_perp.X, tmag) * 1.e6
 ;
 beta_para = np * !CONST.K * t_para / b_pres 
 beta_perp = np * !CONST.K * t_perp / b_pres 
-tname_para = 'Beta_para__C' + sc
-tname_perp = 'Beta_perp__C' + sc
+alpha     = (beta_para - beta_perp) * 2.   ; see Paschmann et al.(1986)
+;
+tname_para  = 'Beta_para__C' + sc
+tname_perp  = 'Beta_perp__C' + sc
+tname_alpha = 'Pressure_anisotropy__C' + sc
 store_data, tname_para, data={X:tmag, Y:beta_para} 
 store_data, tname_perp, data={X:tmag, Y:beta_perp} 
+store_data, tname_alpha, data={x:tmag, y:alpha}
 ;
 ylim, tname_para, 0, 0, 1
 ylim, tname_perp, 0, 0, 1

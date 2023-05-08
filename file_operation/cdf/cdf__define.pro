@@ -31,7 +31,10 @@ IF KEYWORD_SET(filename) THEN BEGIN
         self.id = CDF_OPEN(filename) 
         self->get_info
         self.is_connected = 1
-    ENDIF
+    ENDIF ELSE BEGIN
+        PRINT, ' File not found :   ' + filename 
+        self.is_connected = 0
+    ENDELSE
 ENDIF
 ;
 IF KEYWORD_SET(info) THEN self.info = info

@@ -18,6 +18,12 @@ PRO cdf::varinfo, varname=varname, info_out
 ;===========================================================+
 COMPILE_OPT IDL2
 ;
+;
+IF ~self.is_connected THEN BEGIN 
+    MESSAGE, 'connection to CDF file is not established :  ' + self.filename
+    RETURN
+ENDIF
+
 varnames = ( *(self.info) ).varnames
 nvars    = N_ELEMENTS(varnames)
 ;
