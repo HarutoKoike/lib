@@ -7,6 +7,8 @@
 @myspedas::tmean.pro
 @myspedas::tmax.pro
 @myspedas::sh_method.pro
+@myspedas::tsavgol.pro
+@myspedas::tstddev.pro
 
 FUNCTION myspedas::init
 COMPILE_OPT IDL2, STATIC

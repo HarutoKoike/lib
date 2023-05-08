@@ -48,8 +48,8 @@ str_element, dlim, 'SPEC', 1, /add
 ; X 
 tname = 'BB_xx_st2__C' + sc + '_CP_STA_PSD'
 store_data, tname, data={x:d.x, y:REFORM(d.y[*, 0, *]), v:d.v}, dlim=dlim
-zlim, tname, 0, 0, 0
-ylim, tname, d.v[0], d.v[-1]
+zlim, tname, 0, 0, 1
+ylim, tname, d.v[0], d.v[-1], 0
 ;
 options, tname, 'ytitle', 'Bx'
 options, tname, 'ysubtitle', '[nT!U2!N/Hz]' 
@@ -58,8 +58,8 @@ options, tname, 'ysubtitle', '[nT!U2!N/Hz]'
 ; Y
 tname = 'BB_yy_st2__C' + sc + '_CP_STA_PSD'
 store_data, tname, data={x:d.x, y:REFORM(d.y[*, 1, *]), v:d.v}, dlim=dlim
-zlim, tname, 0, 0, 0
-ylim, tname, d.v[0], d.v[-1]
+zlim, tname, 0, 0, 1
+ylim, tname, d.v[0], d.v[-1], 0
 options, tname, 'ytitle', 'By'
 options, tname, 'ysubtitle', '[nT!U2!N/Hz]' 
 ;
@@ -68,7 +68,7 @@ options, tname, 'ysubtitle', '[nT!U2!N/Hz]'
 tname = 'BB_zz_st2__C' + sc + '_CP_STA_PSD'
 store_data, tname, data={x:d.x, y:REFORM(d.y[*, 2, *]), v:d.v}, dlim=dlim
 zlim, tname, 0, 0, 1
-ylim, tname, d.v[0], d.v[-1]
+ylim, tname, d.v[0], d.v[-1], 0
 options, tname, 'ytitle', 'Bz'
 options, tname, 'ysubtitle', '[nT!U2!N/Hz]' 
 ;
@@ -79,8 +79,8 @@ get_data, tname, dlim=dlim
 str_element, dlim, 'spec', 1, /add
 store_data, tname, dlim=dlim
 ;
-ylim, tname, d.v[0], d.v[-1], 1
-zlim, tname, 0, 0, 0
+ylim, tname, d.v[0], d.v[-1], 0
+zlim, tname, 0, 0, 1
 ;
 options, tname, 'ytitle', 'B_total' 
 options, tname, 'ysubtitle', '[nT!U2!N/Hz]' 
@@ -106,8 +106,8 @@ str_element, dlim, 'SPEC', 1, /add
 ; X
 tname = 'EE_xx_sr2__C' + sc + '_CP_STA_PSD'
 store_data, tname, data={x:d.x, y:REFORM(d.y[*, 0, *]), v:d.v}, dlim=dlim
-zlim, tname, 0, 0, 0
-ylim, tname, d.v[0], d.v[-1]
+zlim, tname, 0, 0, 1
+ylim, tname, d.v[0], d.v[-1], 0
 ;
 options, tname, 'ytitle', 'Ex'
 options, tname, 'ysubtitle', '[(mV/m)!U2!N/Hz]' 
@@ -116,8 +116,8 @@ options, tname, 'ysubtitle', '[(mV/m)!U2!N/Hz]'
 ; Y
 tname = 'EE_yy_sr2__C' + sc + '_CP_STA_PSD'
 store_data, tname, data={x:d.x, y:REFORM(d.y[*, 1, *]), v:d.v}, dlim=dlim
-zlim, tname, 0, 0, 0
-ylim, tname, d.v[0], d.v[-1]
+zlim, tname, 0, 0, 1
+ylim, tname, d.v[0], d.v[-1], 0
 options, tname, 'ytitle', 'Ey'
 options, tname, 'ysubtitle', '[(mV/m)!U2!N/Hz]' 
 ;
@@ -128,7 +128,7 @@ get_data, tname, dlim=dlim
 str_element, dlim, 'spec', 1, /add
 store_data, tname, dlim=dlim
 ;
-ylim, tname, d.v[0], d.v[-1], 1
+ylim, tname, d.v[0], d.v[-1], 0
 zlim, tname, 0, 0, 1
 ;
 options, tname, 'ytitle', 'E_total' 
@@ -142,7 +142,7 @@ options, tname, 'ysubtitle', '[(mV/m)!U2!N/Hz]'
 tname = 'POLSVD__C' + sc + '_CP_STA_PPP'
 options, tname, 'spec', 1
 ;
-ylim, tname, 8, 4000., 1
+ylim, tname, 8, 4000., 0
 options, tname, 'ytitle', 'polarization'
 options, tname, 'ysubtitle', ''
 ;
@@ -154,7 +154,7 @@ options, tname, 'ysubtitle', ''
 tname = 'ELLSVD__C' + sc + '_CP_STA_PPP'
 options, tname, 'spec', 1
 ;
-ylim, tname, 8, 4000., 1
+ylim, tname, 8, 4000., 0
 options, tname, 'ytitle', 'ellipcity'
 options, tname, 'ysubtitle', ''
 ;
@@ -165,7 +165,7 @@ options, tname, 'ysubtitle', ''
 tname = 'THSVD_mfa__C' + sc + '_CP_STA_PPP'
 options, tname, 'spec', 1
 ;
-ylim, tname, 8, 4000., 1
+ylim, tname, 8, 4000., 0
 options, tname, 'ytitle', 'propagetion'
 options, tname, 'ysubtitle', '[deg]'
 
