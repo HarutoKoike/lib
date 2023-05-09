@@ -1,6 +1,7 @@
 ;===========================================================+
 ; ++ NAME ++
-PRO cluster::walen_relation, sc, t_ref, sign
+PRO cluster::walen_relation, sc, t_ref, sign, $
+                             trange_autosign=trange_autosign
 ;
 ; ++ PURPOSE ++
 ;  --> calculate velocity change across the rotational discondinuity
@@ -73,34 +74,44 @@ ENDELSE
 dv_pred = FLTARR(N_ELEMENTS(t), 3)
 v_pred  = FLTARR(N_ELEMENTS(t), 3)
 dv_obs  = FLTARR(N_ELEMENTS(t), 3)
+IF KEYWORD_SET(trange_autosign) THEN $
+    v_pred2 = FLTARR(N_ELEMENTS(t), 3)
+;
 ;
 IF ~ISA(sign) THEN sign = 1.
 
-alpha1 = 0
-alpha = 0
-print, 'aaaaaaaaaaaa'
-print, 'aaaaaaaaaaaa'
-print, sign
 FOR i = 0, 2 DO BEGIN
     dv_pred[*, i] = sign * SQRT( (1. - alpha1) /  (!CONST.MU0 * rho1) ) * $
                     (b[*, i] * (1. - alpha) / (1. - alpha1) - b1[i]) * 1.e-3
     ;
     v_pred[*, i] = v1[i] + dv_pred[*, i]
+    IF KEYWORD_SET(trange_autosign) THEN $
+        v_pred2[*, i] = v1[i] - dv_pred[*, i]
     ;
     dv_obs[*, i] = v[*, i] - v1[i]
 ENDFOR
 
+IF KEYWORD_SET(trange_autosign) THEN BEGIN
+    idx = WHERE(t GE trange_autosign[0] and t LE trange_autosign[1])
+    dv1 = TOTAL( (v[idx, *] - v_pred[idx, *])^2, /NAN)
+    dv2 = TOTAL( (v[idx, *] - v_pred2[idx, *])^2, /NAN)    
+    ;
+    IF dv2 LT dv1 THEN BEGIN
+        dv_pred = dv_pred
+        v_pred  = v_pred2
+        sign    = sign*(-1)
+    ENDIF
+ENDIF
 
 
 
-theta  = TOTAL(v_pred * v, 2) / $
-              SQRT(TOTAL(v_pred^2, 2))*SQRT(TOTAL(v, 2)) 
-theta  = ACOS(TOTAL(v_pred * v, 2) / $
-              SQRT(TOTAL(v_pred^2, 2)*TOTAL(v^2, 2))) / !DTOR
+
 theta  = ACOS(TOTAL(dv_pred * dv_obs, 2) / $
               SQRT(TOTAL(dv_obs^2, 2)*TOTAL(dv_pred^2, 2))) / !DTOR
 
 r  = TOTAL(dv_obs * dv_pred, 2) / TOTAL(dv_pred^2, 2)  
+r  = total(dv_obs^2, 2) / total(dv_pred^2, 2)
+r  = sqrt(r)
 
 
 ;
@@ -110,7 +121,7 @@ store_data, tn, data={x:t, y:theta}
 options, tn, 'ytitle', 'Walen_angle'
 options, tn, 'ysubtitle', '[deg.]'
 options, tn, 'databar', {yval:0, linestyle:1}
-ylim, tn, -180, 180, 0
+ylim, tn, 0, 180, 0
 
 ;
 ; predicted velocity
@@ -134,20 +145,25 @@ store_data, tn, data={x:t, y:y}
 ;
 ; check
 tn = 'Walen_check'
-store_data, tn, data={x:t, y:abs(r)}
+store_data, tn, data={x:t, y:r}
+options, tn, 'ytitle', 'R!DW!N'
 options, tn, 'databar', {yval:0.5, linestyle:1}
-ylim, tn, 0, 1 
+ylim, tn, 0, 1.5
 
 
+tn   = 'Walen_valid'
+disc = (r gt 0.4 and r lt 3.) and $
+       ( (theta ge 0 and theta lt 30.)  or $
+       (theta gt 150 and theta le 180.) )
+store_data, tn, data={x:t, y:disc}
+ylim, tn, 0, 2
 
-tn = 'test1'
-y  = dv_obs
-store_data, 'test1', data={x:t, y:dv_obs}
-store_data, 'test2', data={x:t, y:dv_pred}
-store_data, 'test3', data={x:t, y:sqrt(total((dv_obs-dv_pred)^2, 2))}
+
+tn = 'Walen_deltaV_obs'
+y  = SQRT(TOTAL(dv_obs^2, 2))
+store_data, tn, data={x:t, y:y}
+options, 'ysubtitle', '[km/s]'
+
 
 END 
-
-
-
 
