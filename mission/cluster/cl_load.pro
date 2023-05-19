@@ -5,6 +5,10 @@ PRO cl_load, sc0, $
              _EXTRA=ex
 
 
+CATCH, err
+IF err NE 0 THEN BEGIN
+    RETURN
+ENDIF
 
 FOR i = 0, N_ELEMENTS(sc0) - 1 DO BEGIN
     sc = sc0[i]

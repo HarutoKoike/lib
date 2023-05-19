@@ -74,14 +74,15 @@ END
 ;-------------------------------------------------+
 ; 
 ;-------------------------------------------------+
-PRO tmvab_eigenvec, tname_mag, trange, kl, km, kn 
+PRO tmvab_eigenvec, tname_mag, trange_mva, kl, km, kn 
 ;
-ts = time_string(trange)
+ts = time_string(trange_mva)
 PRINT, '% MVAB START:' + ts[0]
 PRINT, '% MVAB END  :' + ts[1]
 ;
 get_data, tname_mag, data=b
-idx = nn(tname_mag, trange)
+;
+idx = nn(tname_mag, trange_mva)
 ;
 idx = INDGEN(idx[-1] - idx[0] + 1) + idx[0]
 bx = b.Y[idx, 0]
@@ -110,7 +111,7 @@ END
 
 ;===========================================================+
 ; ++ NAME ++
-PRO myspedas::tmva, tname, tname_mag, trange, newname=newname, coord=coord
+PRO myspedas::tmva, tname, tname_mag, trange_mva, newname=newname, coord=coord
 ;
 ; ++ PURPOSE ++
 ;  -->
@@ -135,7 +136,7 @@ idx = WHERE(STRMATCH(tn, tname_mag), count)
 IF count EQ 0 THEN $
     PRINT, '% tplot name for magnetic field data should be set to "tname_mag"'
 ;
-tmvab_eigenvec, tname_mag, trange, kl, km, kn
+tmvab_eigenvec, tname_mag, trange_mva, kl, km, kn
 
 ;
 ;*----------   ----------*

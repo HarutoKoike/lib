@@ -110,6 +110,8 @@ IF error_status NE 0 THEN BEGIN
     CATCH, /CANCEL
     MESSAGE, !ERROR_STATE.MSG, /CONTINUE
     ;
+    IF ~OBJ_VALID(ourl) THEN RETURN
+    ;
     ourl->GetProperty, RESPONSE_CODE=rc, RESPONSE_HEADER=rh, $
             	      	 RESPONSE_FILENAME=rf
     ;
@@ -142,8 +144,19 @@ ourl->SetProperty, URL_QUERY = query
 ourl->SetProperty, HEADERS   = 'User-Agent:<' + user_agent + '>'
 ourl->GetProperty, URL_PATH=up
 ;
-timestamp = STRJOIN( STRSPLIT(SYSTIME(), ':', /EXTRACT) )
+timestamp = STRING(SYSTIME(/SECONDS), FORMAT='(F19.7)')
+timestamp = STRSPLIT(timestamp, '.', /EXTRACT)
+timestamp = STRJOIN(timestamp)
 buff_file = STRCOMPRESS(timestamp + 'buffer.tar.gz', /REMOVE_ALL)
+;
+count = 0
+WHILE FILE_TEST(buff_file) DO BEGIN
+    buff_file = 'c' + STRING(count, FORMAT='(I03)') + '_' + buff_file
+    count ++
+ENDWHILE
+;
+
+
 filename  = ourl->GET( filename=FILEPATH(buff_file, root=self->data_rootdir() ) )
 ourl->GetProperty, RESPONSE_HEADER=rh
 OBJ_DESTROY, ourl

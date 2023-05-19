@@ -130,6 +130,17 @@ self->load
 ;*---------- SPEDAS distribution structure  ----------*
 ;
 ;
+print, 'aaaaaaaaa'
+print, 'aaaaaaaaa'
+print, 'aaaaaaaaa'
+print, 'aaaaaaaaa'
+print, unit
+print, data_name
+stop
+print, 'aaaaaaaaa'
+print, 'aaaaaaaaa'
+print, 'aaaaaaaaa'
+print, 'aaaaaaaaa'
 struct = {$
           project_name    : 'Cluster'          , $
           spacecraft      : sc                 , $
@@ -284,7 +295,7 @@ IF KEYWORD_SET(trange) AND ISA(slice, 'BYTE') THEN $
 IF ~KEYWORD_SET(one_dim) THEN BEGIN
   spd_slice2d_plot, slice, xrange=xrange, yrange=yrange, $
                     background_color_index=0,  _extra=e, $
-                    xtitle='V!Dpara!N(km/s)', ytitle='V!Dperp!N(km/s)'
+                    ;xtitle='V!Dpara!N(km/s)', ytitle='V!Dperp!N(km/s)'
   RETURN
 ENDIF
 

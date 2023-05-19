@@ -10,7 +10,18 @@ IF ~KEYWORD_SET(root_dir) THEN $
 ;
 ;*-redirect file names in the archive to the buffer file
 ;
-buff = FILEPATH('tar-buff.txt', ROOT=root_dir)
+ts   = STRING(SYSTIME(/SECONDS), FORMAT='(F19.7)')
+ts   = STRJOIN(STRSPLIT(ts, '.', /EXTRACT))
+fn   = 'tar-buff_' + ts + '.txt'
+fn   = STRCOMPRESS(fn, /REMOVE)
+buff = FILEPATH(fn, ROOT=root_dir)
+;
+count = 0
+WHILE FILE_TEST(buff) DO BEGIN
+    buff = 'c' + STRING(count, FORMAT='(I03)') + '_' + buff
+    count ++
+ENDWHILE
+;
 SPAWN, 'tar -tf ' + tar_archive + ' > ' + buff
 ;
 ;*---------- read buffer file  ----------*
@@ -37,6 +48,7 @@ files = files[UNIQ(files)]
 IF ~KEYWORD_SET(save_dir) THEN save_dir = root_dir
 ;
 SPAWN, 'tar -xf ' + tar_archive + ' -C ' + root_dir
+
 FILE_DELETE, tar_archive, buff
 
 END

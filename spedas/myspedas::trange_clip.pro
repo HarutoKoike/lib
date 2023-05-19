@@ -29,6 +29,7 @@ get_data, tname, data=d
 IF ~KEYWORD_SET(newname) THEN newname = tname + '_cliped'
 ;
 s = SIZE(d.y)
+
 IF s[0] EQ 1 THEN $
   store_data, newname, data={x:d.x, y:d.y[idx1:idx2]}
 IF s[0] EQ 2 THEN $

@@ -1,6 +1,7 @@
 @myspedas::timespan.pro
 @mytimespan.pro
 @myspedas::trange_clip.pro
+@myspedas::tclip_data.pro
 @myspedas::trotate.pro
 @myspedas::tmva.pro
 @myspedas::twalen_test.pro

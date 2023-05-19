@@ -22,11 +22,10 @@ COMPILE_OPT IDL2, STATIC
 ;
 IF ~KEYWORD_SET(trange) THEN get_timespan, trange
 data = myspedas->tclip_data(tname, trange, /tvar)
-IF ~ISA(data) THEN RETURN, !NULL
 ;
 s = SIZE(data.y)
 IF s[0] EQ 1 THEN BEGIN
-    dmax = MAX(data.y, im, _EXTRA=e)
+    dmax = MIN(data.y, im, _EXTRA=e)
     tmax = data.x[im]
     RETURN, dmax
 ENDIF
@@ -40,5 +39,5 @@ ENDIF
 ;  RETURN, MAX(x, _EXTRA=e)
 ;ENDIF
 ;
-RETURN, !NULL
+RETURN, 0
 END 

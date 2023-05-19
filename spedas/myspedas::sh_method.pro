@@ -161,13 +161,3 @@ v0 = sh_method(ex, ey, ez, bx, by, bz, k)
 RETURN, v0
 END
 
-
-
-
-
-
-
-
-
-
-
