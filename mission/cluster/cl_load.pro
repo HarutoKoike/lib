@@ -1,6 +1,6 @@
 PRO cl_load, sc0, $
-             cis=cis, fgm=fgm, aux=aux, peace=peace, $
-             edi=edi, efw=efw, staff=staff, $
+             cis=cis, fgm=fgm, aux=aux, peace=peace,        $
+             edi=edi, efw=efw, staff=staff, rapid=rapid,    $
              walen_test=walen_test, fote=fote, joule=joule, $
              _EXTRA=ex
 
@@ -60,6 +60,13 @@ FOR i = 0, N_ELEMENTS(sc0) - 1 DO BEGIN
         staff->SetProperty, sc=sc
         staff->load
         OBJ_DESTROY, staff
+    ENDIF  
+    ;
+    IF KEYWORD_SET(rapid) THEN BEGIN
+        rapid = OBJ_NEW('rapid')
+        rapid->SetProperty, sc=sc
+        rapid->load
+        OBJ_DESTROY, rapid
     ENDIF  
     ;
     IF KEYWORD_SET(walen_test) THEN BEGIN

@@ -125,7 +125,7 @@ ylim, tn, 0, 180, 0
 
 ;
 ; predicted velocity
-tn = 'Walen_V_predicted'
+tn = 'Walen_V_gsm__C'+ sc
 store_data, tn, data={x:t, y:v_pred}
 
 

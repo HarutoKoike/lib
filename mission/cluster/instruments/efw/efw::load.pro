@@ -10,6 +10,7 @@ self->GetProperty, st=st, et=et, sc=sc
 ;id = 'C' + sc + '_CP_EFW_L3_E3D_GSE'
 ;id = 'C' + sc + '_CP_EFW_L2_E3D_GSE'
 id = 'C' + sc + '_CP_EFW_L2_E'
+id = [id, 'C' + sc + '_PP_EFW']
 ;id = 'C' + sc + '_CP_EFW_L2_V3D_GSE'
 ;id = 'C' + sc + '_CP_EFW_L2_PB'
 IF KEYWORD_SET(burst_mode) THEN $
