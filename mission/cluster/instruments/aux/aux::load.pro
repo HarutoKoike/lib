@@ -1,8 +1,7 @@
 ;===========================================================+
 ; ++ NAME ++
-PRO aux::load
-;
-; ++ PURPOSE ++
+pro aux::load
+; ; ++ PURPOSE ++
 ;  -->
 ;
 ; ++ POSITIONAL ARGUMENTS ++
